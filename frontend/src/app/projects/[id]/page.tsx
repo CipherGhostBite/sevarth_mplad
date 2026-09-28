@@ -22,6 +22,7 @@ import AiChatDrawer from '@/components/AiChatDrawer';
 import InvestigationModal from '@/components/InvestigationModal';
 import FloatingReasons from '@/components/FloatingReasons';
 import PublicReportTab from '@/components/PublicReportTab';
+import CrossGovtCoordinationTab from '@/components/coordination/CrossGovtCoordinationTab';
 import {
   ShieldAlert,
   ArrowLeft,
@@ -37,6 +38,9 @@ import {
   AlertTriangle,
   Printer,
   ChevronRight,
+  Network,
+  ArrowRight,
+  Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -160,14 +164,15 @@ export default function ProjectInvestigationPage() {
     { id: 'agency', label: '4. AGENCY PROFILE', icon: Building2 },
     { id: 'map', label: '5. GIS SPATIAL', icon: MapPin },
     { id: 'graph', label: '6. GRAPH BOARD', icon: Share2 },
-    { id: 'evidence', label: '7. EVIDENCE LOCKER', icon: FileText },
-    { id: 'assistant', label: '8. AI WORKSTATION', icon: Bot },
-    { id: 'decision', label: '9. OFFICER LOG', icon: FileCheck },
+    { id: 'coordination', label: '7. CROSS-GOVT COORDINATION', icon: Network },
+    { id: 'evidence', label: '8. EVIDENCE LOCKER', icon: FileText },
+    { id: 'assistant', label: '9. AI WORKSTATION', icon: Bot },
+    { id: 'decision', label: '10. OFFICER LOG', icon: FileCheck },
   ];
 
   const tabs = userRole === 'GUEST'
     ? baseTabs
-    : [...baseTabs, { id: 'report', label: '10. REPORT INACCURACY', icon: AlertTriangle }];
+    : [...baseTabs, { id: 'report', label: '11. REPORT INACCURACY', icon: AlertTriangle }];
 
   const statusBadge = getStatusBadge(project.status);
   const invBadge = getInvestigationStatusBadge(project.investigation_status);
@@ -489,12 +494,17 @@ export default function ProjectInvestigationPage() {
           </div>
         )}
 
-        {/* TAB 7: Evidence Locker */}
+        {/* TAB 7: Cross-Govt Multi-Level Project Coordination */}
+        {activeTab === 'coordination' && (
+          <CrossGovtCoordinationTab currentProjectId={project.project_id} />
+        )}
+
+        {/* TAB 8: Evidence Locker */}
         {activeTab === 'evidence' && (
           <EvidenceDossier evidenceItems={project.evidence_items} projectId={project.project_id} />
         )}
 
-        {/* TAB 8: AI Assistant Terminal */}
+        {/* TAB 9: AI Assistant Terminal */}
         {activeTab === 'assistant' && <AiChatDrawer projectId={project.project_id} />}
 
         {/* TAB 9: Officer Log */}

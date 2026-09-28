@@ -331,7 +331,6 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
 
         {/* 3D Tactile Arrow Keycap */}
         <div className="ml-1 px-1.5 py-1 rounded-lg bg-gradient-to-b from-[#FFFFFF] to-[#DDE3D7] border border-[#BAC1B3] shadow-[0_2px_4px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] group-hover:bg-[#285C7A] group-hover:text-white group-hover:border-[#173F58] transition-all flex items-center gap-1">
-          <kbd className="text-[9px] font-bold text-[#667078] group-hover:text-white/90">/[ key ]</kbd>
           <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </div>
       </button>

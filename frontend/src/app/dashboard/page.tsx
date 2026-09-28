@@ -17,6 +17,7 @@ import {
   Sparkles,
   MapPin,
   Layers,
+  Network,
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -151,6 +152,35 @@ export default function DashboardPage() {
         >
           <span>INSPECT CASE DOSSIER</span>
           <ArrowRight className="w-4 h-4 text-[#C88A25]" />
+        </Link>
+      </div>
+
+      {/* NEW FEATURE: MULTI-LEVEL GOVERNMENT PROJECT COORDINATION FEATURED CARD */}
+      <div className="floating-slab p-6 bg-[#0f172a] border-2 border-cyan-500/40 rounded-3xl text-white font-mono flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse" />
+        
+        <div className="space-y-2 max-w-3xl">
+          <div className="flex items-center gap-2.5">
+            <span className="bg-cyan-500 text-slate-950 text-[9px] font-mono font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              3D GIS COMMAND CENTER
+            </span>
+            <span className="font-mono text-xs text-cyan-400 font-bold">CROSS-GOVERNMENT INTELLIGENCE</span>
+          </div>
+          <h2 className="text-lg font-black text-slate-100 leading-snug flex items-center gap-2">
+            <Network className="w-5 h-5 text-cyan-400" />
+            <span>Multi-Level Government Project Coordination &amp; Conflict Detection</span>
+          </h2>
+          <p className="text-xs text-slate-300 font-sans leading-relaxed">
+            Real-time 3D spatial twin analyzing spatial overlaps, timeline concurrencies, and subterranean utility dependencies across Central, State, District, and Local government projects.
+          </p>
+        </div>
+
+        <Link
+          href="/coordination"
+          className="tactile-light-switch bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-3.5 rounded-2xl text-xs font-mono font-bold inline-flex items-center justify-center gap-2 shrink-0 shadow-[0_8px_24px_rgba(6,182,212,0.4)] transition transform hover:scale-105 active:scale-95 select-none relative z-10"
+        >
+          <span>LAUNCH 3D COMMAND CENTER</span>
+          <ArrowRight className="w-4 h-4 text-slate-950" />
         </Link>
       </div>
 
@@ -354,6 +384,17 @@ export default function DashboardPage() {
               COMMAND SHORTCUTS
             </h3>
             <div className="space-y-2 text-xs">
+              <Link
+                href="/coordination"
+                className="tactile-light-switch p-3.5 rounded-xl font-bold text-[#182027] flex items-center justify-between bg-[#0f172a] text-cyan-400 border border-cyan-500/40"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Network className="w-4 h-4 text-cyan-400" />
+                  <span>3D Project Coordination &amp; Conflicts</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+              </Link>
+
               <Link
                 href="/map"
                 className="tactile-light-switch p-3.5 rounded-xl font-bold text-[#182027] flex items-center justify-between"

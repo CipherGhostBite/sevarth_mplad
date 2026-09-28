@@ -10,6 +10,7 @@ from backend.app.api.map_routes import router as map_router
 from backend.app.api.graph_routes import router as graph_router
 from backend.app.api.assistant_routes import router as assistant_router
 from backend.app.api.report_routes import router as report_router
+from backend.app.api.coordination_routes import router as coordination_router
 
 from backend.app.database import engine
 from backend.app.models.schema import Base
@@ -37,6 +38,7 @@ app.add_middleware(
 # Register API Routers
 app.include_router(auth_router, prefix=settings.API_PREFIX)
 app.include_router(dashboard_router, prefix=settings.API_PREFIX)
+app.include_router(coordination_router, prefix=settings.API_PREFIX)
 app.include_router(project_router, prefix=settings.API_PREFIX)
 app.include_router(agency_router, prefix=settings.API_PREFIX)
 app.include_router(map_router, prefix=settings.API_PREFIX)

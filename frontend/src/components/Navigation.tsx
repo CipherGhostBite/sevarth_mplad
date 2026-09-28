@@ -17,6 +17,7 @@ import {
   Compass,
   User,
   ChevronDown,
+  Network,
 } from 'lucide-react';
 import ConstituencySelector from '@/components/ConstituencySelector';
 

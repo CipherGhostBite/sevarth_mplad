@@ -181,6 +181,135 @@ export interface AssistantAnswer {
   timestamp: string;
 }
 
+export interface CoordinationOverview {
+  constituency: string;
+  totalProjects: number;
+  levelCounts: {
+    CENTRAL: number;
+    STATE: number;
+    DISTRICT: number;
+    LOCAL: number;
+  };
+  overallCoordinationIndex: number;
+  coordinationRiskLevel: string;
+  totalSpatialOverlaps: number;
+  totalTimelineOverlaps: number;
+  totalDependencies: number;
+  criticalConflictsCount: number;
+  lastAnalysisTime: string;
+  statusMessage: string;
+}
+
+export interface CoordinationMatrixItem {
+  projectId: string;
+  projectName: string;
+  level: string;
+  department: string;
+  category: string;
+  budget: number;
+  status: string;
+  latitude: number;
+  longitude: number;
+  hasSpatialOverlap: boolean;
+  hasTimelineOverlap: boolean;
+  hasDependency: boolean;
+  highestConflictScore: number;
+  coordinationRisk: string;
+  topRelatedProject: string;
+  topRelatedLevel: string;
+}
+
+export interface CoordinationProjectItem {
+  id: string;
+  name: string;
+  level: string; // CENTRAL, STATE, DISTRICT, LOCAL
+  department: string;
+  category: string;
+  latitude: number;
+  longitude: number;
+  constituency: string;
+  district: string;
+  state: string;
+  budget: number;
+  startDate: string;
+  endDate: string;
+  status: string;
+  description: string;
+  sharedResource?: string;
+  prerequisites?: string[];
+}
+
+export interface CoordinationDossier {
+  subjectProject: CoordinationProjectItem;
+  coordinationScore: number;
+  riskLevel: string;
+  scoreBreakdown: {
+    spatial: number;
+    timeline: number;
+    infrastructure: number;
+    dependency: number;
+    similarity: number;
+  };
+  spatialOverlapsCount: number;
+  timelineOverlapsCount: number;
+  dependenciesCount: number;
+  relatedProjects: Array<{
+    targetProject: CoordinationProjectItem;
+    distanceKm: number;
+    overlapMonths: number;
+    totalCoordinationScore: number;
+    riskLevel: string;
+    relationshipType: string;
+    scoreBreakdown: {
+      spatial: number;
+      timeline: number;
+      infrastructure: number;
+      dependency: number;
+      similarity: number;
+    };
+    sharedResource: string;
+    dependencyType: string;
+    duplicationFlag: boolean;
+  }>;
+  aiSummary: {
+    headline: string;
+    summaryText: string;
+    recommendations: string[];
+  };
+  networkGraph: {
+    nodes: Array<{
+      id: string;
+      name: string;
+      level: string;
+      category: string;
+      isPrimary: boolean;
+      heightVal: number;
+      budget: number;
+      latitude: number;
+      longitude: number;
+    }>;
+    edges: Array<{
+      id: string;
+      source: string;
+      target: string;
+      relationshipType: string;
+      coordinationScore: number;
+      distanceKm: number;
+      overlapMonths: number;
+      sharedResource: string;
+      riskLevel: string;
+    }>;
+  };
+  timelineSpatial: Array<{
+    id: string;
+    name: string;
+    level: string;
+    startDate: string;
+    endDate: string;
+    isSubject: boolean;
+  }>;
+}
+
 // Helper fetch wrapper
 async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
@@ -358,5 +487,27 @@ export const api = {
       }>;
     }>(`/reports/project/${projectId}/public-reports?user_email=${encodeURIComponent(email)}`);
   },
+
+  // Multi-Level Government Project Coordination & Conflict Detection
+  getCoordinationOverview: (constituencyId?: string) => {
+    const cId = constituencyId || getActiveConstituencyId();
+    return apiFetch<CoordinationOverview>(`/projects/coordination/overview?constituency=${encodeURIComponent(cId)}`);
+  },
+
+  getCoordinationProjects: (params?: { level?: string; category?: string; status?: string }) => {
+    const q = new URLSearchParams();
+    if (params?.level) q.append('level', params.level);
+    if (params?.category) q.append('category', params.category);
+    if (params?.status) q.append('status', params.status);
+    return apiFetch<CoordinationProjectItem[]>(`/projects/coordination/projects?${q.toString()}`);
+  },
+
+  getCoordinationMatrix: (constituencyId?: string) => {
+    const cId = constituencyId || getActiveConstituencyId();
+    return apiFetch<CoordinationMatrixItem[]>(`/projects/coordination/matrix?constituency=${encodeURIComponent(cId)}`);
+  },
+
+  getCoordinationDossier: (projectId: string) =>
+    apiFetch<CoordinationDossier>(`/projects/coordination/${encodeURIComponent(projectId)}`),
 };
 

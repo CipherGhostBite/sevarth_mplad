@@ -1,0 +1,23 @@
+{
+  "constituency": "PASCHIM CHAMPARAN",
+  "state": "Bihar",
+  "slug": "paschim-champaran-bihar",
+  "mp_name": "Sanjay Jaiswal",
+  "mp_id": "6a98d96eddf878e1e6c89bb9",
+  "house": "Lok Sabha",
+  "ls_term": 18,
+  "latitude": 25.5311,
+  "longitude": 85.1361,
+  "allocated_amount_inr": 147000000,
+  "allocated_lakhs": 1470.0,
+  "total_expenditure_inr": 0,
+  "total_expenditure_lakhs": 0.0,
+  "utilization_percentage": 0,
+  "completion_rate_percentage": 0,
+  "completed_works_count": 0,
+  "recommended_works_count": 0,
+  "pending_works_count": 0,
+  "unspent_amount_inr": 147000000,
+  "latest_projects_count": 0,
+  "projects": []
+}
