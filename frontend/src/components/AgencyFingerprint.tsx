@@ -4,15 +4,12 @@ import React from 'react';
 import { AgencyDetail } from '@/lib/api';
 import { Building2, AlertTriangle, Activity } from 'lucide-react';
 import Link from 'next/link';
-import { useLanguage } from '@/lib/LanguageContext';
 
 interface AgencyFingerprintProps {
   agency: AgencyDetail;
 }
 
 export default function AgencyFingerprint({ agency }: AgencyFingerprintProps) {
-  const { isHindi, t } = useLanguage();
-
   const getRiskLevelBadge = (level: string) => {
     switch (level) {
       case 'HIGH':
@@ -22,17 +19,6 @@ export default function AgencyFingerprint({ agency }: AgencyFingerprintProps) {
       default:
         return 'bg-[#398265]/10 text-[#398265] border-[#398265]/30';
     }
-  };
-
-  const formatRiskLevelText = (level: string) => {
-    if (isHindi) {
-      switch (level) {
-        case 'HIGH': return 'उच्च जोखिम प्रोफ़ाइल';
-        case 'ELEVATED': return 'मध्यम जोखिम प्रोफ़ाइल';
-        default: return 'कम जोखिम प्रोफ़ाइल';
-      }
-    }
-    return `${level} RISK PROFILE`;
   };
 
   return (
@@ -51,7 +37,7 @@ export default function AgencyFingerprint({ agency }: AgencyFingerprintProps) {
                   agency.risk_profile_level
                 )}`}
               >
-                {formatRiskLevelText(agency.risk_profile_level)}
+                {agency.risk_profile_level} RISK PROFILE
               </span>
             </div>
             <p className="text-xs text-[#667078] font-sans mt-0.5">
@@ -64,26 +50,20 @@ export default function AgencyFingerprint({ agency }: AgencyFingerprintProps) {
           href="/agencies"
           className="tactile-light-switch px-4 py-2 rounded-full text-xs font-mono font-bold text-[#182027] transition self-start md:self-auto"
         >
-          {isHindi ? 'सभी एजेंसियां देखें →' : 'VIEW ALL AGENCIES →'}
+          VIEW ALL AGENCIES &rarr;
         </Link>
       </div>
 
       {/* KPI Instrument Gauges */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="recessed-light-display p-4 space-y-1">
-          <span className="text-[10px] font-bold text-[#667078] uppercase block">
-            {t('agency.project_count', 'Total Works')}
-          </span>
+          <span className="text-[10px] font-bold text-[#667078] uppercase block">Total Works</span>
           <span className="text-2xl font-mono font-extrabold text-[#182027]">{agency.project_count}</span>
-          <span className="text-[9px] text-[#9AA3AB] block">
-            {agency.completed_count} {isHindi ? 'पूर्ण' : 'completed'}
-          </span>
+          <span className="text-[9px] text-[#9AA3AB] block">{agency.completed_count} completed</span>
         </div>
 
         <div className="recessed-light-display p-4 space-y-1">
-          <span className="text-[10px] font-bold text-[#667078] uppercase block">
-            {t('agency.delay_rate', 'Delay Rate')}
-          </span>
+          <span className="text-[10px] font-bold text-[#667078] uppercase block">Delay Rate</span>
           <span
             className={`text-2xl font-mono font-extrabold ${
               agency.delay_rate > 0.5 ? 'text-[#C45145]' : 'text-[#182027]'
@@ -91,37 +71,27 @@ export default function AgencyFingerprint({ agency }: AgencyFingerprintProps) {
           >
             {(agency.delay_rate * 100).toFixed(0)}%
           </span>
-          <span className="text-[9px] text-[#9AA3AB] block">
-            {agency.delayed_count} {isHindi ? 'विलंबित कार्य' : 'delayed works'}
-          </span>
+          <span className="text-[9px] text-[#9AA3AB] block">{agency.delayed_count} delayed works</span>
         </div>
 
         <div className="recessed-light-display p-4 space-y-1">
-          <span className="text-[10px] font-bold text-[#667078] uppercase block">
-            {t('agency.avg_delay', 'Average Delay')}
-          </span>
+          <span className="text-[10px] font-bold text-[#667078] uppercase block">Average Delay</span>
           <span
             className={`text-2xl font-mono font-extrabold ${
               agency.average_delay > 90 ? 'text-[#C45145]' : 'text-[#182027]'
             }`}
           >
-            {agency.average_delay.toFixed(0)} {isHindi ? 'दिन' : 'd'}
+            {agency.average_delay.toFixed(0)} d
           </span>
-          <span className="text-[9px] text-[#9AA3AB] block">
-            {isHindi ? 'प्रति विलंबित कार्य' : 'per delayed work'}
-          </span>
+          <span className="text-[9px] text-[#9AA3AB] block">per delayed work</span>
         </div>
 
         <div className="recessed-light-display p-4 space-y-1">
-          <span className="text-[10px] font-bold text-[#667078] uppercase block">
-            {isHindi ? 'औसत लागत' : 'Average Cost'}
-          </span>
+          <span className="text-[10px] font-bold text-[#667078] uppercase block">Average Cost</span>
           <span className="text-2xl font-mono font-extrabold text-[#182027]">
-            ₹{agency.average_cost.toFixed(1)}{isHindi ? ' लाख' : 'L'}
+            ₹{agency.average_cost.toFixed(1)}L
           </span>
-          <span className="text-[9px] text-[#9AA3AB] block">
-            {isHindi ? 'प्रति स्वीकृत कार्य' : 'per sanctioned work'}
-          </span>
+          <span className="text-[9px] text-[#9AA3AB] block">per sanctioned work</span>
         </div>
       </div>
 
@@ -129,7 +99,7 @@ export default function AgencyFingerprint({ agency }: AgencyFingerprintProps) {
       <div className="floating-slab p-6 space-y-3">
         <h4 className="text-xs font-mono font-bold text-[#285C7A] uppercase tracking-wider flex items-center gap-2 border-b border-[#E4E7E1] pb-2">
           <Activity className="w-4 h-4 text-[#C88A25]" />
-          <span>{isHindi ? 'ऐतिहासिक व्यवहार फ़िंगरप्रिंट संकेत' : 'HISTORICAL BEHAVIORAL FINGERPRINT SIGNALS'}</span>
+          <span>HISTORICAL BEHAVIORAL FINGERPRINT SIGNALS</span>
         </h4>
         <div className="space-y-2.5">
           {agency.historical_risk_signals.map((signal, idx) => (

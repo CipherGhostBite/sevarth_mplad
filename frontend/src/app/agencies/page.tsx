@@ -5,10 +5,7 @@ import { api, AgencySummary } from '@/lib/api';
 import { Building2, ArrowRight, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 
-import { useLanguage } from '@/lib/LanguageContext';
-
 export default function AgenciesDirectoryPage() {
-  const { lang, t, isHindi } = useLanguage();
   const [agencies, setAgencies] = useState<AgencySummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -55,11 +52,11 @@ export default function AgenciesDirectoryPage() {
           <div className="flex items-center gap-2.5">
             <Building2 className="w-5 h-5 text-purple-600" />
             <h1 className="text-lg font-black text-[#182027] tracking-wider uppercase">
-              {t('agency.title', 'Implementing Agency Directory')}
+              3D INSTITUTIONAL AGENCY DIRECTORY
             </h1>
           </div>
           <p className="text-xs text-[#667078] font-sans mt-1">
-            {t('agency.subtitle', 'Track performance, delay metrics, and vendor collusion networks across executing bodies.')}
+            Behavioral profiling, portfolio delay frequency, and cross-project concentration in Nalanda.
           </p>
         </div>
       </div>
@@ -68,7 +65,7 @@ export default function AgenciesDirectoryPage() {
       {loading ? (
         <div className="p-16 text-center text-xs text-[#667078]">
           <RefreshCw className="w-6 h-6 animate-spin mx-auto text-[#285C7A] mb-3" />
-          <span>{isHindi ? 'एजेंसी व्यवहार संबंधी प्रोफाइल लोड हो रही हैं...' : 'LOADING AGENCY BEHAVIORAL PROFILES...'}</span>
+          <span>LOADING AGENCY BEHAVIORAL PROFILES...</span>
         </div>
       ) : error ? (
         <div className="floating-slab bg-[#C45145]/10 border border-[#C45145]/30 p-6 text-center text-xs text-[#C45145] font-bold">{error}</div>
@@ -88,7 +85,7 @@ export default function AgenciesDirectoryPage() {
                         agency.risk_profile_level
                       )}`}
                     >
-                      {agency.risk_profile_level} {isHindi ? 'जोखिम' : 'RISK'}
+                      {agency.risk_profile_level} RISK
                     </span>
                   </div>
                   <h3 className="font-bold text-[#182027] text-base font-sans mt-1">{agency.agency_name}</h3>
@@ -99,13 +96,13 @@ export default function AgenciesDirectoryPage() {
               {/* Stats Recessed Gauges */}
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="recessed-light-display p-3">
-                  <span className="text-[9px] text-[#667078] block font-bold uppercase">{isHindi ? 'कार्य' : 'WORKS'}</span>
+                  <span className="text-[9px] text-[#667078] block font-bold uppercase">WORKS</span>
                   <span className="font-mono font-extrabold text-[#182027] text-lg">
                     {agency.project_count}
                   </span>
                 </div>
                 <div className="recessed-light-display p-3">
-                  <span className="text-[9px] text-[#667078] block font-bold uppercase">{isHindi ? 'देरी दर' : 'DELAY RATE'}</span>
+                  <span className="text-[9px] text-[#667078] block font-bold uppercase">DELAY RATE</span>
                   <span
                     className={`font-mono font-extrabold text-lg ${
                       agency.delay_rate > 0.5 ? 'text-[#C45145]' : 'text-[#182027]'
@@ -115,26 +112,26 @@ export default function AgenciesDirectoryPage() {
                   </span>
                 </div>
                 <div className="recessed-light-display p-3">
-                  <span className="text-[9px] text-[#667078] block font-bold uppercase">{isHindi ? 'औसत देरी' : 'AVG DELAY'}</span>
+                  <span className="text-[9px] text-[#667078] block font-bold uppercase">AVG DELAY</span>
                   <span
                     className={`font-mono font-extrabold text-lg ${
                       agency.average_delay > 90 ? 'text-[#C45145]' : 'text-[#182027]'
                     }`}
                   >
-                    {agency.average_delay.toFixed(0)} {isHindi ? 'दिन' : 'd'}
+                    {agency.average_delay.toFixed(0)} d
                   </span>
                 </div>
               </div>
 
               <div className="flex items-center justify-between pt-1">
                 <span className="text-xs text-[#667078]">
-                  {isHindi ? 'औसत लागत:' : 'Avg Cost:'} <strong className="text-[#182027] font-mono">₹{agency.average_cost.toFixed(1)}{isHindi ? ' लाख' : 'L'}</strong>
+                  Avg Cost: <strong className="text-[#182027] font-mono">₹{agency.average_cost.toFixed(1)}L</strong>
                 </span>
                 <Link
                   href={`/queue?agency_id=${agency.agency_id}`}
                   className="tactile-light-switch inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs text-[#285C7A] font-bold"
                 >
-                  <span>{isHindi ? 'आवंटित कार्य फ़िल्टर करें' : 'FILTER ASSIGNED WORKS'}</span>
+                  <span>FILTER ASSIGNED WORKS</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -145,4 +142,3 @@ export default function AgenciesDirectoryPage() {
     </div>
   );
 }
-

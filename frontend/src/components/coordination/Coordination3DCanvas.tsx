@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CoordinationProjectItem } from '@/lib/api';
-import { useLanguage } from '@/lib/LanguageContext';
 import { 
   ShieldAlert, 
   Layers, 
@@ -31,7 +30,6 @@ export default function Coordination3DCanvas({
   onSelectProject,
   conflicts = []
 }: Props) {
-  const { isHindi, t } = useLanguage();
   const mountRef = useRef<HTMLDivElement>(null);
   const [hoveredProject, setHoveredProject] = useState<CoordinationProjectItem | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
@@ -375,12 +373,8 @@ export default function Coordination3DCanvas({
       {/* Floating Header Tag */}
       <div className="absolute top-4 left-4 z-10 flex items-center gap-3 bg-[#0f172a]/90 backdrop-blur-md px-4 py-2 rounded-2xl border border-[#285c7a]/40 text-xs font-mono">
         <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-        <span className="text-emerald-400 font-bold tracking-wider uppercase">
-          {isHindi ? 'विकास डिजिटल ट्विन' : 'DEVELOPMENT DIGITAL TWIN'}
-        </span>
-        <span className="text-slate-400">
-          {isHindi ? '• 3D जीआईएस कमांड पर्यावरण' : '• 3D GIS Command Environment'}
-        </span>
+        <span className="text-emerald-400 font-bold tracking-wider uppercase">DEVELOPMENT DIGITAL TWIN</span>
+        <span className="text-slate-400">&bull; 3D GIS Command Environment</span>
       </div>
 
       {/* 3D Controls Bar */}
@@ -388,21 +382,21 @@ export default function Coordination3DCanvas({
         <button
           onClick={() => handleZoom('in')}
           className="p-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 hover:text-white transition"
-          title={isHindi ? 'ज़ूम इन' : 'Zoom In'}
+          title="Zoom In"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
         <button
           onClick={() => handleZoom('out')}
           className="p-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 hover:text-white transition"
-          title={isHindi ? 'ज़ूम आउट' : 'Zoom Out'}
+          title="Zoom Out"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
         <button
           onClick={handleResetCamera}
           className="p-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 hover:text-white transition"
-          title={isHindi ? 'कैमरा दृश्य रीसेट करें' : 'Reset Camera View'}
+          title="Reset Camera View"
         >
           <RotateCcw className="w-4 h-4" />
         </button>
@@ -410,24 +404,22 @@ export default function Coordination3DCanvas({
 
       {/* Legend & Level Markers */}
       <div className="absolute bottom-4 left-4 z-10 bg-[#0f172a]/95 backdrop-blur-md p-3.5 rounded-2xl border border-[#285c7a]/40 text-xs font-mono space-y-2">
-        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-          {isHindi ? 'सरकारी स्तर 3D संरचनाएं' : 'GOVERNMENT LEVEL 3D STRUCTURES'}
-        </div>
+        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">GOVERNMENT LEVEL 3D STRUCTURES</div>
         <div className="flex flex-wrap items-center gap-3 text-[11px]">
           <span className="flex items-center gap-1.5 text-purple-400 font-semibold">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> {isHindi ? 'केन्द्रीय' : 'CENTRAL'}
+            <span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> CENTRAL
           </span>
           <span className="flex items-center gap-1.5 text-blue-400 font-semibold">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> {isHindi ? 'राज्य' : 'STATE'}
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> STATE
           </span>
           <span className="flex items-center gap-1.5 text-amber-400 font-semibold">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> {isHindi ? 'जिला' : 'DISTRICT'}
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> DISTRICT
           </span>
           <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> {isHindi ? 'स्थानीय' : 'LOCAL'}
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> LOCAL
           </span>
           <span className="flex items-center gap-1.5 text-red-400 font-semibold">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" /> {isHindi ? 'संघर्ष क्षेत्र' : 'CONFLICT ZONE'}
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" /> CONFLICT ZONE
           </span>
         </div>
       </div>
@@ -448,7 +440,7 @@ export default function Coordination3DCanvas({
               hoveredProject.level === 'DISTRICT' ? 'bg-amber-900/60 text-amber-300 border border-amber-500' :
               'bg-emerald-900/60 text-emerald-300 border border-emerald-500'
             }`}>
-              {hoveredProject.level} {isHindi ? 'परियोजना' : 'PROJECT'}
+              {hoveredProject.level} PROJECT
             </span>
             <span className="text-[10px] text-slate-400 font-mono">{hoveredProject.id}</span>
           </div>
@@ -459,15 +451,15 @@ export default function Coordination3DCanvas({
 
           <div className="space-y-1 text-[11px] text-slate-300">
             <div className="flex justify-between">
-              <span className="text-slate-400">{isHindi ? 'विभाग:' : 'Department:'}</span>
+              <span className="text-slate-400">Department:</span>
               <span className="font-semibold text-right truncate max-w-[140px]">{hoveredProject.department}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-400">{isHindi ? 'बजट:' : 'Budget:'}</span>
-              <span className="font-bold text-emerald-400">₹{(hoveredProject.budget / 10000000).toFixed(1)} {isHindi ? 'करोड़' : 'Cr'}</span>
+              <span className="text-slate-400">Budget:</span>
+              <span className="font-bold text-emerald-400">₹{(hoveredProject.budget / 10000000).toFixed(1)} Cr</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-400">{isHindi ? 'समय-सीमा:' : 'Timeline:'}</span>
+              <span className="text-slate-400">Timeline:</span>
               <span>{hoveredProject.startDate.slice(0, 7)} &rarr; {hoveredProject.endDate.slice(0, 7)}</span>
             </div>
           </div>
@@ -475,7 +467,7 @@ export default function Coordination3DCanvas({
           {hoveredProject.prerequisites && hoveredProject.prerequisites.length > 0 && (
             <div className="mt-2 pt-2 border-t border-slate-800 text-[10px] text-amber-400 flex items-center gap-1.5 font-bold">
               <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
-              <span>{isHindi ? '⚠ निर्भरता पूर्वापेक्षा का पता चला' : '⚠ DEPENDENCY PREREQUISITE DETECTED'}</span>
+              <span>⚠ DEPENDENCY PREREQUISITE DETECTED</span>
             </div>
           )}
         </div>
@@ -483,4 +475,3 @@ export default function Coordination3DCanvas({
     </div>
   );
 }
-

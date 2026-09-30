@@ -22,7 +22,9 @@ __pycache__/
 .coverage
 htmlcov/
 
-*.db
+# Local database (can be reseeded anytime with `python backend/pipeline/seed_db.py`)
+# Keeping a demo db or ignoring: let's include or ignore db
+# *.db
 
 # Environment Variables & Logs
 .env

@@ -447,8 +447,8 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "riskScoreAvg": 62,
     "mpName": "Shri Rajesh Patel",
     "mpParty": "INC",
-    "latitude": 26.5824,
-    "longitude": 93.1711
+    "latitude": 29.708325,
+    "longitude": 77.349067
   },
   {
     "id": "sonitpur",
@@ -462,8 +462,8 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "riskScoreAvg": 75,
     "mpName": "Shri Sunil Joshi",
     "mpParty": "SP",
-    "latitude": 26.6528,
-    "longitude": 92.7926
+    "latitude": 27.511078,
+    "longitude": 80.979409
   },
   {
     "id": "darrang_udalguri",
@@ -927,8 +927,8 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "riskScoreAvg": 73,
     "mpName": "Shri Ramesh Kumar",
     "mpParty": "JD(U)",
-    "latitude": 26.1112,
-    "longitude": 84.4983
+    "latitude": 27.182617,
+    "longitude": 83.489931
   },
   {
     "id": "saran",
@@ -2172,8 +2172,8 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "riskScoreAvg": 72,
     "mpName": "Anurag Singh Thakur",
     "mpParty": "BJP",
-    "latitude": 31.6862,
-    "longitude": 76.5213
+    "latitude": 25.618958,
+    "longitude": 80.000119
   },
   {
     "id": "shimla",
@@ -3207,8 +3207,8 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "riskScoreAvg": 69,
     "mpName": "Shri Anil Reddy",
     "mpParty": "DMK",
-    "latitude": 34.1526,
-    "longitude": 77.5771
+    "latitude": 35.717529,
+    "longitude": 75.158309
   },
   {
     "id": "lakshadweep",
@@ -3477,8 +3477,8 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "riskScoreAvg": 78,
     "mpName": "Shri Vijay Sharma",
     "mpParty": "DMK",
-    "latitude": 22.7519,
-    "longitude": 77.7289
+    "latitude": 16.654638,
+    "longitude": 82.077281
   },
   {
     "id": "vidisha",
@@ -3942,8 +3942,8 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "riskScoreAvg": 76,
     "mpName": "Shri Devendra Gupta",
     "mpParty": "BJP",
-    "latitude": 19.8762,
-    "longitude": 75.3433
+    "latitude": 24.680407,
+    "longitude": 84.516242
   },
   {
     "id": "dindori",
@@ -4797,8 +4797,8 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "riskScoreAvg": 52,
     "mpName": "Shri Suresh Yadav",
     "mpParty": "TDP",
-    "latitude": 11.9416,
-    "longitude": 79.8083
+    "latitude": 10.919647,
+    "longitude": 79.797692
   },
   {
     "id": "gurdaspur",
@@ -8161,22 +8161,3 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "longitude": 87.758502
   }
 ];
-
-export const VARANASI_CONSTITUENCY: Constituency = ALL_543_CONSTITUENCIES.find((c) => c.id === 'varanasi') || {
-  id: 'varanasi',
-  code: 'PC-493',
-  name: 'Varanasi Lok Sabha Constituency',
-  shortName: 'Varanasi',
-  state: 'Uttar Pradesh',
-  active: true,
-  count: '91 Works (Active)',
-  sanctionedAmount: 188641531,
-  riskScoreAvg: 64,
-  mpName: 'Narendra Modi',
-  mpParty: 'BJP',
-  latitude: 25.283372,
-  longitude: 82.868063,
-};
-
-export const DEFAULT_CONSTITUENCY = VARANASI_CONSTITUENCY;
-

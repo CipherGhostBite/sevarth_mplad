@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { ShieldAlert, TrendingUp, Clock, AlertTriangle, Building2, MapPin } from 'lucide-react';
-import { useLanguage } from '@/lib/LanguageContext';
 
 interface FloatingReasonItem {
   category: string;
@@ -18,34 +17,33 @@ interface FloatingReasonsProps {
 }
 
 export default function FloatingReasons({ reasons, overallExplanation }: FloatingReasonsProps) {
-  const { isHindi } = useLanguage();
-
+  // If structured reasons are provided, use them; otherwise extract from explanation text
   const defaultReasons: FloatingReasonItem[] = reasons || [
     {
-      category: isHindi ? 'वित्तीय संकेत' : 'FINANCIAL SIGNAL',
-      reason: isHindi ? 'स्वीकृत व्यय असामान्य लागत भिन्नता दर्शाता है' : 'Sanctioned expenditure shows unusual cost variance',
-      metric: isHindi ? 'समकक्ष मानक तुलना में +18.4%' : '+18.4% vs peer benchmark',
+      category: 'FINANCIAL SIGNAL',
+      reason: 'Sanctioned expenditure shows unusual cost variance',
+      metric: '+18.4% vs peer benchmark',
       severity: 'high',
       icon: TrendingUp,
     },
     {
-      category: isHindi ? 'कार्यान्वयन विलंब' : 'IMPLEMENTATION DELAY',
-      reason: isHindi ? 'परियोजना पूर्णता की समय-सीमा अपेक्षित सीमा से अधिक है' : 'Project completion timeline exceeds expected threshold',
-      metric: isHindi ? 'अपेक्षित तिथि से 27 दिन अधिक' : '27 days past expected date',
+      category: 'IMPLEMENTATION DELAY',
+      reason: 'Project completion timeline exceeds expected threshold',
+      metric: '27 days past expected date',
       severity: 'critical',
       icon: Clock,
     },
     {
-      category: isHindi ? 'ठेकेदार मानक' : 'CONTRACTOR BENCHMARK',
-      reason: isHindi ? 'एजेंसी परियोजना आवंटन एकाग्रता औसत से अधिक है' : 'Agency project allocation concentration exceeds peer average',
-      metric: isHindi ? '84.2% एकल-एजेंसी अनुपात' : '84.2% single-agency ratio',
+      category: 'CONTRACTOR BENCHMARK',
+      reason: 'Agency project allocation concentration exceeds peer average',
+      metric: '84.2% single-agency ratio',
       severity: 'medium',
       icon: Building2,
     },
     {
-      category: isHindi ? 'स्थानिक दोहराव' : 'GEOSPATIAL OVERLAP',
-      reason: isHindi ? 'कार्य स्थान पूर्ण हुए दोहराव कार्य के 500 मीटर के भीतर है' : 'Work location is within 500m radius of completed duplicate work',
-      metric: isHindi ? '280 मीटर की भौतिक निकटता' : '280m physical proximity',
+      category: 'GEOSPATIAL OVERLAP',
+      reason: 'Work location is within 500m radius of completed duplicate work',
+      metric: '280m physical proximity',
       severity: 'high',
       icon: MapPin,
     },
@@ -84,28 +82,16 @@ export default function FloatingReasons({ reasons, overallExplanation }: Floatin
     }
   };
 
-  const getSeverityLabel = (severity: string) => {
-    if (isHindi) {
-      switch (severity) {
-        case 'critical': return 'गंभीर';
-        case 'high': return 'उच्च';
-        case 'medium': return 'मध्यम';
-        default: return 'कम';
-      }
-    }
-    return severity;
-  };
-
   return (
     <div className="space-y-6">
       {/* Floating Header Label */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5 text-[#285C7A] font-extrabold text-xs uppercase tracking-wider font-mono">
           <ShieldAlert className="w-4 h-4 text-[#C88A25]" />
-          <span>{isHindi ? 'प्राथमिकता के कारण (अनियमितता संकेत)' : 'REASONS FOR PRIORITIZATION (FLOATING SEMANTIC SIGNALS)'}</span>
+          <span>REASONS FOR PRIORITIZATION (FLOATING SEMANTIC SIGNALS)</span>
         </div>
         <span className="text-[10px] font-mono text-[#667078] bg-[#FAFAF7] px-2.5 py-1 rounded-full border border-[#E4E7E1]">
-          {defaultReasons.length} {isHindi ? 'संकेत पहचाने गए' : 'SIGNALS DETECTED'}
+          {defaultReasons.length} SIGNALS DETECTED
         </span>
       </div>
 
@@ -128,7 +114,7 @@ export default function FloatingReasons({ reasons, overallExplanation }: Floatin
                 </span>
                 <span className="flex items-center gap-1 text-[10px] font-mono text-[#667078]">
                   <span className={`w-2 h-2 rounded-full ${style.dot}`} />
-                  <span className="uppercase font-bold">{getSeverityLabel(item.severity)}</span>
+                  <span className="uppercase font-bold">{item.severity}</span>
                 </span>
               </div>
 
@@ -154,7 +140,7 @@ export default function FloatingReasons({ reasons, overallExplanation }: Floatin
 
       {overallExplanation && (
         <div className="recessed-light-display p-4 text-xs font-sans text-[#667078] leading-relaxed border-t border-[#E4E7E1]">
-          <strong className="text-[#182027] font-mono font-bold">{isHindi ? 'संश्लेषण: ' : 'SYNTHESIS: '}</strong>
+          <strong className="text-[#182027] font-mono font-bold">SYNTHESIS: </strong>
           {overallExplanation}
         </div>
       )}

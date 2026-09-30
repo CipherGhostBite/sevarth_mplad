@@ -169,14 +169,11 @@ const SAMPLE_COORDINATION_DATA: CoordinationProjectNode[] = [
   }
 ];
 
-import { useLanguage } from '@/lib/LanguageContext';
-
 interface Props {
   currentProjectId?: string;
 }
 
 export default function CrossGovtCoordinationTab({ currentProjectId = 'MPLAD-NAL-2023-042' }: Props) {
-  const { isHindi, t } = useLanguage();
   const [levelFilter, setLevelFilter] = useState<string>('ALL');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [conflictFilter, setConflictFilter] = useState<string>('ALL');
@@ -251,16 +248,16 @@ export default function CrossGovtCoordinationTab({ currentProjectId = 'MPLAD-NAL
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="bg-[#285C7A]/10 text-[#285C7A] text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-              {isHindi ? 'अंतर-विभागीय बुद्धिमत्ता' : 'INTER-DEPARTMENTAL INTELLIGENCE'}
+              INTER-DEPARTMENTAL INTELLIGENCE
             </span>
-            <span className="text-xs font-mono text-[#667078]">&bull; {isHindi ? 'एमपीलैड्स बनाम बहु-स्तरीय परियोजनाएं' : 'MPLAD vs MULTI-LEVEL PROJECTS'}</span>
+            <span className="text-xs font-mono text-[#667078]">&bull; MPLAD vs MULTI-LEVEL PROJECTS</span>
           </div>
           <h2 className="text-xl font-extrabold text-[#182027] font-mono tracking-tight flex items-center gap-2.5">
             <Network className="w-5 h-5 text-[#285C7A]" />
-            <span>{t('coordination.title', 'Cross-Govt Coordination')}</span>
+            <span>Cross-Govt Coordination</span>
           </h2>
           <p className="text-xs text-[#667078] font-sans">
-            {t('coordination.subtitle', 'Multi-agency collusion tracking, joint site inspections, and cross-constituency audit escalation.')}
+            Identify overlapping, related, or potentially conflicting government projects across District, State, and Nodal Agencies.
           </p>
         </div>
 
@@ -275,7 +272,7 @@ export default function CrossGovtCoordinationTab({ currentProjectId = 'MPLAD-NAL
             }`}
           >
             <Share2 className="w-3.5 h-3.5" />
-            <span>{isHindi ? 'नेटवर्क ट्री' : 'NETWORK TREE'}</span>
+            <span>NETWORK TREE</span>
           </button>
           <button
             onClick={() => setActiveViewMode('MAP')}
@@ -286,7 +283,7 @@ export default function CrossGovtCoordinationTab({ currentProjectId = 'MPLAD-NAL
             }`}
           >
             <MapPin className="w-3.5 h-3.5" />
-            <span>{t('nav.map', 'GIS MAP').toUpperCase()}</span>
+            <span>GIS MAP</span>
           </button>
         </div>
       </div>

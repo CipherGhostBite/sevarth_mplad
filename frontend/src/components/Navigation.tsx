@@ -18,15 +18,12 @@ import {
   User,
   ChevronDown,
   Network,
-  Globe,
 } from 'lucide-react';
 import ConstituencySelector from '@/components/ConstituencySelector';
-import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Navigation({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { lang, toggleLanguage, t, isHindi } = useLanguage();
   const [user, setUser] = useState<{ name: string; role: string; agency: string } | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -68,13 +65,13 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
   }
 
   const navLinks = [
-    { href: '/dashboard', label: t('nav.dashboard', 'Dashboard'), icon: LayoutDashboard },
-    { href: '/queue', label: t('nav.queue', 'Investigation Queue'), icon: ShieldAlert, badge: '0-100' },
-    { href: '/agencies', label: t('nav.agencies', 'Agency Directory'), icon: Building2 },
-    { href: '/map', label: t('nav.map', 'GIS Spatial Map'), icon: MapPin },
-    { href: '/assistant', label: t('nav.assistant', 'AI Assistant'), icon: Bot, badge: 'RAG' },
-    { href: '/reports', label: t('nav.reports', 'Reports & Export'), icon: FileText },
-    { href: '/guidelines', label: t('nav.guidelines', 'Norms & Library'), icon: BookOpen },
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/queue', label: 'Investigation Queue', icon: ShieldAlert, badge: '0-100' },
+    { href: '/agencies', label: 'Agency Directory', icon: Building2 },
+    { href: '/map', label: 'GIS Spatial Map', icon: MapPin },
+    { href: '/assistant', label: 'AI Assistant', icon: Bot, badge: 'RAG' },
+    { href: '/reports', label: 'Reports & Export', icon: FileText },
+    { href: '/guidelines', label: 'Norms & Library', icon: BookOpen },
   ];
 
   return (
@@ -98,11 +95,11 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
                     className="h-11 sm:h-12 w-auto mix-blend-multiply object-contain filter contrast-125" 
                   />
                   <span className="bg-[#285C7A]/10 text-[#285C7A] text-[9px] font-mono px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ml-1">
-                    {t('nav.brand_tag', 'INTELLIGENCE')}
+                    INTELLIGENCE
                   </span>
                 </div>
                 <p className="text-[10px] text-[#285C7A] font-mono tracking-wide uppercase emerge-text-hover font-semibold -mt-0.5">
-                  {t('nav.sub_brand', 'PUBLIC EXPENDITURE INTELLIGENCE')}
+                  PUBLIC EXPENDITURE INTELLIGENCE
                 </p>
               </div>
             </Link>
@@ -113,83 +110,68 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
             </div>
           </div>
 
-          {/* Right Header Console: Language Switcher + User Profile */}
-          <div className="flex items-center gap-4">
-            
-            {/* Elegant Language Switcher Pill */}
-            <button
-              onClick={toggleLanguage}
-              title="Switch Language / भाषा बदलें"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D2D7CE] bg-white text-[#182027] hover:border-[#285C7A] hover:bg-[#F5F6F3] shadow-xs transition font-mono text-xs font-bold"
-            >
-              <Globe className="w-3.5 h-3.5 text-[#285C7A]" />
-              <span className={lang === 'en' ? 'text-[#285C7A] font-extrabold' : 'text-[#667078]'}>EN</span>
-              <span className="text-[#9AA3AB] text-[10px]">|</span>
-              <span className={lang === 'hi' ? 'text-[#285C7A] font-extrabold' : 'text-[#667078]'}>हिंदी</span>
-            </button>
+          {/* Right User Profile Console or Sign In Button */}
+          {user ? (
+            <div className="flex items-center gap-4 relative" ref={dropdownRef}>
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="tactile-light-switch flex items-center gap-3 px-3.5 py-1.5 rounded-full border border-[#D2D7CE] bg-white shadow-xs hover:border-[#285C7A] transition group"
+              >
+                {/* Avatar Icon */}
+                <div className="w-8 h-8 rounded-full bg-[#285C7A] text-white flex items-center justify-center font-mono font-bold text-xs shadow-xs group-hover:scale-105 transition-transform">
+                  <User className="w-4 h-4 text-white" />
+                </div>
 
-            {user ? (
-              <div className="flex items-center gap-4 relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setProfileOpen(!profileOpen)}
-                  className="tactile-light-switch flex items-center gap-3 px-3.5 py-1.5 rounded-full border border-[#D2D7CE] bg-white shadow-xs hover:border-[#285C7A] transition group"
-                >
-                  {/* Avatar Icon */}
-                  <div className="w-8 h-8 rounded-full bg-[#285C7A] text-white flex items-center justify-center font-mono font-bold text-xs shadow-xs group-hover:scale-105 transition-transform">
-                    <User className="w-4 h-4 text-white" />
+                <div className="text-left font-mono hidden sm:block">
+                  <div className="text-xs font-bold text-[#182027] leading-tight">
+                    {user.name}
                   </div>
+                  <div className="text-[9px] text-[#285C7A] font-medium leading-tight">
+                    {user.role}
+                  </div>
+                </div>
 
-                  <div className="text-left font-mono hidden sm:block">
-                    <div className="text-xs font-bold text-[#182027] leading-tight">
-                      {user.name}
+                <ChevronDown className={`w-3.5 h-3.5 text-[#667078] transition-transform duration-200 ${profileOpen ? 'rotate-180 text-[#285C7A]' : ''}`} />
+              </button>
+
+              {/* Profile Dropdown Menu */}
+              {profileOpen && (
+                <div className="absolute right-0 top-full mt-2 w-64 bg-white/95 backdrop-blur-xl border-2 border-[#D2D7CE] rounded-2xl shadow-2xl p-3 z-[999] font-mono animate-fadeIn">
+                  <div className="p-3 bg-[#FAFAF7] rounded-xl border border-[#E4E7E1] space-y-1 mb-2">
+                    <div className="flex items-center gap-2 text-xs font-bold text-[#182027]">
+                      <ShieldCheck className="w-4 h-4 text-[#285C7A]" />
+                      <span>{user.name}</span>
                     </div>
-                    <div className="text-[9px] text-[#285C7A] font-medium leading-tight">
+                    <div className="text-[10px] text-[#667078] font-sans">
+                      {user.agency || 'Public expenditure intelligence portal'}
+                    </div>
+                    <div className="text-[9px] text-[#398265] font-mono font-bold uppercase pt-0.5">
                       {user.role}
                     </div>
                   </div>
 
-                  <ChevronDown className={`w-3.5 h-3.5 text-[#667078] transition-transform duration-200 ${profileOpen ? 'rotate-180 text-[#285C7A]' : ''}`} />
-                </button>
-
-                {/* Profile Dropdown Menu */}
-                {profileOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-white/95 backdrop-blur-xl border-2 border-[#D2D7CE] rounded-2xl shadow-2xl p-3 z-[999] font-mono animate-fadeIn">
-                    <div className="p-3 bg-[#FAFAF7] rounded-xl border border-[#E4E7E1] space-y-1 mb-2">
-                      <div className="flex items-center gap-2 text-xs font-bold text-[#182027]">
-                        <ShieldCheck className="w-4 h-4 text-[#285C7A]" />
-                        <span>{user.name}</span>
-                      </div>
-                      <div className="text-[10px] text-[#667078] font-sans">
-                        {user.agency || 'Public expenditure intelligence portal'}
-                      </div>
-                      <div className="text-[9px] text-[#398265] font-mono font-bold uppercase pt-0.5">
-                        {user.role}
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#C45145] hover:bg-[#C45145]/10 flex items-center justify-between transition border border-transparent hover:border-[#C45145]/20"
-                    >
-                      <span className="flex items-center gap-2">
-                        <LogOut className="w-4 h-4 text-[#C45145]" />
-                        <span>{t('nav.logout', 'Sign Out').toUpperCase()}</span>
-                      </span>
-                      <span>&rarr;</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className="tactile-light-switch-active px-5 py-2 rounded-full text-xs font-mono font-bold text-white bg-[#182027] hover:bg-[#285C7A] transition flex items-center gap-2 shadow-sm"
-              >
-                <User className="w-3.5 h-3.5 text-[#C88A25]" />
-                <span>{t('nav.signin', 'SIGN IN')}</span>
-              </Link>
-            )}
-          </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#C45145] hover:bg-[#C45145]/10 flex items-center justify-between transition border border-transparent hover:border-[#C45145]/20"
+                  >
+                    <span className="flex items-center gap-2">
+                      <LogOut className="w-4 h-4 text-[#C45145]" />
+                      <span>SIGN OUT OF WORKSPACE</span>
+                    </span>
+                    <span>&rarr;</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="tactile-light-switch-active px-5 py-2 rounded-full text-xs font-mono font-bold text-white bg-[#182027] hover:bg-[#285C7A] transition flex items-center gap-2 shadow-sm"
+            >
+              <User className="w-3.5 h-3.5 text-[#C88A25]" />
+              <span>SIGN IN</span>
+            </Link>
+          )}
 
         </div>
       </header>
@@ -199,12 +181,12 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
         <div className="max-w-[1650px] mx-auto flex flex-col sm:flex-row items-center justify-between text-xs font-mono gap-2">
           <div className="flex items-center gap-2.5 text-[#C88A25]">
             <span className="w-2 h-2 rounded-full bg-[#398265] pulse-indicator" />
-            <span className="font-bold uppercase tracking-wider text-[11px]">{t('nav.banner_label', 'MPLADS INTELLIGENCE:')}</span>
-            <span className="text-[#182027] text-[11px]">{t('nav.banner_dataset', '18th Lok Sabha Parliamentary Expenditure Dataset')}</span>
+            <span className="font-bold uppercase tracking-wider text-[11px]">MPLADS INTELLIGENCE:</span>
+            <span className="text-[#182027] text-[11px]">18th Lok Sabha Parliamentary Expenditure Dataset</span>
           </div>
           <div className="text-[#667078] text-[11px] flex items-center gap-2">
             <ShieldAlert className="w-3.5 h-3.5 text-[#C88A25] shrink-0" />
-            <span>{t('nav.banner_flow', 'AI Priority Signal → Grounded Evidence → Mandatory Officer Physical Audit')}</span>
+            <span>AI Priority Signal &rarr; Grounded Evidence &rarr; Mandatory Officer Physical Audit</span>
           </div>
         </div>
       </div>
@@ -221,7 +203,7 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
               <div className="px-3.5 py-2.5 flex items-center justify-between text-[10px] font-mono font-bold text-[#667078] uppercase tracking-widest border-b border-[#E4E7E1] mb-2">
                 <span className="flex items-center gap-2 text-[#285C7A]">
                   <Compass className="w-4 h-4" />
-                  <span>{t('nav.title', 'NAVIGATION')}</span>
+                  <span>NAVIGATION</span>
                 </span>
                 <span className="text-[#9AA3AB]">v2.5</span>
               </div>
@@ -263,10 +245,10 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
             {/* Methodological Reference Plaque */}
             <div className="recessed-light-display p-4 text-[11px] font-mono space-y-2">
               <div className="flex items-center gap-2 text-[#285C7A] font-bold text-[10px] tracking-wider uppercase">
-                <span>{t('nav.protocol', 'PARADIGM PROTOCOL')}</span>
+                <span>PARADIGM PROTOCOL</span>
               </div>
               <p className="text-[#667078] text-[10px] leading-relaxed border-t border-[#E4E7E1] pt-2 font-sans">
-                {t('nav.protocol_motto', 'COMPARE • PROFILE • CONNECT • EXPLAIN • VERIFY')}
+                COMPARE &bull; PROFILE &bull; CONNECT &bull; EXPLAIN &bull; VERIFY
               </p>
             </div>
 

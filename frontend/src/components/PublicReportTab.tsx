@@ -7,20 +7,21 @@ import {
   Send,
   CheckCircle2,
   Sparkles,
+  ShieldAlert,
   UserCheck,
   Clock,
+  FileText,
   Lock,
   Layers,
   Info,
+  TrendingUp,
 } from 'lucide-react';
-import { useLanguage } from '@/lib/LanguageContext';
 
 interface PublicReportTabProps {
   projectId: string;
 }
 
 export default function PublicReportTab({ projectId }: PublicReportTabProps) {
-  const { isHindi, t } = useLanguage();
   const [reportsData, setReportsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -74,7 +75,7 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!complaintText.trim()) {
-      setSubmitErrorMsg(isHindi ? 'कृपया विसंगति या शिकायत का विवरण दर्ज करें।' : 'Please enter details of the ground discrepancy or complaint.');
+      setSubmitErrorMsg('Please enter details of the ground discrepancy or complaint.');
       return;
     }
 
@@ -91,13 +92,13 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
         user_name: user?.name || 'Public Citizen',
       });
 
-      setSubmitSuccessMsg(isHindi ? 'सार्वजनिक रिपोर्ट दर्ज की गई और एआई द्वारा विश्लेषित! अधिकारियों को भेजी गई।' : 'Public Report Filed & Synthesized by AI! Sent to Vigilance Officers.');
+      setSubmitSuccessMsg('Public Report Filed & Synthesized by AI! Sent to Vigilance Officers.');
       setLastSubmittedReport(res);
       setComplaintText('');
       setSelectedTag('');
       loadReports();
     } catch (err: any) {
-      setSubmitErrorMsg(err.message || (isHindi ? 'रिपोर्ट दर्ज करने में विफल।' : 'Failed to file report. You may have exceeded your daily quota.'));
+      setSubmitErrorMsg(err.message || 'Failed to file report. You may have exceeded your daily quota.');
     } finally {
       setSubmitting(false);
     }
@@ -107,7 +108,7 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
     return (
       <div className="flex flex-col items-center justify-center p-12 space-y-3 font-mono">
         <div className="w-8 h-8 border-3 border-[#285C7A] border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-[#667078]">{isHindi ? 'सार्वजनिक रिपोर्ट एवं नागरिक प्रतिक्रिया लोड हो रही है...' : 'LOADING PUBLIC REPORT & CITIZEN FEEDBACK DATA...'}</p>
+        <p className="text-xs text-[#667078]">LOADING PUBLIC REPORT & CITIZEN FEEDBACK DATA...</p>
       </div>
     );
   }
@@ -118,22 +119,6 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
   const reportsList = reportsData?.reports || [];
   const capacityPct = Math.min(100, Math.round((totalReports / maxCapacity) * 100));
 
-  const quickTags = isHindi
-    ? [
-        'निष्पादन में विलंब एवं रुका हुआ कार्य',
-        'निम्न स्तरीय सामग्री गुणवत्ता',
-        'संभावित अधिक बिलिंग / फूली हुई लागत',
-        'धरातल पर परिसंपत्ति अनुपस्थित',
-        'स्थान में विसंगति',
-      ]
-    : [
-        'Execution Delay & Halted Work',
-        'Substandard Material Quality',
-        'Suspected Over-Invoicing / Cost Inflated',
-        'Asset Non-Existent on Ground',
-        'Location Discrepancy',
-      ];
-
   return (
     <div className="space-y-8 font-sans">
       
@@ -143,23 +128,23 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#C88A25] uppercase tracking-wider">
               <Sparkles className="w-4 h-4 text-[#C88A25]" />
-              <span>{isHindi ? 'सार्वजनिक ऑडिट एवं ज़मीनी रिपोर्टिंग परत' : 'PUBLIC AUDIT & GROUND REPORTING LAYER'}</span>
+              <span>PUBLIC AUDIT & GROUND REPORTING LAYER</span>
             </div>
             <h3 className="text-xl font-extrabold text-[#182027] font-sans">
-              {isHindi ? 'नागरिक विसंगति एवं शिकायत रिपोर्टिंग' : 'Citizen Discrepancy & Inaccuracy Filing'}
+              Citizen Discrepancy & Inaccuracy Filing
             </h3>
           </div>
 
           <div className="flex items-center gap-3 font-mono text-xs shrink-0">
             <div className="bg-white p-3 rounded-2xl border border-[#E4E7E1] text-center shadow-xs">
-              <span className="text-[10px] text-[#667078] block font-bold">{isHindi ? 'कुल रिपोर्ट' : 'TOTAL REPORTS'}</span>
+              <span className="text-[10px] text-[#667078] block font-bold">TOTAL REPORTS</span>
               <span className="text-lg font-black text-[#285C7A]">
                 {totalReports} <span className="text-xs text-[#667078]">/ {maxCapacity}</span>
               </span>
             </div>
             <div className="bg-white p-3 rounded-2xl border border-[#E4E7E1] text-center shadow-xs">
-              <span className="text-[10px] text-[#667078] block font-bold">{isHindi ? 'दैनिक सीमा' : 'DAILY RATE LIMIT'}</span>
-              <span className="text-xs font-bold text-[#398265]">{isHindi ? '1 / उपयोगकर्ता / दिन' : '1 / User / Day'}</span>
+              <span className="text-[10px] text-[#667078] block font-bold">DAILY RATE LIMIT</span>
+              <span className="text-xs font-bold text-[#398265]">1 / User / Day</span>
             </div>
           </div>
         </div>
@@ -167,8 +152,8 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
         {/* Capacity Bar */}
         <div className="space-y-1.5 font-mono text-xs">
           <div className="flex items-center justify-between text-[#667078]">
-            <span>{isHindi ? `परियोजना शिकायत क्षमता (${totalReports} दर्ज)` : `Project Complaint Capacity (${totalReports} filed)`}</span>
-            <span className="font-bold text-[#182027]">{capacityPct}% {isHindi ? 'उपयोग' : 'Capacity Used'}</span>
+            <span>Project Complaint Capacity ({totalReports} filed)</span>
+            <span className="font-bold text-[#182027]">{capacityPct}% Capacity Used</span>
           </div>
           <div className="w-full h-2 bg-[#E4E7E1] rounded-full overflow-hidden">
             <div
@@ -189,14 +174,14 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
               ✍️
             </div>
             <div>
-              <h4 className="text-base font-extrabold text-[#182027]">{isHindi ? 'ज़मीनी शिकायत / रिपोर्ट दर्ज करें' : 'File Ground Complaint / Report Discrepancy'}</h4>
+              <h4 className="text-base font-extrabold text-[#182027]">File Ground Complaint / Report Discrepancy</h4>
               <p className="text-xs text-[#667078] font-mono">
-                {isHindi ? 'लॉग इन:' : 'Logged in as:'} <strong className="text-[#182027]">{user?.name || 'Public Citizen'}</strong> ({user?.email || 'citizen@mpladguard.gov.in'})
+                Logged in as: <strong className="text-[#182027]">{user?.name || 'Public Citizen'}</strong> ({user?.email || 'citizen@mpladguard.gov.in'})
               </p>
             </div>
           </div>
           <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[#398265]/10 text-[#398265] border border-[#398265]/20">
-            {isHindi ? 'एआई संश्लेषण सक्रिय' : 'AI SYNTHESIS ACTIVE'}
+            AI SYNTHESIS ACTIVE
           </span>
         </div>
 
@@ -215,7 +200,7 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
             </div>
             {lastSubmittedReport?.ai_critical_points && (
               <div className="pt-2 border-t border-[#398265]/20 space-y-1 text-xs">
-                <span className="font-bold text-[#182027] uppercase tracking-wider block">✨ {isHindi ? 'एआई निष्कर्षण बिंदु:' : 'AI Key Critical Point Extraction:'}</span>
+                <span className="font-bold text-[#182027] uppercase tracking-wider block">✨ AI Key Critical Point Extraction:</span>
                 <ul className="list-disc list-inside space-y-1 text-[#182027]">
                   {lastSubmittedReport.ai_critical_points.map((pt: string, idx: number) => (
                     <li key={idx}>{pt}</li>
@@ -229,19 +214,25 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
         {!canSubmit ? (
           <div className="p-6 rounded-2xl bg-[#FAFAF7] border border-[#E4E7E1] text-center space-y-2 font-mono">
             <Lock className="w-6 h-6 text-[#667078] mx-auto" />
-            <h5 className="font-bold text-sm text-[#182027]">{isHindi ? 'दैनिक रिपोर्ट सीमा समाप्त' : 'Daily Report Limit Reached'}</h5>
+            <h5 className="font-bold text-sm text-[#182027]">Daily Report Limit Reached</h5>
             <p className="text-xs text-[#667078] max-w-md mx-auto">
-              {isHindi ? 'आपने आज इस परियोजना के लिए 1 रिपोर्ट दर्ज कर ली है। प्रत्येक नागरिक प्रति दिन प्रति परियोजना 1 रिपोर्ट जमा कर सकता है।' : 'You have submitted 1 report for this project today. To ensure high-quality citizen intelligence, each citizen can submit 1 report per project per day.'}
+              You have submitted 1 report for this project today. To ensure high-quality citizen intelligence, each citizen can submit 1 report per project per day.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-mono font-bold text-[#182027] uppercase tracking-wider mb-2">
-                {isHindi ? 'त्वरित श्रेणी टैग' : 'Quick Category Tag'}
+                Quick Category Tag
               </label>
               <div className="flex flex-wrap gap-2 text-xs font-mono">
-                {quickTags.map((tag) => (
+                {[
+                  'Execution Delay & Halted Work',
+                  'Substandard Material Quality',
+                  'Suspected Over-Invoicing / Cost Inflated',
+                  'Asset Non-Existent on Ground',
+                  'Location Discrepancy',
+                ].map((tag) => (
                   <button
                     key={tag}
                     type="button"
@@ -260,20 +251,20 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
 
             <div>
               <label className="block text-xs font-mono font-bold text-[#182027] uppercase tracking-wider mb-2">
-                {isHindi ? 'ज़मीनी विवरण एवं शिकायत पाठ' : 'Ground Observation Details & Complaint Text'}
+                Ground Observation Details &amp; Complaint Text
               </label>
               <textarea
                 rows={4}
                 value={complaintText}
                 onChange={(e) => setComplaintText(e.target.value)}
-                placeholder={isHindi ? 'ज़मीनी स्थिति का वर्णन करें (उदा. कार्य 4 महीने से रुका हुआ है, सड़क 2 सप्ताह में टूट गई)...' : 'Describe ground realities (e.g. work stopped 4 months ago, road broken within 2 weeks, non-existent tubewell, over-invoiced bill)...'}
+                placeholder="Describe ground realities (e.g. work stopped 4 months ago, road broken within 2 weeks, non-existent tubewell, over-invoiced bill)..."
                 className="w-full p-4 rounded-2xl border border-[#D2D7CE] bg-[#FAFAF7] focus:bg-white focus:border-[#285C7A] text-sm text-[#182027] font-sans transition outline-none shadow-inner"
               />
             </div>
 
             <div className="flex items-center justify-between pt-2 font-mono">
               <span className="text-[11px] text-[#667078]">
-                {isHindi ? 'ज़मीनी शिकायतों को एआई द्वारा विश्लेषित करके अधिकारियों को भेजा जाता है।' : 'Ground complaints are processed by AI to extract critical signals for Vigilance Officers.'}
+                Ground complaints are processed by AI to extract critical signals for Vigilance Officers.
               </span>
 
               <button
@@ -284,12 +275,12 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
                 {submitting ? (
                   <>
                     <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>{isHindi ? 'संश्लेषण हो रहा है...' : 'SYNTHESIZING REPORT...'}</span>
+                    <span>SYNTHESIZING REPORT...</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-3.5 h-3.5 text-[#C88A25]" />
-                    <span>{isHindi ? 'सार्वजनिक रिपोर्ट जमा करें' : 'SUBMIT PUBLIC REPORT'}</span>
+                    <span>SUBMIT PUBLIC REPORT</span>
                   </>
                 )}
               </button>
@@ -303,15 +294,15 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
         <div className="flex items-center justify-between font-mono">
           <h4 className="text-sm font-bold text-[#182027] uppercase tracking-wider flex items-center gap-2">
             <Layers className="w-4 h-4 text-[#285C7A]" />
-            <span>{isHindi ? `दर्ज सार्वजनिक रिपोर्ट (${reportsList.length})` : `FILED PUBLIC REPORTS (${reportsList.length})`}</span>
+            <span>FILED PUBLIC REPORTS ({reportsList.length})</span>
           </h4>
-          <span className="text-xs text-[#667078]">{isHindi ? 'नवीनतम पहले' : 'ORDERED BY RECENT SUBMISSION'}</span>
+          <span className="text-xs text-[#667078]">ORDERED BY RECENT SUBMISSION</span>
         </div>
 
         {reportsList.length === 0 ? (
           <div className="p-8 rounded-3xl bg-white border border-[#E4E7E1] text-center space-y-2 font-mono text-xs text-[#667078]">
             <Info className="w-6 h-6 text-[#285C7A] mx-auto opacity-60" />
-            <p>{isHindi ? 'इस परियोजना के लिए अभी तक कोई सार्वजनिक रिपोर्ट दर्ज नहीं की गई है।' : 'No public reports filed for this project yet. Be the first citizen to file ground observations!'}</p>
+            <p>No public reports filed for this project yet. Be the first citizen to file ground observations!</p>
           </div>
         ) : (
           <div className="space-y-4 font-mono">
@@ -335,7 +326,7 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
                           : 'bg-[#C88A25]/10 text-[#C88A25] border border-[#C88A25]/20'
                       }`}
                     >
-                      {isHindi ? 'तात्कालिकता:' : 'URGENCY:'} {item.ai_urgency}
+                      URGENCY: {item.ai_urgency}
                     </span>
                     <span className="text-[#667078] flex items-center gap-1">
                       <Clock className="w-3 h-3" />
@@ -354,7 +345,7 @@ export default function PublicReportTab({ projectId }: PublicReportTabProps) {
                   <div className="p-4 rounded-2xl bg-[#F0F4F8] border border-[#285C7A]/20 space-y-2 text-xs font-mono">
                     <div className="flex items-center gap-2 font-bold text-[#285C7A] text-[11px] uppercase tracking-wider">
                       <Sparkles className="w-3.5 h-3.5 text-[#C88A25]" />
-                      <span>{isHindi ? 'एआई द्वारा विश्लेषित महत्वपूर्ण बिंदु (अधिकारियों को भेजे गए):' : 'AI Synthesized Critical Intelligence (Sent to Officers):'}</span>
+                      <span>AI Synthesized Critical Intelligence (Sent to Officers):</span>
                     </div>
                     <ul className="space-y-1 list-disc list-inside text-[#182027]">
                       {item.ai_critical_points.map((pt: string, idx: number) => (

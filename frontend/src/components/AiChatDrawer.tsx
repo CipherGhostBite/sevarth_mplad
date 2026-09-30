@@ -2,32 +2,15 @@
 
 import React, { useState } from 'react';
 import { api, AssistantAnswer } from '@/lib/api';
-import { Send, Terminal, FileText, RefreshCw } from 'lucide-react';
-import { useLanguage } from '@/lib/LanguageContext';
+import { Send, Terminal, FileText, RefreshCw, Cpu, CheckCircle2 } from 'lucide-react';
 
 interface AiChatDrawerProps {
   projectId?: string;
 }
 
 export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
-  const { isHindi, t } = useLanguage();
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const getConstituencyName = () => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('selected_constituency');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (parsed?.shortName) return parsed.shortName;
-        }
-      } catch (e) {}
-    }
-    return 'Varanasi';
-  };
-  const activeConstituency = getConstituencyName();
-
   const [messages, setMessages] = useState<
     Array<{
       sender: 'user' | 'assistant';
@@ -39,40 +22,23 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
     {
       sender: 'assistant',
       text: projectId
-        ? (isHindi 
-            ? `जाँच विश्लेषण केंद्र [मामला: ${projectId}]\nसाक्ष्य-आधारित विश्लेषण सक्रिय है। प्राथमिकता विश्लेषण, लागत तुलना, या नियमों के संबंध में प्रश्न पूछें।`
-            : `INVESTIGATION ANALYTICAL WORKSTATION [CASE: ${projectId}]\nGrounded cognitive analysis active. Formulate inquiries regarding score breakdown, peer cost benchmarks, agency delay records, or verification protocols.`)
-        : (isHindi
-            ? `जाँच विश्लेषण केंद्र [संसदीय क्षेत्र: ${activeConstituency}]\nक्षेत्रीय जोखिम संकेतों, एजेंसी विलंब, या एमओएसपीआई नियमों से संबंधित प्रश्न पूछें।`
-            : `INVESTIGATION ANALYTICAL WORKSTATION [CONSTITUENCY: ${activeConstituency.toUpperCase()}]\nFormulate analytical inquiries regarding constituency risk signals, agency concentration, or MoSPI scheme compliance parameters.`),
+        ? `INVESTIGATION ANALYTICAL WORKSTATION [CASE: ${projectId}]\nGrounded cognitive analysis active. Formulate inquiries regarding score breakdown, peer cost benchmarks, agency delay records, or verification protocols.`
+        : `INVESTIGATION ANALYTICAL WORKSTATION [CONSTITUENCY: NALANDA]\nFormulate analytical inquiries regarding constituency risk signals, agency concentration, or MoSPI scheme compliance parameters.`,
     },
   ]);
 
   const presetQuestions = projectId
-    ? (isHindi
-        ? [
-            'इस मामले को प्राथमिकता क्यों दी गई?',
-            'लागत की तुलना अन्य कार्यों से कैसे की जाती है?',
-            'इस एजेंसी के बारे में क्या असामान्य है?',
-            'जांच अधिकारी को क्या सत्यापित करना चाहिए?',
-          ]
-        : [
-            'Why was this case prioritized?',
-            'How does cost compare to peer works?',
-            'What is unusual about this agency?',
-            'What should an investigator verify?',
-          ])
-    : (isHindi
-        ? [
-            `${activeConstituency} में शीर्ष प्राथमिकता वाली परियोजनाएं कौन सी हैं?`,
-            'किन एजेंसियों की विलंब दर सबसे अधिक है?',
-            'कार्यों के दोहराव पर एमओएसपीआई पैरा 4.12 क्या कहता है?',
-          ]
-        : [
-            `What are the top prioritized projects in ${activeConstituency}?`,
-            'Which agencies have high delay rates?',
-            'What does MoSPI Para 4.12 say about work duplication?',
-          ]);
+    ? [
+        'Why was this case prioritized?',
+        'How does cost compare to peer works?',
+        'What is unusual about this agency?',
+        'What should an investigator verify?',
+      ]
+    : [
+        'What are the top prioritized projects in Nalanda?',
+        'Which agencies have high delay rates?',
+        'What does MoSPI Para 4.12 say about work duplication?',
+      ];
 
   const handleSend = async (qToSend?: string) => {
     const q = (qToSend || question).trim();
@@ -99,9 +65,7 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
         ...prev,
         {
           sender: 'assistant',
-          text: isHindi
-            ? `सिस्टम त्रुटि: बुद्धिमत्ता सेवा से संपर्क करने में असमर्थ (${err.message || 'एपीआई अनुपलब्ध'})।`
-            : `SYSTEM ERROR: Unable to contact intelligence service (${err.message || 'API Unavailable'}).`,
+          text: `SYSTEM ERROR: Unable to contact intelligence service (${err.message || 'API Unavailable'}).`,
         },
       ]);
     } finally {
@@ -119,13 +83,13 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
           </div>
           <div>
             <h3 className="text-xs font-bold flex items-center gap-2.5 tracking-wider text-[#182027]">
-              <span>{isHindi ? 'जाँच विश्लेषणात्मक कार्यकेंद्र' : 'INVESTIGATION ANALYTICAL WORKSTATION'}</span>
+              <span>INVESTIGATION ANALYTICAL WORKSTATION</span>
               <span className="bg-[#285C7A]/10 text-[#285C7A] text-[9px] px-2 py-0.5 rounded-full font-bold">
-                {t('assistant.rag_engine', 'RAG ENGINE')}
+                RAG ENGINE
               </span>
             </h3>
             <p className="text-[10px] text-[#667078] font-sans">
-              {isHindi ? 'साक्ष्य-आधारित निर्णय सहायता • सत्यापन अनिवार्य' : 'Evidence-Grounded Cognitive Decision Support • Verification Required'}
+              Evidence-Grounded Cognitive Decision Support &bull; Verification Required
             </p>
           </div>
         </div>
@@ -136,13 +100,13 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
               {
                 sender: 'assistant',
                 text: projectId
-                  ? (isHindi ? `मामले ${projectId} के लिए कार्यकेंद्र रीसेट किया गया। प्रश्नों के लिए तैयार।` : `WORKSTATION RESET FOR CASE ${projectId}. READY FOR INQUIRIES.`)
-                  : (isHindi ? 'कार्यकेंद्र रीसेट किया गया। प्रश्नों के लिए तैयार।' : 'WORKSTATION RESET. READY FOR INQUIRIES.'),
+                  ? `WORKSTATION RESET FOR CASE ${projectId}. READY FOR INQUIRIES.`
+                  : 'WORKSTATION RESET. READY FOR INQUIRIES.',
               },
             ])
           }
           className="tactile-light-switch p-2 rounded-full text-[#667078] hover:text-[#182027]"
-          title={isHindi ? 'लॉग रीसेट करें' : 'Reset Log'}
+          title="Reset Log"
         >
           <RefreshCw className="w-3.5 h-3.5" />
         </button>
@@ -158,9 +122,9 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
             {/* Header label */}
             <div className="text-[10px] font-mono text-[#667078] mb-1.5 px-1 flex items-center gap-1.5">
               {m.sender === 'user' ? (
-                <span className="text-[#C88A25] font-bold">&gt; {isHindi ? 'विश्लेषक प्रश्न:' : 'ANALYST INQUIRY:'}</span>
+                <span className="text-[#C88A25] font-bold">&gt; ANALYST INQUIRY:</span>
               ) : (
-                <span className="text-[#285C7A] font-bold">&gt; {isHindi ? 'विश्लेषणात्मक निष्कर्ष:' : 'ANALYTICAL FINDING:'}</span>
+                <span className="text-[#285C7A] font-bold">&gt; ANALYTICAL FINDING:</span>
               )}
             </div>
 
@@ -177,16 +141,16 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
               {m.sender === 'assistant' && (
                 <div className="mt-4 pt-3 border-t border-[#E4E7E1] flex flex-wrap gap-2 text-[9px] font-mono">
                   <span className="bg-[#285C7A]/10 text-[#285C7A] px-2.5 py-1 rounded-full border border-[#285C7A]/20 font-bold">
-                    {isHindi ? 'निष्कर्ष: साक्ष्य आधारित डेटा' : 'FINDING: Grounded Dataset'}
+                    FINDING: Grounded Dataset
                   </span>
                   <span className="bg-[#C88A25]/10 text-[#C88A25] px-2.5 py-1 rounded-full border border-[#C88A25]/20 font-bold">
-                    {isHindi ? 'जोखिम संकेत: परिकलित' : 'RISK SIGNAL: Calculated'}
+                    RISK SIGNAL: Calculated
                   </span>
                   <span className="bg-[#398265]/10 text-[#398265] px-2.5 py-1 rounded-full border border-[#398265]/20 font-bold">
-                    {isHindi ? 'विश्वासनीयता: उच्च (RAG)' : 'CONFIDENCE: High (RAG)'}
+                    CONFIDENCE: High (RAG)
                   </span>
                   <span className="bg-[#C45145]/10 text-[#C45145] px-2.5 py-1 rounded-full border border-[#C45145]/20 font-bold">
-                    {isHindi ? 'सत्यापन आवश्यक' : 'REQUIRES VERIFICATION'}
+                    REQUIRES VERIFICATION
                   </span>
                 </div>
               )}
@@ -196,7 +160,7 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
                 <div className="mt-4 pt-3 border-t border-[#E4E7E1] space-y-2">
                   <div className="text-[9px] font-mono font-bold text-[#667078] uppercase tracking-wider flex items-center gap-1.5">
                     <FileText className="w-3.5 h-3.5 text-[#285C7A]" />
-                    <span>{isHindi ? `समर्थक साक्ष्य दस्तावेज (${m.citations.length})` : `SUPPORTING EVIDENCE ARTIFACTS (${m.citations.length})`}</span>
+                    <span>SUPPORTING EVIDENCE ARTIFACTS ({m.citations.length})</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {m.citations.map((cit, cIdx) => (
@@ -218,7 +182,7 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
         {loading && (
           <div className="flex items-center gap-2 text-[#285C7A] text-xs p-2 font-mono">
             <RefreshCw className="w-4 h-4 animate-spin text-[#285C7A]" />
-            <span>{isHindi ? 'साक्ष्य प्राप्त किए जा रहे हैं और निष्कर्ष संकलित हो रहे हैं...' : 'RETRIEVING GROUNDED EVIDENCE & SYNTHESIZING ANALYTICAL FINDINGS...'}</span>
+            <span>RETRIEVING GROUNDED EVIDENCE &amp; SYNTHESIZING ANALYTICAL FINDINGS...</span>
           </div>
         )}
       </div>
@@ -249,7 +213,7 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
             type="text"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            placeholder={t('assistant.placeholder', 'Ask any question about constituency projects, guidelines, or anomalies...')}
+            placeholder="Type analytical inquiry grounded in evidence..."
             className="w-full bg-[#FAFAF7] border border-[#D2D7CE] rounded-xl px-4 py-2.5 text-xs text-[#182027] font-mono focus:outline-hidden focus:border-[#285C7A] placeholder-[#9AA3AB]"
           />
         </div>
@@ -259,7 +223,7 @@ export default function AiChatDrawer({ projectId }: AiChatDrawerProps) {
           className="tactile-light-switch tactile-light-switch-active px-5 py-2.5 rounded-xl text-xs font-mono font-bold flex items-center gap-2 transition"
         >
           <Send className="w-4 h-4 text-white" />
-          <span>{t('assistant.send', 'Ask Assistant')}</span>
+          <span>QUERY</span>
         </button>
       </form>
     </div>

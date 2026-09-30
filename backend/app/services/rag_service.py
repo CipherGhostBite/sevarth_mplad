@@ -4,10 +4,7 @@ import os
 import urllib.request
 import urllib.parse
 import json
-try:
-    import google.generativeai as genai
-except ImportError:
-    genai = None
+import google.generativeai as genai
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, or_
 from backend.app.config import settings

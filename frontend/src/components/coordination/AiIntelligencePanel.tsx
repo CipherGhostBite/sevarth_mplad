@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Sparkles, CheckCircle2, Lightbulb } from 'lucide-react';
-import { useLanguage } from '@/lib/LanguageContext';
+import { Sparkles, ShieldCheck, CheckCircle2, ArrowRight, Lightbulb, AlertTriangle } from 'lucide-react';
 
 interface Props {
   summary: {
@@ -21,8 +20,6 @@ export default function AiIntelligencePanel({
   timelineCount,
   dependencyCount
 }: Props) {
-  const { isHindi } = useLanguage();
-
   return (
     <div className="floating-slab p-6 bg-[#0f172a] border-2 border-cyan-500/40 rounded-3xl text-white font-mono space-y-5 shadow-2xl relative overflow-hidden">
       
@@ -37,13 +34,13 @@ export default function AiIntelligencePanel({
           </div>
           <div>
             <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
-              <span>✦ {isHindi ? 'सेवाार्थ एआई बुद्धिमत्ता' : 'SEVAARTH AI INTELLIGENCE'}</span>
+              <span>✦ SEVAARTH AI INTELLIGENCE</span>
               <span className="bg-cyan-500/20 text-cyan-300 text-[9px] px-2 py-0.5 rounded-full font-bold">
-                {isHindi ? 'इंजन सक्रिय' : 'ENGINE ACTIVE'}
+                ENGINE ACTIVE
               </span>
             </h3>
             <span className="text-[10px] text-slate-400 font-sans">
-              {isHindi ? 'स्वयत्त अंतर-सरकारी अवसंरचना समन्वय विश्लेषण' : 'Autonomous Cross-Government Infrastructure Coordination Analysis'}
+              Autonomous Cross-Government Infrastructure Coordination Analysis
             </span>
           </div>
         </div>
@@ -56,7 +53,7 @@ export default function AiIntelligencePanel({
             0{spatialCount}
           </span>
           <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold">
-            {isHindi ? 'स्थानिक दोहराव' : 'SPATIAL OVERLAPS'}
+            SPATIAL OVERLAPS
           </span>
         </div>
         <div className="p-3 bg-slate-900/80 rounded-2xl border border-slate-800">
@@ -64,7 +61,7 @@ export default function AiIntelligencePanel({
             0{timelineCount}
           </span>
           <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold">
-            {isHindi ? 'समय-सीमा समवर्ती' : 'TIMELINE CONCURRENCIES'}
+            TIMELINE CONCURRENCIES
           </span>
         </div>
         <div className="p-3 bg-slate-900/80 rounded-2xl border border-slate-800">
@@ -72,7 +69,7 @@ export default function AiIntelligencePanel({
             0{dependencyCount}
           </span>
           <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold">
-            {isHindi ? 'उपयोगिता निर्भरताएं' : 'UTILITY DEPENDENCIES'}
+            UTILITY DEPENDENCIES
           </span>
         </div>
       </div>
@@ -91,7 +88,7 @@ export default function AiIntelligencePanel({
       {/* Recommended Coordination Actions */}
       <div className="space-y-2.5">
         <div className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">
-          {isHindi ? 'अनुशंसित अंतर-एजेंसी कार्रवाई' : 'RECOMMENDED INTER-AGENCY ACTIONS'}
+          RECOMMENDED INTER-AGENCY ACTIONS
         </div>
         <div className="space-y-2 text-xs">
           {summary.recommendations.map((rec, idx) => (

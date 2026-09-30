@@ -3,8 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { MapPin, ChevronDown, Check, Globe, Search, X, Sparkles, Filter, ShieldAlert } from 'lucide-react';
-import { ALL_543_CONSTITUENCIES, Constituency, VARANASI_CONSTITUENCY } from '@/lib/constituenciesData';
-import { useLanguage } from '@/lib/LanguageContext';
+import { ALL_543_CONSTITUENCIES, Constituency } from '@/lib/constituenciesData';
 
 interface ConstituencySelectorProps {
   variant?: 'header' | 'hero';
@@ -72,13 +71,12 @@ function getPartyBadgeStyle(partyName?: string) {
 
 export default function ConstituencySelector({ variant = 'header' }: ConstituencySelectorProps) {
   const router = useRouter();
-  const { lang, t, isHindi } = useLanguage();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const [selected, setSelected] = useState<Constituency>(VARANASI_CONSTITUENCY); // Default to Varanasi
+  const [selected, setSelected] = useState<Constituency>(ALL_543_CONSTITUENCIES[28]); // Default to Nalanda
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeStateTab, setActiveStateTab] = useState<string>('ALL');
@@ -92,22 +90,15 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
         if (parsed && parsed.id) {
           if (parsed.id === 'all_india') {
             setSelected(ALL_INDIA_OPTION);
-            return;
           } else {
             const found = ALL_543_CONSTITUENCIES.find((c) => c.id === parsed.id);
-            if (found) {
-              setSelected(found);
-              return;
-            }
+            if (found) setSelected(found);
           }
         }
       } catch (e) {
-        // Fallback to default Varanasi
+        // Fallback to default
       }
     }
-    // Default fallback for first-time visitor with no stored selection
-    setSelected(VARANASI_CONSTITUENCY);
-    localStorage.setItem('selected_constituency', JSON.stringify(VARANASI_CONSTITUENCY));
   }, []);
 
   // Close dropdown on outside click
@@ -321,7 +312,7 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
         <div className="text-left leading-tight">
           <div className="flex items-center gap-1.5 mb-0.5">
             <span className="block text-[8px] uppercase tracking-widest text-[#667078] font-bold">
-              {isHindi ? 'संसदीय क्षेत्र कंसोल' : 'JURISDICTION CONSOLE'}
+              JURISDICTION CONSOLE
             </span>
             {selected.mpName && (
               <span className={`inline-flex items-center gap-1 text-[9px] px-2 py-0.5 rounded-full font-mono font-extrabold border shadow-sm ${partyStyle.badge}`}>
@@ -332,9 +323,9 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
           </div>
           <div className="flex items-center gap-1.5">
             <span className="font-extrabold text-[#182027] text-[12px] tracking-tight truncate max-w-[210px] group-hover:text-[#285C7A] transition-colors">
-              {selected.id === 'all_india' ? t('selector.pan_india', 'All India') : selected.shortName}
+              {selected.shortName}
             </span>
-            <span className="text-[10px] text-[#667078] font-semibold">({selected.id === 'all_india' ? (isHindi ? 'राष्ट्रीय' : 'National') : selected.state})</span>
+            <span className="text-[10px] text-[#667078] font-semibold">({selected.state})</span>
           </div>
         </div>
 
@@ -357,11 +348,11 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
                 </div>
                 <div>
                   <span className="font-extrabold text-[#182027] text-sm tracking-tight block">
-                    {isHindi ? '18वीं लोकसभा संसदीय क्षेत्र खोज' : '18TH LOK SABHA JURISDICTION SEARCH'}
+                    18TH LOK SABHA JURISDICTION SEARCH
                   </span>
                   <span className="text-[10px] text-[#667078] font-mono font-medium flex items-center gap-1.5 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#398265] animate-ping" />
-                    <span>{isHindi ? '543 संसदीय सीटें निर्देशिका' : '543 PARLIAMENTARY SEATS DIRECTORY'}</span>
+                    <span>543 PARLIAMENTARY SEATS DIRECTORY</span>
                   </span>
                 </div>
               </div>
@@ -369,7 +360,7 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
               {/* 3D Live Match Telemetry Badge */}
               <div className="bg-gradient-to-b from-white to-[#EAEFE6] border border-[#BFC8B9] shadow-[0_2px_6px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,1)] text-[#285C7A] text-[10px] font-mono px-3 py-1.5 rounded-xl font-bold uppercase tracking-wider flex items-center gap-1.5">
                 <Sparkles className="w-3 h-3 text-[#C88A25]" />
-                <span>{filteredConstituencies.length} {isHindi ? 'परिणाम' : 'MATCHES'}</span>
+                <span>{filteredConstituencies.length} MATCHES</span>
               </div>
             </div>
 
@@ -385,7 +376,7 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={t('selector.search_placeholder', 'Search 543 Lok Sabha constituencies...')}
+                placeholder="Type constituency, MP (Modi, Rahul), party (BJP, TDP), or state..."
                 className="w-full pl-10 pr-24 py-3 text-xs bg-gradient-to-b from-[#FAFBF8] to-[#EEF2EA] border-2 border-[#B8C2B3] rounded-2xl text-[#182027] placeholder-[#78828A] font-sans shadow-[inset_0_3px_6px_rgba(0,0,0,0.08),inset_0_1px_2px_rgba(0,0,0,0.06)] focus:outline-none focus:bg-white focus:border-[#285C7A] focus:ring-4 focus:ring-[#285C7A]/25 transition-all duration-200"
                 autoFocus
               />
@@ -400,14 +391,14 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
                       inputRef.current?.focus();
                     }}
                     className="p-1.5 rounded-xl bg-gradient-to-b from-[#FFFFFF] to-[#E2E7DC] hover:from-[#E2E7DC] hover:to-[#D4DBD0] border border-[#BAC1B3] text-[#4A525A] shadow-[0_2px_4px_rgba(0,0,0,0.08)] active:translate-y-0.5 transition flex items-center gap-1"
-                    title={isHindi ? 'खोज साफ़ करें (ESC)' : 'Clear search (ESC)'}
+                    title="Clear search (ESC)"
                   >
                     <X className="w-3.5 h-3.5" />
                     <span className="text-[9px] font-mono font-bold hidden sm:inline">ESC</span>
                   </button>
                 ) : (
                   <div className="px-2 py-1 rounded-lg bg-[#E2E7DC]/80 border border-[#CBD3C5] text-[9px] font-mono font-bold text-[#667078] flex items-center gap-1 shadow-inner">
-                    <span>{isHindi ? 'नेविगेट करने के लिए ↑↓ का उपयोग करें' : 'Use ↑↓ to navigate'}</span>
+                    <span>Use ↑↓ to navigate</span>
                   </div>
                 )}
               </div>
@@ -416,7 +407,7 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
             {/* 3D STATE QUICK-FILTER KEYCAPS (HORIZONTAL TACTILE BAR) */}
             <div className="mt-3 flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 scrollbar-thin scrollbar-thumb-[#C5CBC0] scrollbar-track-transparent select-none">
               <span className="text-[9px] font-mono uppercase tracking-wider text-[#667078] font-bold shrink-0 flex items-center gap-1 mr-1">
-                <Filter className="w-3 h-3 text-[#285C7A]" /> {isHindi ? 'राज्य:' : 'STATE:'}
+                <Filter className="w-3 h-3 text-[#285C7A]" /> STATE:
               </span>
               {STATE_FILTERS.map((st) => {
                 const isActive = activeStateTab.toLowerCase() === st.code.toLowerCase() || (st.code === 'ALL' && activeStateTab === 'ALL');
@@ -434,7 +425,7 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
                         : 'bg-gradient-to-b from-white via-[#FAFBF8] to-[#E5EADF] text-[#4A525A] border border-[#C5CBC0] shadow-[0_2px_4px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)] hover:bg-[#F0F4EC] hover:text-[#182027] hover:-translate-y-0.5 active:translate-y-0.5'
                     }`}
                   >
-                    <span>{st.code === 'ALL' && isHindi ? 'अखिल भारत' : st.label}</span>
+                    <span>{st.label}</span>
                     <span className={`text-[8px] px-1 py-0.2 rounded-full font-extrabold ${isActive ? 'bg-white/25 text-white' : 'bg-[#DCE2D7] text-[#556068]'}`}>
                       {st.count}
                     </span>
@@ -452,20 +443,16 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
             {filteredConstituencies.length === 0 ? (
               <div className="px-6 py-12 text-center text-[#667078] font-sans text-xs bg-gradient-to-b from-white to-[#F8FAF6] rounded-3xl border-2 border-[#DCE2D6] shadow-[inset_0_2px_6px_rgba(0,0,0,0.04)] space-y-3">
                 <ShieldAlert className="w-9 h-9 text-[#C88A25] mx-auto opacity-80 animate-bounce" />
-                <p className="font-extrabold text-[#182027] text-sm">
-                  {isHindi ? `"${searchQuery}" से मेल खाता कोई क्षेत्र नहीं मिला` : `No constituency or MP matching "${searchQuery}"`}
-                </p>
+                <p className="font-extrabold text-[#182027] text-sm">No constituency or MP matching &quot;{searchQuery}&quot;</p>
                 <p className="text-[11px] text-[#667078] max-w-sm mx-auto">
-                  {isHindi
-                    ? 'सांसद नाम, राज्य या दल नाम से खोजने का प्रयास करें।'
-                    : 'Try typing by MP name (e.g., "Modi", "Rahul"), State ("UP", "Bihar"), or party name.'}
+                  Try typing by MP name (e.g., &quot;Modi&quot;, &quot;Rahul&quot;, &quot;Tejasvi&quot;), State (&quot;UP&quot;, &quot;Bihar&quot;), or party name.
                 </p>
                 <button
                   type="button"
                   onClick={() => { setSearchQuery(''); setActiveStateTab('ALL'); inputRef.current?.focus(); }}
                   className="px-5 py-2 rounded-2xl bg-gradient-to-b from-[#285C7A] to-[#173F58] text-white font-mono text-[11px] font-bold shadow-[0_4px_12px_rgba(40,92,122,0.3),inset_0_1px_0_rgba(255,255,255,0.3)] hover:brightness-110 active:translate-y-0.5 transition"
                 >
-                  {isHindi ? 'फ़िल्टर और खोज रीसेट करें' : 'RESET FILTERS & SEARCH'}
+                  RESET FILTERS &amp; SEARCH
                 </button>
               </div>
             ) : (
@@ -497,10 +484,10 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
                         {/* Title & MP Badge */}
                         <div className="flex items-center gap-2 flex-wrap mb-1">
                           <span className={`font-extrabold text-sm tracking-tight ${isHighlighted || isSelected ? 'text-[#285C7A]' : 'text-[#182027] group-hover:text-[#285C7A]'} transition-colors`}>
-                            {c.id === 'all_india' ? t('selector.pan_india', 'All India') : c.shortName}
+                            {c.shortName}
                           </span>
                           <span className="text-[10px] font-mono text-[#667078] font-semibold">
-                            {c.id === 'all_india' ? (isHindi ? 'राष्ट्रीय' : 'National') : c.state}
+                            {c.state}
                           </span>
 
                           {c.mpName && (
@@ -520,7 +507,7 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
                           <span>&bull;</span>
                           <span className="font-semibold text-[#182027]">{c.count}</span>
                           <span>&bull;</span>
-                          <span className="text-[#398265] font-extrabold">₹{sanctionedCr} {isHindi ? 'करोड़ स्वीकृत' : 'Cr Sanctioned'}</span>
+                          <span className="text-[#398265] font-extrabold">₹{sanctionedCr} Cr Sanctioned</span>
                         </div>
                       </div>
 
@@ -536,7 +523,7 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
                               ? 'bg-gradient-to-b from-[#285C7A] to-[#173F58] text-white border-[#102B3C] shadow-[0_3px_8px_rgba(40,92,122,0.3)] scale-105'
                               : 'bg-gradient-to-b from-[#F2F6ED] to-[#E2E8DC] text-[#4A525A] border border-[#C5CBC0] shadow-[0_2px_4px_rgba(0,0,0,0.05)] group-hover:bg-[#285C7A] group-hover:text-white group-hover:border-[#173F58]'
                           }`}>
-                            <span>{isHindi ? 'चुनें' : 'SELECT'}</span>
+                            <span>SELECT</span>
                             <span className="text-[9px] opacity-80">↵</span>
                           </div>
                         )}
@@ -552,16 +539,14 @@ export default function ConstituencySelector({ variant = 'header' }: Constituenc
           <div className="px-4 py-2.5 bg-gradient-to-b from-[#EAEFE6] via-[#E2E8DC] to-[#D8DFD1] border-t-2 border-[#C0C8BA] flex items-center justify-between text-[10px] font-mono text-[#667078] shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#398265] animate-pulse shadow-[0_0_6px_#398265]" />
-              <span className="font-extrabold text-[#182027]">
-                {isHindi ? '18वीं लोकसभा बुद्धिमत्ता पाइपलाइन' : '18TH LOK SABHA INTELLIGENCE PIPELINE'}
-              </span>
+              <span className="font-extrabold text-[#182027]">18TH LOK SABHA INTELLIGENCE PIPELINE</span>
             </div>
             <div className="flex items-center gap-3">
               <span className="hidden sm:inline-block text-[#667078]">
-                <kbd className="bg-white border border-[#BFC8B9] px-1 py-0.5 rounded text-[8px] font-bold shadow-xs">↑↓</kbd> {isHindi ? 'नेविगेट' : 'navigate'} &bull; <kbd className="bg-white border border-[#BFC8B9] px-1 py-0.5 rounded text-[8px] font-bold shadow-xs">↵</kbd> {isHindi ? 'चुनें' : 'select'}
+                <kbd className="bg-white border border-[#BFC8B9] px-1 py-0.5 rounded text-[8px] font-bold shadow-xs">↑↓</kbd> navigate &bull; <kbd className="bg-white border border-[#BFC8B9] px-1 py-0.5 rounded text-[8px] font-bold shadow-xs">↵</kbd> select
               </span>
               <span>
-                {isHindi ? `दिखा रहा है ` : `Showing `}<span className="font-extrabold text-[#285C7A] text-xs">{filteredConstituencies.length}</span> / 543 {isHindi ? 'सीटें' : 'Seats'}
+                Showing <span className="font-extrabold text-[#285C7A] text-xs">{filteredConstituencies.length}</span> / 543 Seats
               </span>
             </div>
           </div>

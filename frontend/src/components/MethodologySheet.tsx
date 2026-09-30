@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, Info, ArrowRight, Zap } from 'lucide-react';
-import { useLanguage } from '@/lib/LanguageContext';
+import { X, ShieldCheck, Scale, Calculator, Info, ArrowRight, Zap } from 'lucide-react';
 
 interface MethodologySheetProps {
   isOpen: boolean;
@@ -10,46 +9,14 @@ interface MethodologySheetProps {
 }
 
 export default function MethodologySheet({ isOpen, onClose }: MethodologySheetProps) {
-  const { isHindi, t } = useLanguage();
-
   if (!isOpen) return null;
 
   const weights = [
-    {
-      label: isHindi ? 'वित्तीय संकेत' : 'FINANCIAL SIGNAL',
-      weight: '30%',
-      desc: isHindi ? 'व्यय अंतर और स्वीकृत-से-लागत विचलन' : 'Expenditure variance & sanction-to-cost deviation',
-      color: 'bg-[#285C7A]',
-      barWidth: 'w-[30%]',
-    },
-    {
-      label: isHindi ? 'कार्यान्वयन संकेत' : 'IMPLEMENTATION SIGNAL',
-      weight: '25%',
-      desc: isHindi ? 'समय-सीमा विस्तार और कार्य शुरू होने में विलंब अनुपात' : 'Timeline extensions & start-delay ratio',
-      color: 'bg-[#C88A25]',
-      barWidth: 'w-[25%]',
-    },
-    {
-      label: isHindi ? 'समकक्ष विचलन' : 'PEER DEVIATION',
-      weight: '20%',
-      desc: isHindi ? 'ऐतिहासिक ब्लॉक मानकों से सांख्यिकीय जेड-स्कोर दूरी' : 'Statistical Z-score distance from historical block benchmarks',
-      color: 'bg-[#398265]',
-      barWidth: 'w-[20%]',
-    },
-    {
-      label: isHindi ? 'एजेंसी पैटर्न' : 'AGENCY PATTERNS',
-      weight: '15%',
-      desc: isHindi ? 'ठेकेदार एकाग्रता और समवर्ती परियोजना भार' : 'Contractor concentration & concurrent project load',
-      color: 'bg-[#173F58]',
-      barWidth: 'w-[15%]',
-    },
-    {
-      label: isHindi ? 'स्थानिक निकटता' : 'GEOSPATIAL PROXIMITY',
-      weight: '10%',
-      desc: isHindi ? 'भौतिक 500 मीटर निकटता और दोहराव कार्य प्रकार' : 'Physical 500m proximity & duplicate work type overlap',
-      color: 'bg-[#C45145]',
-      barWidth: 'w-[10%]',
-    },
+    { label: 'FINANCIAL SIGNAL', weight: '30%', desc: 'Expenditure variance & sanction-to-cost deviation', color: 'bg-[#285C7A]', barWidth: 'w-[30%]' },
+    { label: 'IMPLEMENTATION SIGNAL', weight: '25%', desc: 'Timeline extensions & start-delay ratio', color: 'bg-[#C88A25]', barWidth: 'w-[25%]' },
+    { label: 'PEER DEVIATION', weight: '20%', desc: 'Statistical Z-score distance from historical block benchmarks', color: 'bg-[#398265]', barWidth: 'w-[20%]' },
+    { label: 'AGENCY PATTERNS', weight: '15%', desc: 'Contractor concentration & concurrent project load', color: 'bg-[#173F58]', barWidth: 'w-[15%]' },
+    { label: 'GEOSPATIAL PROXIMITY', weight: '10%', desc: 'Physical 500m proximity & duplicate work type overlap', color: 'bg-[#C45145]', barWidth: 'w-[10%]' },
   ];
 
   return (
@@ -69,7 +36,7 @@ export default function MethodologySheet({ isOpen, onClose }: MethodologySheetPr
         <button
           onClick={onClose}
           className="absolute top-5 right-5 p-2 rounded-full text-[#667078] hover:text-[#182027] hover:bg-[#ECEFEA] transition border border-transparent hover:border-[#E4E7E1]"
-          title={isHindi ? 'बंद करें (Esc)' : 'Close Modal (Esc)'}
+          title="Close Modal (Esc)"
         >
           <X className="w-5 h-5" />
         </button>
@@ -78,15 +45,13 @@ export default function MethodologySheet({ isOpen, onClose }: MethodologySheetPr
         <div className="space-y-2 border-b border-[#E4E7E1]/80 pb-4 pr-8">
           <div className="flex items-center gap-2 text-[#285C7A] font-mono text-[11px] font-bold uppercase tracking-wider">
             <Zap className="w-3.5 h-3.5 text-[#C88A25]" />
-            <span>{isHindi ? '5-सिग्नल जोखिम संचयी • व्याख्या योग्य एआई' : '5-SIGNAL RISK COMPOSITE • EXPLAINABLE AI'}</span>
+            <span>5-SIGNAL RISK COMPOSITE &bull; EXPLAINABLE AI</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-[#182027] tracking-tight font-sans">
-            {isHindi ? 'सेवाार्थ एआई जोखिम की गणना कैसे करता है' : 'How Sevaarth AI Calculates Risk'}
+            How Sevaarth AI Calculates Risk
           </h2>
           <p className="text-xs text-[#667078] leading-relaxed font-sans">
-            {isHindi
-              ? 'सांख्यिकीय अनिमियतता पहचान, भौगोलिक निकटता और एमओएसपीआई दिशानिर्देश अनुपालन नियमों का संयोजन।'
-              : 'Deterministic scoring engine combining statistical anomaly detection, geospatial proximity, and MoSPI guideline compliance rules.'}
+            Deterministic scoring engine combining statistical anomaly detection, geospatial proximity, and MoSPI guideline compliance rules.
           </p>
         </div>
 
@@ -123,22 +88,20 @@ export default function MethodologySheet({ isOpen, onClose }: MethodologySheetPr
         <div className="p-3.5 rounded-2xl bg-[#285C7A]/5 border border-[#285C7A]/15 flex items-start gap-2.5 text-xs text-[#667078] font-sans">
           <Info className="w-4 h-4 text-[#285C7A] shrink-0 mt-0.5" />
           <p className="text-[11px] leading-relaxed text-[#182027]">
-            {isHindi
-              ? 'प्रत्येक आउटपुट स्कोर (0-100) निश्चित है और भौतिक ऑडिट सत्यापन के लिए विशिष्ट मदों में विभाजित है।'
-              : 'Every output score (0–100) is 100% deterministic and decomposed into verifiable line-items for physical audit verification.'}
+            Every output score (0–100) is 100% deterministic and decomposed into verifiable line-items for physical audit verification.
           </p>
         </div>
 
         {/* Action Button */}
         <div className="pt-1 flex items-center justify-between border-t border-[#E4E7E1]/80">
           <span className="text-[10px] font-mono text-[#667078]">
-            {isHindi ? 'सेवाार्थ एआई • मानक जोखिम प्रोटोकॉल' : 'Sevaarth AI • Standard Risk Protocol'}
+            Sevaarth AI &bull; Standard Risk Protocol
           </span>
           <button
             onClick={onClose}
             className="px-5 py-2 rounded-full bg-[#182027] text-white hover:bg-[#285C7A] text-xs font-bold font-mono inline-flex items-center gap-2 shadow-md transition-all duration-200"
           >
-            <span>{isHindi ? 'समझ आ गया' : 'UNDERSTOOD'}</span>
+            <span>UNDERSTOOD</span>
             <ArrowRight className="w-3.5 h-3.5 text-[#C88A25]" />
           </button>
         </div>
@@ -147,3 +110,4 @@ export default function MethodologySheet({ isOpen, onClose }: MethodologySheetPr
     </div>
   );
 }
+

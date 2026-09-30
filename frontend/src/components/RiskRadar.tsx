@@ -3,20 +3,17 @@
 import React from 'react';
 import { DollarSign, Clock, Building2, MapPin, Copy, Activity } from 'lucide-react';
 import { RiskDetail } from '@/lib/api';
-import { useLanguage } from '@/lib/LanguageContext';
 
 interface RiskRadarProps {
   risk: RiskDetail;
 }
 
 export default function RiskRadar({ risk }: RiskRadarProps) {
-  const { isHindi } = useLanguage();
-
   const dimensions = [
     {
-      name: isHindi ? 'वित्तीय जोखिम' : 'Financial Risk',
+      name: 'Financial Risk',
       score: risk.financial_risk,
-      weight: isHindi ? '25% भार' : '25% Weight',
+      weight: '25% Weight',
       icon: DollarSign,
       explanation: risk.financial_explanation,
       color: 'bg-[#398265]',
@@ -24,9 +21,9 @@ export default function RiskRadar({ risk }: RiskRadarProps) {
       bgColor: 'bg-[#398265]/10',
     },
     {
-      name: isHindi ? 'समय-सीमा जोखिम' : 'Timeline Risk',
+      name: 'Timeline Risk',
       score: risk.timeline_risk,
-      weight: isHindi ? '25% भार' : '25% Weight',
+      weight: '25% Weight',
       icon: Clock,
       explanation: risk.timeline_explanation,
       color: 'bg-[#285C7A]',
@@ -34,9 +31,9 @@ export default function RiskRadar({ risk }: RiskRadarProps) {
       bgColor: 'bg-[#285C7A]/10',
     },
     {
-      name: isHindi ? 'एजेंसी जोखिम' : 'Agency Risk',
+      name: 'Agency Risk',
       score: risk.agency_risk,
-      weight: isHindi ? '20% भार' : '20% Weight',
+      weight: '20% Weight',
       icon: Building2,
       explanation: risk.agency_explanation,
       color: 'bg-purple-600',
@@ -44,9 +41,9 @@ export default function RiskRadar({ risk }: RiskRadarProps) {
       bgColor: 'bg-purple-50',
     },
     {
-      name: isHindi ? 'भौगोलिक जोखिम' : 'Geographic Risk',
+      name: 'Geographic Risk',
       score: risk.geographic_risk,
-      weight: isHindi ? '15% भार' : '15% Weight',
+      weight: '15% Weight',
       icon: MapPin,
       explanation: risk.geographic_explanation,
       color: 'bg-[#C88A25]',
@@ -54,9 +51,9 @@ export default function RiskRadar({ risk }: RiskRadarProps) {
       bgColor: 'bg-[#C88A25]/10',
     },
     {
-      name: isHindi ? 'दोहराव जोखिम' : 'Similarity Risk',
+      name: 'Similarity Risk',
       score: risk.similarity_risk,
-      weight: isHindi ? '15% भार' : '15% Weight',
+      weight: '15% Weight',
       icon: Copy,
       explanation: risk.similarity_explanation,
       color: 'bg-[#C45145]',
@@ -82,9 +79,9 @@ export default function RiskRadar({ risk }: RiskRadarProps) {
       <div className="flex items-center justify-between border-b border-[#E4E7E1] pb-3 text-xs font-mono">
         <span className="flex items-center gap-2 text-[#285C7A] font-bold uppercase tracking-wider">
           <Activity className="w-4 h-4" />
-          <span>{isHindi ? '5-आयामी जोखिम मैट्रिक्स विश्लेषण' : '5-DIMENSIONAL RISK MATRIX ANALYSIS'}</span>
+          <span>5-DIMENSIONAL RISK MATRIX ANALYSIS</span>
         </span>
-        <span className="text-[#667078] text-[10px]">{isHindi ? 'भारित संचयी मॉडल' : 'WEIGHTED AGGREGATE MODEL'}</span>
+        <span className="text-[#667078] text-[10px]">WEIGHTED AGGREGATE MODEL</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

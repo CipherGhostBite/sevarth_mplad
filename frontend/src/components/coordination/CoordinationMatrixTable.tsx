@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { CoordinationMatrixItem } from '@/lib/api';
-import { Table, Search, ArrowRight } from 'lucide-react';
-import { useLanguage } from '@/lib/LanguageContext';
+import { formatCurrency } from '@/lib/utils';
+import { Table, Search, AlertTriangle, ShieldCheck, Filter, ArrowRight } from 'lucide-react';
 
 interface Props {
   matrix: CoordinationMatrixItem[];
@@ -11,7 +11,6 @@ interface Props {
 }
 
 export default function CoordinationMatrixTable({ matrix, onSelectProject }: Props) {
-  const { isHindi } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [levelFilter, setLevelFilter] = useState('ALL');
 
@@ -29,26 +28,26 @@ export default function CoordinationMatrixTable({ matrix, onSelectProject }: Pro
   const getRiskBadge = (risk: string) => {
     switch (risk.toUpperCase()) {
       case 'CRITICAL':
-        return <span className="bg-red-900/60 text-red-300 border border-red-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">{isHindi ? 'गंभीर' : 'CRITICAL'}</span>;
+        return <span className="bg-red-900/60 text-red-300 border border-red-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">CRITICAL</span>;
       case 'HIGH':
-        return <span className="bg-amber-900/60 text-amber-300 border border-amber-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">{isHindi ? 'उच्च' : 'HIGH'}</span>;
+        return <span className="bg-amber-900/60 text-amber-300 border border-amber-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">HIGH</span>;
       case 'MODERATE':
-        return <span className="bg-blue-900/60 text-blue-300 border border-blue-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">{isHindi ? 'मध्यम' : 'MODERATE'}</span>;
+        return <span className="bg-blue-900/60 text-blue-300 border border-blue-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">MODERATE</span>;
       default:
-        return <span className="bg-emerald-900/60 text-emerald-300 border border-emerald-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">{isHindi ? 'कम' : 'LOW'}</span>;
+        return <span className="bg-emerald-900/60 text-emerald-300 border border-emerald-500 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">LOW</span>;
     }
   };
 
   const getLevelBadge = (level: string) => {
     switch (level.toUpperCase()) {
       case 'CENTRAL':
-        return <span className="bg-purple-900/50 text-purple-300 border border-purple-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">{isHindi ? 'केंद्रीय' : 'CENTRAL'}</span>;
+        return <span className="bg-purple-900/50 text-purple-300 border border-purple-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">CENTRAL</span>;
       case 'STATE':
-        return <span className="bg-blue-900/50 text-blue-300 border border-blue-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">{isHindi ? 'राज्य' : 'STATE'}</span>;
+        return <span className="bg-blue-900/50 text-blue-300 border border-blue-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">STATE</span>;
       case 'DISTRICT':
-        return <span className="bg-amber-900/50 text-amber-300 border border-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">{isHindi ? 'जिला' : 'DISTRICT'}</span>;
+        return <span className="bg-amber-900/50 text-amber-300 border border-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">DISTRICT</span>;
       default:
-        return <span className="bg-emerald-900/50 text-emerald-300 border border-emerald-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">{isHindi ? 'स्थानीय' : 'LOCAL'}</span>;
+        return <span className="bg-emerald-900/50 text-emerald-300 border border-emerald-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">LOCAL</span>;
     }
   };
 
@@ -60,10 +59,10 @@ export default function CoordinationMatrixTable({ matrix, onSelectProject }: Pro
         <div>
           <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider flex items-center gap-2">
             <Table className="w-4 h-4 text-cyan-400" />
-            <span>{isHindi ? 'परियोजना समन्वय मैट्रिक्स' : 'PROJECT COORDINATION MATRIX'}</span>
+            <span>PROJECT COORDINATION MATRIX</span>
           </h3>
           <p className="text-[11px] text-slate-400 font-sans mt-0.5">
-            {isHindi ? 'अंतर-सरकारी दोहराव एवं निर्भरता रजिस्टर' : 'Cross-Government Overlap & Dependency Register'}
+            Cross-Government Overlap &amp; Dependency Register
           </p>
         </div>
 
@@ -74,7 +73,7 @@ export default function CoordinationMatrixTable({ matrix, onSelectProject }: Pro
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
             <input
               type="text"
-              placeholder={isHindi ? 'परियोजना खोजें...' : 'Search project...'}
+              placeholder="Search project..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="bg-slate-900 border border-slate-700 rounded-xl text-xs pl-8 pr-3 py-1.5 focus:outline-none focus:border-cyan-400 text-white placeholder-slate-500"
@@ -87,11 +86,11 @@ export default function CoordinationMatrixTable({ matrix, onSelectProject }: Pro
             onChange={(e) => setLevelFilter(e.target.value)}
             className="bg-slate-900 border border-slate-700 rounded-xl text-xs px-3 py-1.5 text-white focus:outline-none focus:border-cyan-400"
           >
-            <option value="ALL">{isHindi ? 'सभी स्तर' : 'ALL LEVELS'}</option>
-            <option value="CENTRAL">{isHindi ? 'केंद्रीय' : 'CENTRAL'}</option>
-            <option value="STATE">{isHindi ? 'राज्य' : 'STATE'}</option>
-            <option value="DISTRICT">{isHindi ? 'जिला' : 'DISTRICT'}</option>
-            <option value="LOCAL">{isHindi ? 'स्थानीय' : 'LOCAL'}</option>
+            <option value="ALL">ALL LEVELS</option>
+            <option value="CENTRAL">CENTRAL</option>
+            <option value="STATE">STATE</option>
+            <option value="DISTRICT">DISTRICT</option>
+            <option value="LOCAL">LOCAL</option>
           </select>
         </div>
       </div>
@@ -115,7 +114,7 @@ export default function CoordinationMatrixTable({ matrix, onSelectProject }: Pro
                 {item.projectName}
               </h4>
               <div className="text-[11px] text-slate-400 font-sans">
-                {isHindi ? 'विभाग:' : 'Dept:'} <span className="text-slate-200">{item.department}</span> &bull; {isHindi ? 'बजट:' : 'Budget:'} <span className="font-mono text-emerald-400 font-bold">₹{(item.budget / 10000000).toFixed(1)} {isHindi ? 'करोड़' : 'Cr'}</span>
+                Dept: <span className="text-slate-200">{item.department}</span> &bull; Budget: <span className="font-mono text-emerald-400 font-bold">₹{(item.budget / 10000000).toFixed(1)} Cr</span>
               </div>
             </div>
 
@@ -124,31 +123,31 @@ export default function CoordinationMatrixTable({ matrix, onSelectProject }: Pro
               <div className="flex items-center gap-2 text-[10px] font-bold">
                 {item.hasSpatialOverlap ? (
                   <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-500/40">
-                    ⚠️ {isHindi ? 'स्थानिक' : 'SPATIAL'}
+                    ⚠️ SPATIAL
                   </span>
                 ) : (
                   <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                    ✅ {isHindi ? 'स्थानिक ओके' : 'SPATIAL OK'}
+                    ✅ SPATIAL OK
                   </span>
                 )}
 
                 {item.hasTimelineOverlap ? (
                   <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-500/40">
-                    ⚠️ {isHindi ? 'समय-सीमा' : 'TIMELINE'}
+                    ⚠️ TIMELINE
                   </span>
                 ) : (
                   <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                    ✅ {isHindi ? 'समय ओके' : 'TIMELINE OK'}
+                    ✅ TIMELINE OK
                   </span>
                 )}
 
                 {item.hasDependency ? (
                   <span className="px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-500/40">
-                    🔴 {isHindi ? 'निर्भरता' : 'DEPENDENCY'}
+                    🔴 DEPENDENCY
                   </span>
                 ) : (
                   <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-                    ✅ {isHindi ? 'अनुक्रम ओके' : 'SEQUENCE OK'}
+                    ✅ SEQUENCE OK
                   </span>
                 )}
               </div>

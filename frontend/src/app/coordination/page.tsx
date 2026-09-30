@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '@/lib/LanguageContext';
 import {
   api,
   CoordinationOverview,
@@ -37,29 +36,11 @@ import {
 } from 'lucide-react';
 
 export default function CoordinationPage() {
-  const { isHindi, t } = useLanguage();
-  const [constituencyName, setConstituencyName] = useState<string>('Varanasi');
   const [overview, setOverview] = useState<CoordinationOverview | null>(null);
   const [projects, setProjects] = useState<CoordinationProjectItem[]>([]);
   const [matrix, setMatrix] = useState<CoordinationMatrixItem[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string>('PRJ-GOV-STATE-01');
   const [dossier, setDossier] = useState<CoordinationDossier | null>(null);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('selected_constituency');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed?.shortName) setConstituencyName(parsed.shortName);
-      }
-    } catch (e) {}
-    const handleConstituencyChange = (e: Event) => {
-      const detail = (e as CustomEvent)?.detail;
-      if (detail?.shortName) setConstituencyName(detail.shortName);
-    };
-    window.addEventListener('constituency-changed', handleConstituencyChange);
-    return () => window.removeEventListener('constituency-changed', handleConstituencyChange);
-  }, []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -109,9 +90,7 @@ export default function CoordinationPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[600px] space-y-4 font-mono">
         <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-slate-400">
-          {isHindi ? '3D सरकारी इंटेलिजेंस कमांड सेंटर प्रारंभ हो रहा है...' : 'INITIALIZING 3D GOVERNMENT INTELLIGENCE COMMAND CENTER...'}
-        </p>
+        <p className="text-xs text-slate-400">INITIALIZING 3D GOVERNMENT INTELLIGENCE COMMAND CENTER...</p>
       </div>
     );
   }
@@ -125,17 +104,15 @@ export default function CoordinationPage() {
           <div className="space-y-1">
             <div className="flex items-center gap-3">
               <span className="bg-cyan-500/20 text-cyan-300 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-cyan-500/40">
-                {isHindi ? 'राष्ट्रीय बुनियादी ढांचा कमांड सेंटर' : 'NATIONAL INFRASTRUCTURE COMMAND CENTER'}
+                NATIONAL INFRASTRUCTURE COMMAND CENTER
               </span>
-              <span className="text-xs text-slate-400">
-                {isHindi ? `• ${constituencyName} संसदीय क्षेत्र पारिस्थितिकी तंत्र` : `• ${constituencyName.toUpperCase()} CONSTITUENCY ECOSYSTEM`}
-              </span>
+              <span className="text-xs text-slate-400">&bull; NALANDA CONSTITUENCY ECOSYSTEM</span>
             </div>
             <h1 className="text-2xl font-black text-slate-100 tracking-tight">
-              {isHindi ? 'परियोजना पारिस्थितिकी तंत्र बुद्धिमत्ता' : 'PROJECT ECOSYSTEM INTELLIGENCE'}
+              PROJECT ECOSYSTEM INTELLIGENCE
             </h1>
             <p className="text-xs text-slate-400 font-sans">
-              {isHindi ? 'क्रॉस-सरकार बुनियादी ढांचा समन्वय और बहु-स्तरीय संघर्ष पहचान मंच' : 'Cross-Government Infrastructure Coordination & Multi-Level Conflict Detection Platform'}
+              Cross-Government Infrastructure Coordination &amp; Multi-Level Conflict Detection Platform
             </p>
           </div>
 
@@ -143,8 +120,8 @@ export default function CoordinationPage() {
             <div className="p-3 bg-slate-900/80 rounded-2xl border border-slate-800 flex items-center gap-2.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
               <div>
-                <div className="text-[10px] text-slate-400 font-bold uppercase">{isHindi ? '● लाइव परियोजना नेटवर्क' : '● LIVE PROJECT NETWORK'}</div>
-                <div className="text-slate-200 text-[11px] font-bold">{isHindi ? 'अंतिम विश्लेषण: अभी-अभी' : 'Last Analysis: Just now'}</div>
+                <div className="text-[10px] text-slate-400 font-bold uppercase">● LIVE PROJECT NETWORK</div>
+                <div className="text-slate-200 text-[11px] font-bold">Last Analysis: Just now</div>
               </div>
             </div>
           </div>
@@ -158,7 +135,7 @@ export default function CoordinationPage() {
                 {overview.levelCounts.CENTRAL}
               </span>
               <span className="text-[9px] text-purple-300/80 font-bold tracking-wider uppercase">
-                {isHindi ? 'केंद्रीय परियोजनाएं' : 'CENTRAL PROJECTS'}
+                CENTRAL PROJECTS
               </span>
             </div>
 
@@ -167,7 +144,7 @@ export default function CoordinationPage() {
                 {overview.levelCounts.STATE}
               </span>
               <span className="text-[9px] text-blue-300/80 font-bold tracking-wider uppercase">
-                {isHindi ? 'राज्य परियोजनाएं' : 'STATE PROJECTS'}
+                STATE PROJECTS
               </span>
             </div>
 
@@ -176,7 +153,7 @@ export default function CoordinationPage() {
                 {overview.levelCounts.DISTRICT}
               </span>
               <span className="text-[9px] text-amber-300/80 font-bold tracking-wider uppercase">
-                {isHindi ? 'जिला परियोजनाएं' : 'DISTRICT PROJECTS'}
+                DISTRICT PROJECTS
               </span>
             </div>
 
@@ -185,7 +162,7 @@ export default function CoordinationPage() {
                 {overview.levelCounts.LOCAL}
               </span>
               <span className="text-[9px] text-emerald-300/80 font-bold tracking-wider uppercase">
-                {isHindi ? 'स्थानीय / नगर पालिका' : 'LOCAL / MUNICIPAL'}
+                LOCAL / MUNICIPAL
               </span>
             </div>
           </div>
@@ -204,7 +181,7 @@ export default function CoordinationPage() {
             }`}
           >
             <Layers className="w-4 h-4" />
-            <span>{isHindi ? '[ 3D जीआईएस कमांड ]' : '[ 3D GIS COMMAND ]'}</span>
+            <span>[ 3D GIS COMMAND ]</span>
           </button>
 
           <button
@@ -216,7 +193,7 @@ export default function CoordinationPage() {
             }`}
           >
             <Network className="w-4 h-4" />
-            <span>{isHindi ? '[ संबंध नेटवर्क ]' : '[ RELATIONSHIP NETWORK ]'}</span>
+            <span>[ RELATIONSHIP NETWORK ]</span>
           </button>
 
           <button
@@ -228,7 +205,7 @@ export default function CoordinationPage() {
             }`}
           >
             <Calendar className="w-4 h-4" />
-            <span>{isHindi ? '[ स्थानिक समय-सीमा ]' : '[ SPATIAL TIMELINE ]'}</span>
+            <span>[ SPATIAL TIMELINE ]</span>
           </button>
 
           <button
@@ -240,14 +217,14 @@ export default function CoordinationPage() {
             }`}
           >
             <Table className="w-4 h-4" />
-            <span>{isHindi ? '[ समन्वय मैट्रिक्स ]' : '[ COORDINATION MATRIX ]'}</span>
+            <span>[ COORDINATION MATRIX ]</span>
           </button>
         </div>
 
         {/* Level Selector Filter */}
         <div className="flex items-center gap-2 pr-2">
           <Filter className="w-3.5 h-3.5 text-cyan-400" />
-          <span className="text-slate-400 text-[11px]">{isHindi ? 'फ़िल्टर स्तर:' : 'FILTER LEVEL:'}</span>
+          <span className="text-slate-400 text-[11px]">FILTER LEVEL:</span>
           {['ALL', 'CENTRAL', 'STATE', 'DISTRICT', 'LOCAL'].map((lvl) => (
             <button
               key={lvl}
@@ -258,7 +235,7 @@ export default function CoordinationPage() {
                   : 'bg-slate-900 text-slate-400 hover:text-white'
               }`}
             >
-              {isHindi ? (lvl === 'ALL' ? 'सभी' : lvl === 'CENTRAL' ? 'केन्द्रीय' : lvl === 'STATE' ? 'राज्य' : lvl === 'DISTRICT' ? 'जिला' : 'स्थानीय') : lvl}
+              {lvl}
             </button>
           ))}
         </div>
@@ -354,7 +331,7 @@ export default function CoordinationPage() {
             <div className="floating-slab p-6 bg-[#0f172a] border border-[#285c7a]/40 rounded-3xl text-white font-mono space-y-4 shadow-2xl">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">
-                  {isHindi ? 'प्राथमिक जाँच डोजियर' : 'PRIMARY INVESTIGATION DOSSIER'}
+                  PRIMARY INVESTIGATION DOSSIER
                 </span>
                 <span className="text-xs text-slate-400 font-mono">{dossier.subjectProject.id}</span>
               </div>
@@ -370,13 +347,13 @@ export default function CoordinationPage() {
 
               <div className="grid grid-cols-2 gap-3 text-xs font-mono pt-2 border-t border-slate-800">
                 <div>
-                  <span className="text-slate-400 block text-[10px]">{isHindi ? 'विभाग' : 'DEPARTMENT'}</span>
+                  <span className="text-slate-400 block text-[10px]">DEPARTMENT</span>
                   <span className="font-bold text-slate-200">{dossier.subjectProject.department}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[10px]">{isHindi ? 'स्वीकृत बजट' : 'SANCTIONED BUDGET'}</span>
+                  <span className="text-slate-400 block text-[10px]">SANCTIONED BUDGET</span>
                   <span className="font-bold text-emerald-400">
-                    ₹{(dossier.subjectProject.budget / 10000000).toFixed(1)} {isHindi ? 'करोड़' : 'Cr'}
+                    ₹{(dossier.subjectProject.budget / 10000000).toFixed(1)} Cr
                   </span>
                 </div>
               </div>
@@ -386,9 +363,9 @@ export default function CoordinationPage() {
             <div className="floating-slab p-6 bg-[#0f172a] border border-[#285c7a]/40 rounded-3xl text-white font-mono space-y-4 shadow-2xl">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider">
-                  {isHindi ? `संबंधित बहु-स्तरीय परियोजनाएं (${dossier.relatedProjects.length})` : `RELATED MULTI-LEVEL PROJECTS (${dossier.relatedProjects.length})`}
+                  RELATED MULTI-LEVEL PROJECTS ({dossier.relatedProjects.length})
                 </h4>
-                <span className="text-[10px] text-slate-400">{isHindi ? 'निकटता एवं संघर्ष सूची' : 'PROXIMITY & CONFLICT LIST'}</span>
+                <span className="text-[10px] text-slate-400">PROXIMITY &amp; CONFLICT LIST</span>
               </div>
 
               <div className="space-y-3">
@@ -405,11 +382,11 @@ export default function CoordinationPage() {
                         rel.targetProject.level === 'DISTRICT' ? 'bg-amber-900/60 text-amber-300 border border-amber-500' :
                         'bg-emerald-900/60 text-emerald-300 border border-emerald-500'
                       }`}>
-                        {rel.targetProject.level} {isHindi ? 'परियोजना' : 'PROJECT'}
+                        {rel.targetProject.level} PROJECT
                       </span>
 
                       <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-red-900/60 text-red-300 border border-red-500">
-                        {rel.riskLevel} {isHindi ? 'संघर्ष' : 'CONFLICT'}
+                        {rel.riskLevel} CONFLICT
                       </span>
                     </div>
 
@@ -418,9 +395,9 @@ export default function CoordinationPage() {
                     </h5>
 
                     <div className="text-[11px] text-slate-400 font-sans flex flex-wrap items-center gap-3 pt-1 border-t border-slate-800/80">
-                      <span>{isHindi ? 'निकटता:' : 'Proximity:'} <strong className="text-slate-200">{rel.distanceKm} km</strong></span>
-                      <span>{isHindi ? 'समय अतिव्यापन:' : 'Timeline Overlap:'} <strong className="text-amber-400">{rel.overlapMonths} {isHindi ? 'महीने' : 'Mos'}</strong></span>
-                      <span>{isHindi ? 'संसाधन:' : 'Resource:'} <strong className="text-cyan-300">{rel.sharedResource}</strong></span>
+                      <span>Proximity: <strong className="text-slate-200">{rel.distanceKm} km</strong></span>
+                      <span>Timeline Overlap: <strong className="text-amber-400">{rel.overlapMonths} Mos</strong></span>
+                      <span>Resource: <strong className="text-cyan-300">{rel.sharedResource}</strong></span>
                     </div>
                   </div>
                 ))}
@@ -433,4 +410,3 @@ export default function CoordinationPage() {
     </div>
   );
 }
-

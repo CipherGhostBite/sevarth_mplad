@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, Sparkles, MapPin, Bot, FileSpreadsheet, ArrowRight, CheckCircle2, ChevronRight, ShieldCheck, Zap } from 'lucide-react';
-import { useLanguage } from '@/lib/LanguageContext';
 
 export type ExplanationTopic = 'intelligence' | 'constituencies' | 'explainability' | 'dossiers' | null;
 
@@ -31,187 +30,144 @@ interface TopicConfig {
   summary: string;
 }
 
+const TOPIC_DATA: Record<NonNullable<ExplanationTopic>, TopicConfig> = {
+  intelligence: {
+    id: 'intelligence',
+    badge: 'RISK ENGINE CALCULATION',
+    badgeColor: 'bg-[#C88A25]/15 text-[#9E6B17] border-[#C88A25]/40',
+    icon: Sparkles,
+    title: 'How is an anomaly signal calculated?',
+    subtitle: 'Multi-signal risk engine converting expenditure variance & spatial telemetry into 0–100 priority scores.',
+    steps: [
+      {
+        stepNum: '01',
+        label: 'Telemetry Ingestion',
+        short: 'Data Ingest',
+        detail: 'Aggregates sanction amounts, expenditure vouchers, completion timelines, and contractor registry logs.',
+        keyMetric: 'Raw Data Index',
+      },
+      {
+        stepNum: '02',
+        label: 'Isolation Anomaly Engine',
+        short: 'Anomaly Model',
+        detail: 'Statistical Isolation Forest isolates cost overruns & start delay deviations from historical block benchmarks.',
+        keyMetric: 'Z-Score Distance',
+      },
+      {
+        stepNum: '03',
+        label: 'Traceable Audit Signal',
+        short: 'Audit Score',
+        detail: 'Generates deterministic 0–100 priority score decomposed into specific evidence line-items for field audit.',
+        keyMetric: 'Traceable Score',
+      },
+    ],
+    summary: 'Every priority score is 100% deterministic and decomposed into specific evidence line-items for physical audit verification.',
+  },
+  constituencies: {
+    id: 'constituencies',
+    badge: 'SPATIAL GEOGRAPHY & GRAPH ANALYTICS',
+    badgeColor: 'bg-[#285C7A]/15 text-[#285C7A] border-[#285C7A]/40',
+    icon: MapPin,
+    title: 'Why are cities shown with interactive graphs?',
+    subtitle: 'Graph-based spatial mapping connects geographic location, project density, and vendor overlap.',
+    steps: [
+      {
+        stepNum: '01',
+        label: 'Vector Coordinates',
+        short: 'Geospatial Vectors',
+        detail: 'High-resolution vector maps pinpoint sanctioned works with exact lat/long coordinates across blocks.',
+        keyMetric: 'Spatial Vectors',
+      },
+      {
+        stepNum: '02',
+        label: 'Contractor Graph Edges',
+        short: 'Graph Topology',
+        detail: 'Network edges link projects sharing identical contractors, agencies, or execution timeframes.',
+        keyMetric: 'Vendor Graph',
+      },
+      {
+        stepNum: '03',
+        label: 'Cluster Heatmaps',
+        short: 'Spatial Insight',
+        detail: 'Visualizes physical clustering and duplicate work allocations across administrative boundaries.',
+        keyMetric: 'Proximity Signal',
+      },
+    ],
+    summary: 'Graph connectivity transforms raw GPS coordinates into spatial heatmaps, spotlighting duplicate work allocations.',
+  },
+  explainability: {
+    id: 'explainability',
+    badge: 'RAG ARCHITECTURE & ZERO-HALLUCINATION',
+    badgeColor: 'bg-[#398265]/15 text-[#398265] border-[#398265]/40',
+    icon: Bot,
+    title: 'How does Sevaarth AI reason with RAG?',
+    subtitle: 'Retrieval-Augmented Generation grounds AI responses directly in official MoSPI guidelines & vouchers.',
+    steps: [
+      {
+        stepNum: '01',
+        label: 'Natural Language Query',
+        short: 'Query Ingest',
+        detail: 'Parses investigator prompts regarding project progress, guidelines, or expenditure compliance rules.',
+        keyMetric: 'NL Ingest',
+      },
+      {
+        stepNum: '02',
+        label: 'Policy Vector Lookup',
+        short: 'Vector Search',
+        detail: 'Vector search scans official MoSPI circulars, scheme norms, and sanction evidence records.',
+        keyMetric: 'Vector Lookup',
+      },
+      {
+        stepNum: '03',
+        label: 'Cited Audit Answer',
+        short: 'Zero-Hallucination',
+        detail: 'Synthesizes answers with explicit clickable citations back to official source documents.',
+        keyMetric: 'Zero-Hallucination',
+      },
+    ],
+    summary: 'RAG guarantees zero hallucination by retrieving exact policy clauses before synthesizing answers with clickable citations.',
+  },
+  dossiers: {
+    id: 'dossiers',
+    badge: 'PRIORITY DOSSIER RANKER',
+    badgeColor: 'bg-[#C45145]/15 text-[#C45145] border-[#C45145]/40',
+    icon: FileSpreadsheet,
+    title: 'How is a project dossier ranked for audit?',
+    subtitle: 'Automated compiler that stacks telemetry signals into prioritized physical audit dossiers.',
+    steps: [
+      {
+        stepNum: '01',
+        label: 'Multi-Signal Fusion',
+        short: 'Signal Fusion',
+        detail: 'Merges financial variance, delay index, and contractor load into a composite risk profile.',
+        keyMetric: 'Composite Risk',
+      },
+      {
+        stepNum: '02',
+        label: 'Evidence Binder Stacking',
+        short: 'Binder Stacking',
+        detail: 'Auto-compiles vouchers, map snips, delay logs, and statutory checklists into a printable binder.',
+        keyMetric: 'Evidence Binder',
+      },
+      {
+        stepNum: '03',
+        label: 'Priority Field Queue',
+        short: 'Ranked Queue',
+        detail: 'Ranks projects in order of risk intensity for targeted officer physical field inspection.',
+        keyMetric: 'Ranked Queue',
+      },
+    ],
+    summary: 'Dossiers convert raw data into prioritized physical audit packs, directing officer focus to high-risk projects first.',
+  },
+};
+
 export default function ExplanationModal({ isOpen, topic, onClose }: ExplanationModalProps) {
-  const { isHindi, t } = useLanguage();
   const [currentTopic, setCurrentTopic] = useState<NonNullable<ExplanationTopic>>('intelligence');
   const [activeStep, setActiveStep] = useState<number>(0);
 
-  const getTopicData = (): Record<NonNullable<ExplanationTopic>, TopicConfig> => ({
-    intelligence: {
-      id: 'intelligence',
-      badge: isHindi ? 'जोखिम इंजन गणना' : 'RISK ENGINE CALCULATION',
-      badgeColor: 'bg-[#C88A25]/15 text-[#9E6B17] border-[#C88A25]/40',
-      icon: Sparkles,
-      title: isHindi ? 'अनियमितता संकेत की गणना कैसे की जाती है?' : 'How is an anomaly signal calculated?',
-      subtitle: isHindi
-        ? 'व्यय अंतर और भौगोलिक डेटा को 0–100 प्राथमिकता स्कोर में बदलने वाला मल्टी-सिग्नल जोखिम इंजन।'
-        : 'Multi-signal risk engine converting expenditure variance & spatial telemetry into 0–100 priority scores.',
-      steps: [
-        {
-          stepNum: '01',
-          label: isHindi ? 'डेटा संग्रह' : 'Telemetry Ingestion',
-          short: isHindi ? 'डेटा संग्रह' : 'Data Ingest',
-          detail: isHindi
-            ? 'स्वीकृति राशि, व्यय वाउचर, पूर्णता समय-सीमा और ठेकेदार रजिस्ट्रियों को एकत्रित करता है।'
-            : 'Aggregates sanction amounts, expenditure vouchers, completion timelines, and contractor registry logs.',
-          keyMetric: isHindi ? 'कच्चा डेटा सूचकांक' : 'Raw Data Index',
-        },
-        {
-          stepNum: '02',
-          label: isHindi ? 'आइसोलेशन अनिमियतता इंजन' : 'Isolation Anomaly Engine',
-          short: isHindi ? 'अनियमितता मॉडल' : 'Anomaly Model',
-          detail: isHindi
-            ? 'सांख्यिकीय आइसोलेशन फ़ॉरेस्ट ऐतिहासिक मानकों से लागत वृद्धि और विलंब का पता लगाता है।'
-            : 'Statistical Isolation Forest isolates cost overruns & start delay deviations from historical block benchmarks.',
-          keyMetric: isHindi ? 'जेड-स्कोर दूरी' : 'Z-Score Distance',
-        },
-        {
-          stepNum: '03',
-          label: isHindi ? 'सत्यापनीय ऑडिट स्कोर' : 'Traceable Audit Signal',
-          short: isHindi ? 'ऑडिट स्कोर' : 'Audit Score',
-          detail: isHindi
-            ? 'भौतिक ऑडिट के लिए विशिष्ट साक्ष्य मदों में विभाजित 0–100 स्कोर तैयार करता है।'
-            : 'Generates deterministic 0–100 priority score decomposed into specific evidence line-items for field audit.',
-          keyMetric: isHindi ? 'सत्यापनीय स्कोर' : 'Traceable Score',
-        },
-      ],
-      summary: isHindi
-        ? 'प्रत्येक प्राथमिकता स्कोर 100% निश्चित है और भौतिक निरीक्षण के लिए विशिष्ट साक्ष्य मदों में विभाजित है।'
-        : 'Every priority score is 100% deterministic and decomposed into specific evidence line-items for physical audit verification.',
-    },
-    constituencies: {
-      id: 'constituencies',
-      badge: isHindi ? 'स्थानिक भूगोल एवं ग्राफ विश्लेषण' : 'SPATIAL GEOGRAPHY & GRAPH ANALYTICS',
-      badgeColor: 'bg-[#285C7A]/15 text-[#285C7A] border-[#285C7A]/40',
-      icon: MapPin,
-      title: isHindi ? 'संसदीय क्षेत्रों को इंटरैक्टिव ग्राफ के साथ क्यों दिखाया गया है?' : 'Why are cities shown with interactive graphs?',
-      subtitle: isHindi
-        ? 'ग्राफ-आधारित मानचित्रण भौगोलिक स्थिति, परियोजना घनत्व और विक्रेता नेटवर्क को जोड़ता है।'
-        : 'Graph-based spatial mapping connects geographic location, project density, and vendor overlap.',
-      steps: [
-        {
-          stepNum: '01',
-          label: isHindi ? 'वेक्टर निर्देशांक' : 'Vector Coordinates',
-          short: isHindi ? 'स्थानिक वेक्टर' : 'Geospatial Vectors',
-          detail: isHindi
-            ? 'उच्च-गुणवत्ता वाले वेक्टर मानचित्र सटीक अक्षांश/देशांतर के साथ स्वीकृत कार्यों को दर्शाते हैं।'
-            : 'High-resolution vector maps pinpoint sanctioned works with exact lat/long coordinates across blocks.',
-          keyMetric: isHindi ? 'स्थानिक वेक्टर' : 'Spatial Vectors',
-        },
-        {
-          stepNum: '02',
-          label: isHindi ? 'ठेकेदार ग्राफ जुड़ाव' : 'Contractor Graph Edges',
-          short: isHindi ? 'ग्राफ टोपोलॉजी' : 'Graph Topology',
-          detail: isHindi
-            ? 'नेटवर्क ग्राफ समान ठेकेदारों या समय सीमा को साझा करने वाली परियोजनाओं को जोड़ता है।'
-            : 'Network edges link projects sharing identical contractors, agencies, or execution timeframes.',
-          keyMetric: isHindi ? 'विक्रेता ग्राफ' : 'Vendor Graph',
-        },
-        {
-          stepNum: '03',
-          label: isHindi ? 'क्लस्टर हीटमैप' : 'Cluster Heatmaps',
-          short: isHindi ? 'स्थानिक सूझबूझ' : 'Spatial Insight',
-          detail: isHindi
-            ? 'प्रशासनिक सीमाओं के पार भौतिक क्लस्टरिंग और दोहराव कार्य आवंटन का दृश्य प्रस्तुत करता है।'
-            : 'Visualizes physical clustering and duplicate work allocations across administrative boundaries.',
-          keyMetric: isHindi ? 'निकटता संकेत' : 'Proximity Signal',
-        },
-      ],
-      summary: isHindi
-        ? 'ग्राफ जुड़ाव कच्चे जीपीएस डेटा को स्थानिक मानचित्र में बदलता है, जिससे दोहराव आवंटन उजागर होता है।'
-        : 'Graph connectivity transforms raw GPS coordinates into spatial heatmaps, spotlighting duplicate work allocations.',
-    },
-    explainability: {
-      id: 'explainability',
-      badge: isHindi ? 'आरएजी संरचना एवं शून्य-भ्रम' : 'RAG ARCHITECTURE & ZERO-HALLUCINATION',
-      badgeColor: 'bg-[#398265]/15 text-[#398265] border-[#398265]/40',
-      icon: Bot,
-      title: isHindi ? 'एआई सहायक आरएजी प्रणाली के साथ कैसे तर्क करता है?' : 'How does Sevaarth AI reason with RAG?',
-      subtitle: isHindi
-        ? 'रिट्रीवल-ऑगमेंटेड जनरेशन एआई उत्तरों को सीधे एमओएसपीआई नियमों और वाउचरों से जोड़ता है।'
-        : 'Retrieval-Augmented Generation grounds AI responses directly in official MoSPI guidelines & vouchers.',
-      steps: [
-        {
-          stepNum: '01',
-          label: isHindi ? 'प्राकृतिक भाषा प्रश्न' : 'Natural Language Query',
-          short: isHindi ? 'प्रश्न विश्लेषण' : 'Query Ingest',
-          detail: isHindi
-            ? 'परियोजना प्रगति और एमओएसपीआई नियमों से संबंधित प्रश्नों का विश्लेषण करता है।'
-            : 'Parses investigator prompts regarding project progress, guidelines, or expenditure compliance rules.',
-          keyMetric: isHindi ? 'प्रश्न संग्रह' : 'NL Ingest',
-        },
-        {
-          stepNum: '02',
-          label: isHindi ? 'नीति वेक्टर खोज' : 'Policy Vector Lookup',
-          short: isHindi ? 'वेक्टर खोज' : 'Vector Search',
-          detail: isHindi
-            ? 'वेक्टर खोज आधिकारिक एमओएसपीआई परिपत्रों और योजना नियमों को स्कैन करती है।'
-            : 'Vector search scans official MoSPI circulars, scheme norms, and sanction evidence records.',
-          keyMetric: isHindi ? 'वेक्टर खोज' : 'Vector Lookup',
-        },
-        {
-          stepNum: '03',
-          label: isHindi ? 'सत्यापित ऑडिट उत्तर' : 'Cited Audit Answer',
-          short: isHindi ? 'शून्य-भ्रम' : 'Zero-Hallucination',
-          detail: isHindi
-            ? 'मूल स्रोत दस्तावेजों के क्लिक करने योग्य संदर्भों के साथ उत्तर तैयार करता है।'
-            : 'Synthesizes answers with explicit clickable citations back to official source documents.',
-          keyMetric: isHindi ? 'शून्य-भ्रम' : 'Zero-Hallucination',
-        },
-      ],
-      summary: isHindi
-        ? 'आरएजी सटीक नीति संदर्भ प्राप्त करके और स्रोतों के साथ उत्तर तैयार करके शून्य भ्रम सुनिश्चित करता है।'
-        : 'RAG guarantees zero hallucination by retrieving exact policy clauses before synthesizing answers with clickable citations.',
-    },
-    dossiers: {
-      id: 'dossiers',
-      badge: isHindi ? 'प्राथमिकता फ़ाइल रेंकर' : 'PRIORITY DOSSIER RANKER',
-      badgeColor: 'bg-[#C45145]/15 text-[#C45145] border-[#C45145]/40',
-      icon: FileSpreadsheet,
-      title: isHindi ? 'ऑडिट के लिए परियोजना साक्ष्य फ़ाइल कैसे रैंक की जाती है?' : 'How is a project dossier ranked for audit?',
-      subtitle: isHindi
-        ? 'डेटा संकेतों को प्राथमिकताबद्ध भौतिक ऑडिट फ़ाइलों में व्यवस्थित करने वाला स्वचालित संकलनकर्ता।'
-        : 'Automated compiler that stacks telemetry signals into prioritized physical audit dossiers.',
-      steps: [
-        {
-          stepNum: '01',
-          label: isHindi ? 'मल्टी-सिग्नल संलयन' : 'Multi-Signal Fusion',
-          short: isHindi ? 'सिग्नल संलयन' : 'Signal Fusion',
-          detail: isHindi
-            ? 'वित्तीय अंतर, विलंब सूचकांक और ठेकेदार भार को एक संचयी जोखिम प्रोफ़ाइल में मिलाता है।'
-            : 'Merges financial variance, delay index, and contractor load into a composite risk profile.',
-          keyMetric: isHindi ? 'संचयी जोखिम' : 'Composite Risk',
-        },
-        {
-          stepNum: '02',
-          label: isHindi ? 'साक्ष्य बाइंडिंग' : 'Evidence Binder Stacking',
-          short: isHindi ? 'बाइंडर स्टैकिंग' : 'Binder Stacking',
-          detail: isHindi
-            ? 'प्रिंट करने योग्य बाइंडिंग में वाउचर, मानचित्र, विलंब लॉग और चेकलिस्ट स्वतः संकलित करता है।'
-            : 'Auto-compiles vouchers, map snips, delay logs, and statutory checklists into a printable binder.',
-          keyMetric: isHindi ? 'साक्ष्य बाइंडिंग' : 'Evidence Binder',
-        },
-        {
-          stepNum: '03',
-          label: isHindi ? 'प्राथमिकता फ़ील्ड कतार' : 'Priority Field Queue',
-          short: isHindi ? 'रैंक की गई कतार' : 'Ranked Queue',
-          detail: isHindi
-            ? 'अधिकारियों के लक्षित स्थल निरीक्षण के लिए जोखिम तीव्रता के क्रम में परियोजनाओं को रैंक करता है।'
-            : 'Ranks projects in order of risk intensity for targeted officer physical field inspection.',
-          keyMetric: isHindi ? 'रैंक की गई कतार' : 'Ranked Queue',
-        },
-      ],
-      summary: isHindi
-        ? 'साक्ष्य फ़ाइलें कच्चे डेटा को प्राथमिकताबद्ध ऑडिट पैक में बदलती हैं, जिससे अधिकारियों का ध्यान उच्च जोखिम वाली परियोजनाओं पर पहले जाता है।'
-        : 'Dossiers convert raw data into prioritized physical audit packs, directing officer focus to high-risk projects first.',
-    },
-  });
-
-  const topicData = getTopicData();
-
   // Sync internal topic state when external topic prop changes
   useEffect(() => {
-    if (topic && topicData[topic]) {
+    if (topic && TOPIC_DATA[topic]) {
       setCurrentTopic(topic);
       setActiveStep(0);
     }
@@ -232,9 +188,9 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen || !topicData[currentTopic]) return null;
+  if (!isOpen || !TOPIC_DATA[currentTopic]) return null;
 
-  const data = topicData[currentTopic];
+  const data = TOPIC_DATA[currentTopic];
   const Icon = data.icon;
   const currentStepData = data.steps[activeStep] || data.steps[0];
 
@@ -257,7 +213,7 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
         <div className="flex items-center justify-between gap-2 border-b border-[#E4E7E1]/80 pb-4">
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
             {topicsList.map((tKey) => {
-              const tItem = topicData[tKey];
+              const tItem = TOPIC_DATA[tKey];
               const isSelected = tKey === currentTopic;
               const TIcon = tItem.icon;
               return (
@@ -275,10 +231,10 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
                 >
                   <TIcon className={`w-3.5 h-3.5 ${isSelected ? 'text-[#C88A25]' : 'text-[#667078]'}`} />
                   <span className="hidden sm:inline">
-                    {tKey === 'intelligence' && (isHindi ? 'गणना विधि?' : 'Calculated?')}
-                    {tKey === 'constituencies' && (isHindi ? 'ग्राफ क्यों?' : 'Why Cities?')}
-                    {tKey === 'explainability' && (isHindi ? 'एआई तर्क' : 'AI Reasoning')}
-                    {tKey === 'dossiers' && (isHindi ? 'फ़ाइल रैंकिंग' : 'Dossier Ranking')}
+                    {tKey === 'intelligence' && 'Calculated?'}
+                    {tKey === 'constituencies' && 'Why Cities?'}
+                    {tKey === 'explainability' && 'AI Reasoning'}
+                    {tKey === 'dossiers' && 'Dossier Ranking'}
                   </span>
                   <span className="sm:hidden capitalize">{tKey}</span>
                 </button>
@@ -289,7 +245,7 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
           <button
             onClick={onClose}
             className="p-2 rounded-full text-[#667078] hover:text-[#182027] hover:bg-[#ECEFEA] transition shrink-0 border border-transparent hover:border-[#E4E7E1]"
-            title={isHindi ? 'बंद करें (Esc)' : 'Close Panel (Esc)'}
+            title="Close Panel (Esc)"
           >
             <X className="w-5 h-5" />
           </button>
@@ -322,10 +278,10 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
           <div className="flex items-center justify-between text-[11px] font-mono font-bold text-[#667078] uppercase tracking-wider">
             <span className="flex items-center gap-1.5 text-[#285C7A]">
               <Zap className="w-3.5 h-3.5 text-[#C88A25]" />
-              <span>{isHindi ? '3-चरण प्रणाली कार्यप्रवाह' : '3-STAGE SYSTEM WORKFLOW'}</span>
+              <span>3-STAGE SYSTEM WORKFLOW</span>
             </span>
             <span className="text-[10px] bg-[#285C7A]/10 text-[#285C7A] px-2.5 py-0.5 rounded-full border border-[#285C7A]/20">
-              {isHindi ? `चरण ${activeStep + 1} / ${data.steps.length}` : `STAGE ${activeStep + 1} OF ${data.steps.length}`}
+              STAGE {activeStep + 1} OF {data.steps.length}
             </span>
           </div>
 
@@ -377,7 +333,7 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
           <div className="p-4 rounded-2xl bg-gradient-to-r from-[#FAFAF7] to-white border border-[#E4E7E1] space-y-1.5 shadow-inner">
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#285C7A] uppercase tracking-wider">
               <CheckCircle2 className="w-4 h-4 text-[#398265]" />
-              <span>{isHindi ? `चरण ${currentStepData.stepNum}: ${currentStepData.label}` : `STAGE ${currentStepData.stepNum}: ${currentStepData.label}`}</span>
+              <span>STAGE {currentStepData.stepNum}: {currentStepData.label}</span>
             </div>
             <p className="text-xs text-[#182027] leading-relaxed font-sans">
               {currentStepData.detail}
@@ -390,7 +346,7 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
           <ShieldCheck className="w-5 h-5 text-[#285C7A] shrink-0 mt-0.5" />
           <div className="text-xs text-[#182027] font-sans leading-snug space-y-0.5">
             <span className="font-mono font-bold text-[#285C7A] text-[10px] uppercase tracking-wider block">
-              {isHindi ? 'प्रणाली गारंटी' : 'SYSTEM GUARANTEE'}
+              SYSTEM GUARANTEE
             </span>
             <span>{data.summary}</span>
           </div>
@@ -399,13 +355,13 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
         {/* Footer Close Action */}
         <div className="pt-1 flex items-center justify-between border-t border-[#E4E7E1]/80">
           <span className="text-[10px] font-mono text-[#667078]">
-            {isHindi ? 'सेवाार्थ एआई • व्याख्या योग्य सार्वजनिक व्यय मॉडल' : 'Sevaarth AI • Explainable Public Expenditure Model'}
+            Sevaarth AI &bull; Explainable Public Expenditure Model
           </span>
           <button
             onClick={onClose}
             className="px-5 py-2 rounded-full bg-[#182027] text-white hover:bg-[#285C7A] text-xs font-bold font-mono inline-flex items-center gap-2 shadow-md transition-all duration-200"
           >
-            <span>{t('common.close', 'CLOSE').toUpperCase()}</span>
+            <span>CLOSE</span>
             <ArrowRight className="w-3.5 h-3.5 text-[#C88A25]" />
           </button>
         </div>
@@ -413,3 +369,4 @@ export default function ExplanationModal({ isOpen, topic, onClose }: Explanation
     </div>
   );
 }
+
