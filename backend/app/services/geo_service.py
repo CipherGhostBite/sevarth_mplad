@@ -12,8 +12,9 @@ def get_map_projects(
     work_type: Optional[str] = None,
     agency_id: Optional[str] = None
 ) -> List[Dict[str, Any]]:
-    if constituency and constituency.lower() not in ["all_india", "all", "national"]:
-        seed_constituency_if_needed(db, constituency)
+    c_target = constituency or "varanasi"
+    if c_target.lower() not in ["all_india", "all", "national"]:
+        seed_constituency_if_needed(db, c_target)
 
     query = db.query(Project, Risk, Agency, Location).join(
         Risk, Project.project_id == Risk.project_id
@@ -23,9 +24,8 @@ def get_map_projects(
         Location, Project.location_id == Location.location_id
     )
     
-    if constituency and constituency.lower() not in ["all_india", "all", "national"]:
-        seed_constituency_if_needed(db, constituency)
-        token = constituency.lower().replace('-', '_').replace(' ', '_').split('_')[0]
+    if c_target.lower() not in ["all_india", "all", "national"]:
+        token = c_target.lower().replace('-', '_').replace(' ', '_').split('_')[0]
         query = query.filter(Project.constituency.ilike(f"%{token}%"))
     if min_priority is not None:
         query = query.filter(Risk.priority_score >= min_priority)

@@ -12,8 +12,9 @@ from backend.app.api.assistant_routes import router as assistant_router
 from backend.app.api.report_routes import router as report_router
 from backend.app.api.coordination_routes import router as coordination_router
 
-from backend.app.database import engine
+from backend.app.database import engine, SessionLocal
 from backend.app.models.schema import Base
+from backend.pipeline.seed_db import seed_constituency_if_needed
 
 # Ensure all tables (including new public_reports table) exist
 Base.metadata.create_all(bind=engine)
@@ -25,6 +26,16 @@ app = FastAPI(
     docs_url="/api/docs",
     openapi_url="/api/openapi.json"
 )
+
+@app.on_event("startup")
+def startup_event():
+    db = SessionLocal()
+    try:
+        seed_constituency_if_needed(db, "varanasi")
+    except Exception as e:
+        print("Startup seed error:", e)
+    finally:
+        db.close()
 
 # Enable CORS for Next.js frontend development and production
 app.add_middleware(

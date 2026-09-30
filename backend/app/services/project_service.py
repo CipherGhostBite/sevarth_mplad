@@ -23,8 +23,9 @@ def get_projects(
     limit: int = 100,
     offset: int = 0
 ) -> List[ProjectSummary]:
-    if constituency and constituency.lower() not in ["all_india", "all", "national"]:
-        seed_constituency_if_needed(db, constituency)
+    c_target = constituency or "varanasi"
+    if c_target.lower() not in ["all_india", "all", "national"]:
+        seed_constituency_if_needed(db, c_target)
 
     query = db.query(Project, Risk, Agency, Investigation).join(
         Risk, Project.project_id == Risk.project_id
@@ -34,8 +35,8 @@ def get_projects(
         Investigation, Project.project_id == Investigation.project_id
     )
     
-    if constituency and constituency.lower() not in ["all_india", "all", "national"]:
-        token = constituency.lower().replace('-', '_').replace(' ', '_').split('_')[0]
+    if c_target.lower() not in ["all_india", "all", "national"]:
+        token = c_target.lower().replace('-', '_').replace(' ', '_').split('_')[0]
         query = query.filter(Project.constituency.ilike(f"%{token}%"))
     if status and status != "ALL":
         query = query.filter(Project.status == status)
@@ -235,11 +236,12 @@ def update_investigation(db: Session, project_id: str, req: InvestigationUpdate)
     )
 
 def get_dashboard_stats(db: Session, constituency: Optional[str] = None) -> DashboardStats:
-    if constituency and constituency.lower() not in ["all_india", "all", "national"]:
-        seed_constituency_if_needed(db, constituency)
-        token = constituency.lower().replace('-', '_').replace(' ', '_').split('_')[0]
+    c_target = constituency or "varanasi"
+    if c_target.lower() not in ["all_india", "all", "national"]:
+        seed_constituency_if_needed(db, c_target)
+        token = c_target.lower().replace('-', '_').replace(' ', '_').split('_')[0]
         projects = db.query(Project).filter(Project.constituency.ilike(f"%{token}%")).all()
-        constituency_title = projects[0].constituency if projects else f"{constituency.replace('_', ' ').title()} Lok Sabha Constituency"
+        constituency_title = projects[0].constituency if projects else f"{c_target.replace('_', ' ').title()} Lok Sabha Constituency"
     else:
         projects = db.query(Project).all()
         constituency_title = "All India (All 543 Constituencies)"

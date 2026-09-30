@@ -6,9 +6,10 @@ from backend.app.models.api_models import AgencySummary, AgencyDetail, ProjectSu
 from backend.pipeline.seed_db import seed_constituency_if_needed
 
 def get_agencies(db: Session, constituency: Optional[str] = None) -> List[AgencySummary]:
-    if constituency and constituency.lower() not in ["all_india", "all", "national"]:
-        seed_constituency_if_needed(db, constituency)
-        token = constituency.lower().replace('-', '_').replace(' ', '_').split('_')[0]
+    c_target = constituency or "varanasi"
+    if c_target.lower() not in ["all_india", "all", "national"]:
+        seed_constituency_if_needed(db, c_target)
+        token = c_target.lower().replace('-', '_').replace(' ', '_').split('_')[0]
         agency_ids = [r[0] for r in db.query(Project.agency_id).filter(Project.constituency.ilike(f"%{token}%")).distinct().all()]
         agencies = db.query(Agency).filter(Agency.agency_id.in_(agency_ids)).order_by(Agency.project_count.desc()).all()
     else:
