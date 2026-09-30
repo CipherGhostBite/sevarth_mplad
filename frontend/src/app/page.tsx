@@ -34,9 +34,11 @@ import ConstituencySelector from '@/components/ConstituencySelector';
 import MethodologySheet from '@/components/MethodologySheet';
 import ExplanationModal, { ExplanationTopic } from '@/components/ExplanationModal';
 import ConstituencyLeaderboard from '@/components/ConstituencyLeaderboard';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function LandingPage() {
   const router = useRouter();
+  const { lang, toggleLanguage, t, isHindi } = useLanguage();
   const [email, setEmail] = useState('investigator@mpladguard.gov.in');
   const [password, setPassword] = useState('admin123');
   const [loading, setLoading] = useState(false);
@@ -107,7 +109,7 @@ export default function LandingPage() {
                   />
                 </div>
                 <span className="text-[10px] text-[#285C7A] font-mono tracking-wider uppercase -mt-0.5 emerge-text-hover font-semibold">
-                  PUBLIC EXPENDITURE INTELLIGENCE
+                  {t('landing.sub_brand')}
                 </span>
               </div>
             </Link>
@@ -116,41 +118,52 @@ export default function LandingPage() {
           {/* In-Page Navigation References / Smooth Scroll Anchors */}
           <nav className="hidden lg:flex items-center gap-7 text-xs font-semibold text-[#667078] tracking-wide">
             <a href="#platform" className="nav-link-item">
-              <span>Platform</span>
+              <span>{t('landing.nav_platform')}</span>
             </a>
             <span className="text-[#D2D7CE] text-[10px]">&bull;</span>
             <a href="#intelligence" className="nav-link-item">
-              <span>Intelligence</span>
+              <span>{t('landing.nav_intelligence')}</span>
             </a>
             <span className="text-[#D2D7CE] text-[10px]">&bull;</span>
             <a href="#explainability" className="nav-link-item">
-              <span>Explainability</span>
+              <span>{t('landing.nav_explainability')}</span>
             </a>
             <span className="text-[#D2D7CE] text-[10px]">&bull;</span>
             <a href="#constituencies" className="nav-link-item">
-              <span>Constituencies</span>
+              <span>{t('landing.nav_constituencies')}</span>
             </a>
             <span className="text-[#D2D7CE] text-[10px]">&bull;</span>
             <a href="#efficiency-leaderboard" className="nav-link-item">
-              <span>Leaderboard</span>
+              <span>{t('landing.nav_leaderboard')}</span>
             </a>
             <span className="text-[#D2D7CE] text-[10px]">&bull;</span>
             <a href="#dossiers" className="nav-link-item">
-              <span>Dossiers</span>
+              <span>{t('landing.nav_dossiers')}</span>
             </a>
             <span className="text-[#D2D7CE] text-[10px]">&bull;</span>
             <a href="#footer" className="nav-link-item">
-              <span>About</span>
+              <span>{t('landing.nav_about')}</span>
             </a>
           </nav>
 
-          {/* Authentication Actions Only */}
+          {/* Authentication Actions & Language Switcher */}
           <div className="flex items-center gap-3 font-mono">
+            <button
+              onClick={toggleLanguage}
+              title="Switch Language / भाषा बदलें"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#D2D7CE] bg-white text-[#182027] hover:border-[#285C7A] hover:bg-[#F5F6F3] shadow-xs transition font-mono text-xs font-bold"
+            >
+              <Globe className="w-3.5 h-3.5 text-[#285C7A]" />
+              <span className={lang === 'en' ? 'text-[#285C7A] font-extrabold' : 'text-[#667078]'}>EN</span>
+              <span className="text-[#9AA3AB] text-[10px]">|</span>
+              <span className={lang === 'hi' ? 'text-[#285C7A] font-extrabold' : 'text-[#667078]'}>हिंदी</span>
+            </button>
+
             <Link
               href="/login"
               className="tactile-light-switch-active nav-btn-tactile px-6 py-2 rounded-full text-xs font-bold text-white flex items-center gap-2 transition shadow-md"
             >
-              <span>SIGN IN</span>
+              <span>{isHindi ? 'साइन इन' : 'SIGN IN'}</span>
             </Link>
           </div>
         </div>
@@ -259,7 +272,7 @@ export default function LandingPage() {
 
           <div className="inline-flex items-center gap-2 px-4.5 py-1.5 rounded-full bg-white/90 border border-[#D2D7CE] text-[#285C7A] text-xs font-mono tracking-wide shadow-[0_2px_8px_rgba(24,32,39,0.04)] font-bold backdrop-blur-md">
             <Globe className="w-3.5 h-3.5 text-[#C88A25]" />
-            <span>⚡ NEXT-GEN PUBLIC GOVERNANCE &amp; EXPENDITURE FORENSIC ENGINE</span>
+            <span>{t('landing.badge')}</span>
           </div>
 
           <div className="space-y-4 indian-ambient-glow-wrapper group">
@@ -275,7 +288,7 @@ export default function LandingPage() {
               />
             </h1>
             <p className="max-w-3xl mx-auto text-base sm:text-xl text-[#667078] leading-relaxed font-normal emerge-text-hover relative z-10">
-              Unlocking unprecedented financial integrity in public governance &mdash; converting raw constituency expenditure into real-time, AI-driven forensic intelligence to catch anomalies before funds disappear.
+              {t('landing.tagline')}
             </p>
           </div>
 
@@ -284,7 +297,7 @@ export default function LandingPage() {
               href="/queue"
               className="tactile-light-switch-active nav-btn-tactile px-8 py-4 rounded-2xl text-sm font-bold shadow-xl transition transform hover:-translate-y-0.5 flex items-center gap-2.5"
             >
-              <span>Explore Platform Intelligence</span>
+              <span>{t('landing.explore_btn')}</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <button
@@ -292,38 +305,38 @@ export default function LandingPage() {
               className="tactile-light-switch nav-btn-tactile px-8 py-4 rounded-2xl text-sm font-bold flex items-center gap-2 transition"
             >
               <Compass className="w-4 h-4 text-[#285C7A]" />
-              <span>Understand Methodology</span>
+              <span>{t('landing.understand_btn')}</span>
             </button>
           </div>
 
           {/* Live Telemetry Slabs (Stats) */}
           <div className="pt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left max-w-4xl mx-auto">
             <div className="floating-slab p-5 space-y-1">
-              <span className="text-[10px] font-mono text-[#667078] uppercase tracking-wider block font-bold">MONITORED WORKS</span>
+              <span className="text-[10px] font-mono text-[#667078] uppercase tracking-wider block font-bold">{t('landing.monitored_works')}</span>
               <div className="editorial-number text-3xl text-[#182027]">{stats?.total_projects || 104}</div>
               <span className="text-[11px] text-[#398265] font-semibold flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> Live Telemetry Stream
+                <CheckCircle2 className="w-3 h-3" /> {t('landing.live_stream')}
               </span>
             </div>
 
             <div className="floating-slab p-5 space-y-1 border-l-4 border-l-[#C45145]">
-              <span className="text-[10px] font-mono text-[#C45145] font-bold uppercase tracking-wider block">CRITICAL ALERTS</span>
+              <span className="text-[10px] font-mono text-[#C45145] font-bold uppercase tracking-wider block">{t('landing.critical_alerts')}</span>
               <div className="editorial-number text-3xl text-[#C45145]">{stats?.high_priority_count || 14}</div>
-              <span className="text-[11px] text-[#667078]">Immediate Physical Audit</span>
+              <span className="text-[11px] text-[#667078]">{t('landing.immediate_audit')}</span>
             </div>
 
             <div className="floating-slab p-5 space-y-1">
-              <span className="text-[10px] font-mono text-[#667078] uppercase tracking-wider block font-bold">EXECUTIVE AGENCIES</span>
+              <span className="text-[10px] font-mono text-[#667078] uppercase tracking-wider block font-bold">{t('landing.executive_agencies')}</span>
               <div className="editorial-number text-3xl text-[#285C7A]">{stats?.total_agencies || 18}</div>
-              <span className="text-[11px] text-[#667078]">Vendor Network Tracked</span>
+              <span className="text-[11px] text-[#667078]">{t('landing.vendor_tracked')}</span>
             </div>
 
             <div className="floating-slab p-5 space-y-1">
-              <span className="text-[10px] font-mono text-[#667078] uppercase tracking-wider block font-bold">SANCTIONED OUTLAY</span>
+              <span className="text-[10px] font-mono text-[#667078] uppercase tracking-wider block font-bold">{t('landing.sanctioned_outlay')}</span>
               <div className="editorial-number text-3xl text-[#C88A25]">
                 ₹{stats ? (stats.total_sanctioned_amount / 10000000).toFixed(2) : '24.85'} Cr
               </div>
-              <span className="text-[11px] text-[#667078]">Audited Public Outlay</span>
+              <span className="text-[11px] text-[#667078]">{t('landing.audited_outlay')}</span>
             </div>
           </div>
 
@@ -333,8 +346,8 @@ export default function LandingPage() {
       {/* Protocol Banner Strip */}
       <div className="relative z-10 border-y border-[#E4E7E1] bg-[#ECEFEA] py-3.5 px-6 text-center">
         <div className="max-w-[1650px] mx-auto flex flex-wrap items-center justify-center gap-2 text-xs font-mono text-[#667078]">
-          <span className="text-[#285C7A] font-bold">🔥 LIVE FORENSIC PIPELINE:</span>
-          <span>REAL-TIME INGESTION &rarr; ISOLATION FOREST AI &rarr; GEOSPATIAL HEATMAPS &rarr; EVIDENTIAL DOSSIERS &rarr; ZERO-HALLUCINATION RAG</span>
+          <span className="text-[#285C7A] font-bold">{t('landing.pipeline_title')}</span>
+          <span>{t('landing.pipeline_desc')}</span>
         </div>
       </div>
 
@@ -342,13 +355,13 @@ export default function LandingPage() {
       <section className="relative z-10 py-20 px-6 max-w-[1650px] mx-auto w-full space-y-24" id="platform">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <span className="text-[10px] font-mono font-bold text-[#285C7A] bg-[#285C7A]/10 px-3 py-1 rounded-full uppercase tracking-widest border border-[#285C7A]/20">
-            SYSTEM ARCHITECTURE
+            {t('landing.arch_badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#182027] tracking-tight">
-            Autonomous Governance &amp; Forensic Intelligence Stack
+            {t('landing.arch_title')}
           </h2>
           <p className="text-[#667078] text-sm sm:text-base">
-            Four high-precision intelligence layers designed to safeguard public funds, track vendor behavior, and deliver unassailable audit transparency.
+            {t('landing.arch_sub')}
           </p>
         </div>
 
@@ -367,10 +380,10 @@ export default function LandingPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl font-extrabold text-[#182027]">
-                Forensic Anomaly &amp; Fraud Intelligence
+                {t('landing.f1_title')}
               </h3>
               <p className="text-[#667078] text-sm sm:text-base leading-relaxed">
-                Isolation Forest AI models continuously audit public fund flows, identifying hidden cost overruns, suspicious vendor cartels, and timeline delays with pin-point accuracy.
+                {t('landing.f1_desc')}
               </p>
             </div>
 
@@ -380,7 +393,7 @@ export default function LandingPage() {
                 onClick={() => setExplanationTopic('intelligence')}
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#285C7A] hover:text-[#C88A25] transition group/trigger"
               >
-                <span>How is this calculated?</span>
+                <span>{t('landing.f1_link')}</span>
                 <span className="text-[#C88A25] group-hover/trigger:translate-x-0.5 group-hover/trigger:-translate-y-0.5 transition">↗</span>
               </button>
             </div>
@@ -402,10 +415,10 @@ export default function LandingPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl font-extrabold text-[#182027]">
-                Constituency Geospatial &amp; Spatial Intelligence
+                {t('landing.f2_title')}
               </h3>
               <p className="text-[#667078] text-sm sm:text-base leading-relaxed">
-                High-resolution 3D vector maps and dynamic risk heatmaps spotlighting block-level expenditure clusters, physical proximity overlaps, and regional risk anomalies in real time.
+                {t('landing.f2_desc')}
               </p>
             </div>
 
@@ -415,7 +428,7 @@ export default function LandingPage() {
                 onClick={() => setExplanationTopic('constituencies')}
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#285C7A] hover:text-[#C88A25] transition group/trigger"
               >
-                <span>Why these cities?</span>
+                <span>{t('landing.f2_link')}</span>
                 <span className="text-[#C88A25] group-hover/trigger:translate-x-0.5 group-hover/trigger:-translate-y-0.5 transition">↗</span>
               </button>
             </div>
@@ -437,10 +450,10 @@ export default function LandingPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl font-extrabold text-[#182027]">
-                Autonomous RAG Audit &amp; Knowledge Engine
+                {t('landing.f3_title')}
               </h3>
               <p className="text-[#667078] text-sm sm:text-base leading-relaxed">
-                Query multi-crore scheme guidelines, project vouchers, and regulatory frameworks in natural language with 100% verifiable, source-cited factual precision.
+                {t('landing.f3_desc')}
               </p>
             </div>
 
@@ -450,7 +463,7 @@ export default function LandingPage() {
                 onClick={() => setExplanationTopic('explainability')}
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#285C7A] hover:text-[#C88A25] transition group/trigger"
               >
-                <span>How does the AI reason?</span>
+                <span>{t('landing.f3_link')}</span>
                 <span className="text-[#C88A25] group-hover/trigger:translate-x-0.5 group-hover/trigger:-translate-y-0.5 transition">↗</span>
               </button>
             </div>
@@ -472,10 +485,10 @@ export default function LandingPage() {
             </div>
             <div className="space-y-2">
               <h3 className="text-2xl font-extrabold text-[#182027]">
-                Priority Risk Dossiers &amp; Forensic Queue
+                {t('landing.f4_title')}
               </h3>
               <p className="text-[#667078] text-sm sm:text-base leading-relaxed">
-                Automated evidence compiler that converts complex telemetry signals into officer-ready physical audit briefs, ranked by impact, probability, and financial risk.
+                {t('landing.f4_desc')}
               </p>
             </div>
 
@@ -485,7 +498,7 @@ export default function LandingPage() {
                 onClick={() => setExplanationTopic('dossiers')}
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#285C7A] hover:text-[#C88A25] transition group/trigger"
               >
-                <span>How is a dossier ranked?</span>
+                <span>{t('landing.f4_link')}</span>
                 <span className="text-[#C88A25] group-hover/trigger:translate-x-0.5 group-hover/trigger:-translate-y-0.5 transition">↗</span>
               </button>
             </div>
@@ -528,7 +541,7 @@ export default function LandingPage() {
               </div>
 
               <p className="text-[#667078] leading-relaxed">
-                AI-assisted public expenditure intelligence platform delivering explainable anomaly signals, geospatial analytics, and evidence-backed governance for constituency development schemes.
+                {t('landing.footer_mission')}
               </p>
 
               <div className="pt-1 text-[11px] font-mono text-[#285C7A] font-bold">
@@ -538,48 +551,48 @@ export default function LandingPage() {
 
             {/* Column 2: Platform Capabilities */}
             <div className="space-y-3">
-              <h4 className="font-mono font-bold text-[#182027] text-xs uppercase tracking-wider">Platform</h4>
+              <h4 className="font-mono font-bold text-[#182027] text-xs uppercase tracking-wider">{t('landing.footer_col_platform')}</h4>
               <ul className="space-y-2 text-[#667078]">
-                <li><a href="#intelligence" className="hover:text-[#182027] transition">Explainable Fraud &amp; Anomaly Signals</a></li>
-                <li><a href="#constituencies" className="hover:text-[#182027] transition">Constituency Geospatial Intelligence</a></li>
-                <li><a href="#explainability" className="hover:text-[#182027] transition">RAG-Powered AI Analysis</a></li>
-                <li><a href="#dossiers" className="hover:text-[#182027] transition">Physical Evidence Dossiers</a></li>
-                <li><a href="#platform" className="hover:text-[#182027] transition">Project Expenditure Intelligence</a></li>
+                <li><a href="#intelligence" className="hover:text-[#182027] transition">{t('landing.f1_title')}</a></li>
+                <li><a href="#constituencies" className="hover:text-[#182027] transition">{t('landing.f2_title')}</a></li>
+                <li><a href="#explainability" className="hover:text-[#182027] transition">{t('landing.f3_title')}</a></li>
+                <li><a href="#dossiers" className="hover:text-[#182027] transition">{t('landing.f4_title')}</a></li>
+                <li><a href="#platform" className="hover:text-[#182027] transition">{t('landing.arch_title')}</a></li>
               </ul>
             </div>
 
             {/* Column 3: Resources */}
             <div className="space-y-3">
-              <h4 className="font-mono font-bold text-[#182027] text-xs uppercase tracking-wider">Resources</h4>
+              <h4 className="font-mono font-bold text-[#182027] text-xs uppercase tracking-wider">{t('landing.footer_col_resources')}</h4>
               <ul className="space-y-2 text-[#667078]">
-                <li><a href="#platform" className="hover:text-[#182027] transition">How It Works</a></li>
-                <li><button onClick={() => setIsMethodologyOpen(true)} className="hover:text-[#182027] transition text-left">5-Signal Risk Methodology</button></li>
-                <li><a href="#explainability" className="hover:text-[#182027] transition">Explainability Principles</a></li>
-                <li><a href="#about" className="hover:text-[#182027] transition">Data Sources &amp; Standards</a></li>
-                <li><a href="#about" className="hover:text-[#182027] transition">Policy Guidelines &amp; Circulars</a></li>
+                <li><a href="#platform" className="hover:text-[#182027] transition">{t('landing.footer_how_works')}</a></li>
+                <li><button onClick={() => setIsMethodologyOpen(true)} className="hover:text-[#182027] transition text-left">{t('landing.view_methodology')}</button></li>
+                <li><a href="#explainability" className="hover:text-[#182027] transition">{t('landing.footer_principles')}</a></li>
+                <li><a href="#about" className="hover:text-[#182027] transition">{t('landing.footer_sources')}</a></li>
+                <li><a href="#about" className="hover:text-[#182027] transition">{t('landing.footer_policy')}</a></li>
               </ul>
             </div>
 
             {/* Column 4: Contact & Enquiries */}
             <div className="space-y-3">
-              <h4 className="font-mono font-bold text-[#182027] text-xs uppercase tracking-wider">Contact</h4>
+              <h4 className="font-mono font-bold text-[#182027] text-xs uppercase tracking-wider">{t('landing.footer_col_contact')}</h4>
               <ul className="space-y-2 text-[#667078]">
-                <li><a href="mailto:info@sevaarth.ai" className="hover:text-[#182027] transition">Contact Governance Team</a></li>
-                <li><a href="mailto:feedback@sevaarth.ai" className="hover:text-[#182027] transition">Public Feedback</a></li>
-                <li><a href="mailto:support@sevaarth.ai" className="hover:text-[#182027] transition">Report Data Discrepancy</a></li>
-                <li><a href="mailto:partnerships@sevaarth.ai" className="hover:text-[#182027] transition">Institutional Enquiries</a></li>
+                <li><a href="mailto:info@sevaarth.ai" className="hover:text-[#182027] transition">{t('landing.footer_contact_team')}</a></li>
+                <li><a href="mailto:feedback@sevaarth.ai" className="hover:text-[#182027] transition">{t('landing.footer_feedback')}</a></li>
+                <li><a href="mailto:support@sevaarth.ai" className="hover:text-[#182027] transition">{t('landing.footer_report_disc')}</a></li>
+                <li><a href="mailto:partnerships@sevaarth.ai" className="hover:text-[#182027] transition">{t('landing.footer_inst_enq')}</a></li>
               </ul>
             </div>
 
             {/* Column 5: Legal & Governance */}
             <div className="space-y-3">
-              <h4 className="font-mono font-bold text-[#182027] text-xs uppercase tracking-wider">Legal &amp; Governance</h4>
+              <h4 className="font-mono font-bold text-[#182027] text-xs uppercase tracking-wider">{t('landing.footer_col_legal')}</h4>
               <ul className="space-y-2 text-[#667078]">
-                <li><span className="hover:text-[#182027] cursor-pointer">Privacy &amp; Data Protection</span></li>
-                <li><span className="hover:text-[#182027] cursor-pointer">Terms of Service</span></li>
-                <li><span className="hover:text-[#182027] cursor-pointer">Data Usage &amp; Ethics</span></li>
-                <li><span className="hover:text-[#182027] cursor-pointer">Governance Disclaimer</span></li>
-                <li><span className="hover:text-[#182027] cursor-pointer">AI Scope &amp; Limitations</span></li>
+                <li><span className="hover:text-[#182027] cursor-pointer">{t('landing.footer_privacy')}</span></li>
+                <li><span className="hover:text-[#182027] cursor-pointer">{t('landing.footer_terms')}</span></li>
+                <li><span className="hover:text-[#182027] cursor-pointer">{t('landing.footer_ethics')}</span></li>
+                <li><span className="hover:text-[#182027] cursor-pointer">{t('landing.footer_disclaimer')}</span></li>
+                <li><span className="hover:text-[#182027] cursor-pointer">{t('landing.footer_limitations')}</span></li>
               </ul>
             </div>
 
@@ -587,14 +600,14 @@ export default function LandingPage() {
 
           <div className="border-t border-[#E4E7E1] pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#667078] font-mono gap-4">
             <div>
-              &copy; 2026 <strong>Sevaarth AI</strong> &bull; Public Expenditure Intelligence &amp; Governance Platform
+              {t('landing.footer_copyright')}
             </div>
             <div className="flex items-center gap-4">
-              <span>Explainable AI Engine</span>
+              <span>{t('landing.nav_explainability')}</span>
               <span>&bull;</span>
-              <span>Geospatial Spatial Intelligence</span>
+              <span>{t('landing.f2_title')}</span>
               <span>&bull;</span>
-              <span>Policy Alignment</span>
+              <span>{t('landing.footer_policy')}</span>
             </div>
           </div>
 

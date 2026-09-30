@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Activity, ShieldAlert, AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface Props {
   score: number;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function CoordinationRiskGauge({ score, breakdown, riskLevel }: Props) {
+  const { isHindi, t } = useLanguage();
   const [activeSegment, setActiveSegment] = useState<string | null>(null);
 
   // SVG Radial Math
@@ -34,34 +36,34 @@ export default function CoordinationRiskGauge({ score, breakdown, riskLevel }: P
 
   const segmentDescriptions: Record<string, { label: string; maxPct: number; current: number; desc: string }> = {
     spatial: {
-      label: 'SPATIAL OVERLAP',
+      label: isHindi ? 'स्थानिक अतिव्यापन (SPATIAL OVERLAP)' : 'SPATIAL OVERLAP',
       maxPct: 30,
       current: breakdown.spatial,
-      desc: 'Calculates physical proximity and shared right-of-way corridor (<1.5 km threshold).'
+      desc: isHindi ? 'भौतिक निकटता और साझा अधिकार-क्षेत्र कॉरिडोर का आकलन करता है (<1.5 किमी थ्रेशोल्ड)।' : 'Calculates physical proximity and shared right-of-way corridor (<1.5 km threshold).'
     },
     timeline: {
-      label: 'TIMELINE OVERLAP',
+      label: isHindi ? 'समय-सीमा अतिव्यापन (TIMELINE OVERLAP)' : 'TIMELINE OVERLAP',
       maxPct: 25,
       current: breakdown.timeline,
-      desc: 'Measures execution date window concurrency across agencies in months.'
+      desc: isHindi ? 'विभिन्न एजेंसियों में निष्पादन तिथि विंडो समवर्तीता को महीनों में मापता है।' : 'Measures execution date window concurrency across agencies in months.'
     },
     infrastructure: {
-      label: 'SHARED INFRASTRUCTURE',
+      label: isHindi ? 'साझा बुनियादी ढांचा (SHARED INFRASTRUCTURE)' : 'SHARED INFRASTRUCTURE',
       maxPct: 20,
       current: breakdown.infrastructure,
-      desc: 'Evaluates sub-surface and civil utility resource conflicts (e.g. Roads vs Pipelines).'
+      desc: isHindi ? 'उप-सतह और नागरिक उपयोगिता संसाधन संघर्षों का मूल्यांकन करता है (जैसे सड़क बनाम पाइपलाइन)।' : 'Evaluates sub-surface and civil utility resource conflicts (e.g. Roads vs Pipelines).'
     },
     dependency: {
-      label: 'PROJECT DEPENDENCY',
+      label: isHindi ? 'परियोजना निर्भरता (PROJECT DEPENDENCY)' : 'PROJECT DEPENDENCY',
       maxPct: 20,
       current: breakdown.dependency,
-      desc: 'Identifies prerequisite construction sequences (Utility trenching prior to road surfacing).'
+      desc: isHindi ? 'पूर्वापेक्षित निर्माण अनुक्रमों की पहचान करता है (सड़क की सतह से पहले उपयोगिता ट्रेंचिंग)।' : 'Identifies prerequisite construction sequences (Utility trenching prior to road surfacing).'
     },
     similarity: {
-      label: 'SCOPE SIMILARITY',
+      label: isHindi ? 'दायरा समानता (SCOPE SIMILARITY)' : 'SCOPE SIMILARITY',
       maxPct: 5,
       current: breakdown.similarity,
-      desc: 'Detects potential administrative duplication within the same locality.'
+      desc: isHindi ? 'एक ही इलाके के भीतर संभावित प्रशासनिक दोहराव का पता लगाता है।' : 'Detects potential administrative duplication within the same locality.'
     }
   };
 
@@ -78,7 +80,7 @@ export default function CoordinationRiskGauge({ score, breakdown, riskLevel }: P
         <div className="flex items-center gap-2">
           <Activity className="w-5 h-5 text-cyan-400" />
           <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider">
-            3D COORDINATION RISK INDEX
+            {isHindi ? '3D समन्वय जोखिम सूचकांक' : '3D COORDINATION RISK INDEX'}
           </h3>
         </div>
         <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
@@ -86,7 +88,7 @@ export default function CoordinationRiskGauge({ score, breakdown, riskLevel }: P
           score >= 50 ? 'bg-amber-900/60 text-amber-400 border border-amber-500' :
           'bg-emerald-900/60 text-emerald-400 border border-emerald-500'
         }`}>
-          {riskLevel} COORDINATION RISK
+          {riskLevel} {isHindi ? 'समन्वय जोखिम' : 'COORDINATION RISK'}
         </span>
       </div>
 
@@ -126,7 +128,7 @@ export default function CoordinationRiskGauge({ score, breakdown, riskLevel }: P
               {Math.round(score)}
             </span>
             <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mt-0.5">
-              SCORE / 100
+              {isHindi ? 'स्कोर / 100' : 'SCORE / 100'}
             </span>
           </div>
         </div>
@@ -150,7 +152,7 @@ export default function CoordinationRiskGauge({ score, breakdown, riskLevel }: P
               >
                 <div className="flex items-center justify-between font-bold text-[11px] mb-1">
                   <span className="text-slate-300">{data.label} ({data.maxPct}%)</span>
-                  <span className="text-cyan-400 font-mono">+{data.current} pts</span>
+                  <span className="text-cyan-400 font-mono">+{data.current} {isHindi ? 'अंक' : 'pts'}</span>
                 </div>
                 
                 {/* Progress Bar */}
@@ -179,9 +181,10 @@ export default function CoordinationRiskGauge({ score, breakdown, riskLevel }: P
             <span>{segmentDescriptions[activeSegment].desc}</span>
           </div>
         ) : (
-          <span>Hover over any of the 5 coordination score factors above to inspect its multi-dimensional impact.</span>
+          <span>{isHindi ? 'इसके बहु-आयामी प्रभाव का निरीक्षण करने के लिए ऊपर दिए गए 5 समन्वय स्कोर कारकों में से किसी पर भी होवर करें।' : 'Hover over any of the 5 coordination score factors above to inspect its multi-dimensional impact.'}</span>
         )}
       </div>
     </div>
   );
 }
+

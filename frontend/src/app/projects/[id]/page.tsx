@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/LanguageContext';
 import {
   api,
   ProjectDetail,
@@ -45,6 +46,7 @@ import {
 import Link from 'next/link';
 
 export default function ProjectInvestigationPage() {
+  const { lang, t, isHindi } = useLanguage();
   const params = useParams();
   const router = useRouter();
   const projectId = params?.id as string;
@@ -133,7 +135,9 @@ export default function ProjectInvestigationPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 font-mono">
         <div className="w-10 h-10 border-4 border-[#285C7A] border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-[#667078]">ASSEMBLING SPATIAL INVESTIGATION DOSSIER...</p>
+        <p className="text-xs text-[#667078]">
+          {isHindi ? 'स्थानिक जाँच डोजियर तैयार किया जा रहा है...' : 'ASSEMBLING SPATIAL INVESTIGATION DOSSIER...'}
+        </p>
       </div>
     );
   }
@@ -143,36 +147,36 @@ export default function ProjectInvestigationPage() {
       <div className="floating-slab bg-[#C45145]/10 border border-[#C45145]/30 p-6 text-xs text-[#C45145] font-mono space-y-3">
         <div className="flex items-center gap-2 font-bold text-sm">
           <AlertTriangle className="w-5 h-5" />
-          <span>CASE DOSSIER NOT FOUND</span>
+          <span>{isHindi ? 'केस डोजियर नहीं मिला' : 'CASE DOSSIER NOT FOUND'}</span>
         </div>
-        <p>{error || `Project ID ${projectId} does not exist.`}</p>
+        <p>{error || (isHindi ? `परियोजना आईडी ${projectId} मौजूद नहीं है।` : `Project ID ${projectId} does not exist.`)}</p>
         <Link
           href="/queue"
           className="tactile-light-switch inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-bold"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>RETURN TO QUEUE</span>
+          <span>{isHindi ? 'कतार पर लौटें' : 'RETURN TO QUEUE'}</span>
         </Link>
       </div>
     );
   }
 
   const baseTabs = [
-    { id: 'risk', label: '1. RISK & EXPLAINABILITY', icon: ShieldAlert },
-    { id: 'overview', label: '2. OVERVIEW', icon: Layers },
-    { id: 'peers', label: '3. PEER COMPARISON', icon: Scale },
-    { id: 'agency', label: '4. AGENCY PROFILE', icon: Building2 },
-    { id: 'map', label: '5. GIS SPATIAL', icon: MapPin },
-    { id: 'graph', label: '6. GRAPH BOARD', icon: Share2 },
-    { id: 'coordination', label: '7. CROSS-GOVT COORDINATION', icon: Network },
-    { id: 'evidence', label: '8. EVIDENCE LOCKER', icon: FileText },
-    { id: 'assistant', label: '9. AI WORKSTATION', icon: Bot },
-    { id: 'decision', label: '10. OFFICER LOG', icon: FileCheck },
+    { id: 'risk', label: isHindi ? '1. जोखिम और व्याख्यात्मकता' : '1. RISK & EXPLAINABILITY', icon: ShieldAlert },
+    { id: 'overview', label: isHindi ? '2. अवलोकन' : '2. OVERVIEW', icon: Layers },
+    { id: 'peers', label: isHindi ? '3. सहकर्मी तुलना' : '3. PEER COMPARISON', icon: Scale },
+    { id: 'agency', label: isHindi ? '4. एजेंसी प्रोफाइल' : '4. AGENCY PROFILE', icon: Building2 },
+    { id: 'map', label: isHindi ? '5. जीआईएस स्थानिक' : '5. GIS SPATIAL', icon: MapPin },
+    { id: 'graph', label: isHindi ? '6. ग्राफ बोर्ड' : '6. GRAPH BOARD', icon: Share2 },
+    { id: 'coordination', label: isHindi ? '7. क्रॉस-सरकार समन्वय' : '7. CROSS-GOVT COORDINATION', icon: Network },
+    { id: 'evidence', label: isHindi ? '8. साक्ष्य लॉकर' : '8. EVIDENCE LOCKER', icon: FileText },
+    { id: 'assistant', label: isHindi ? '9. एआई कार्यकेंद्र' : '9. AI WORKSTATION', icon: Bot },
+    { id: 'decision', label: isHindi ? '10. अधिकारी लॉग' : '10. OFFICER LOG', icon: FileCheck },
   ];
 
   const tabs = userRole === 'GUEST'
     ? baseTabs
-    : [...baseTabs, { id: 'report', label: '11. REPORT INACCURACY', icon: AlertTriangle }];
+    : [...baseTabs, { id: 'report', label: isHindi ? '11. अशुद्धता की रिपोर्ट करें' : '11. REPORT INACCURACY', icon: AlertTriangle }];
 
   const statusBadge = getStatusBadge(project.status);
   const invBadge = getInvestigationStatusBadge(project.investigation_status);
@@ -185,7 +189,7 @@ export default function ProjectInvestigationPage() {
         <div className="flex items-center gap-2 text-xs text-[#667078]">
           <Link href="/queue" className="hover:text-[#285C7A] flex items-center gap-1 font-bold">
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>INVESTIGATION QUEUE</span>
+            <span>{isHindi ? 'जाँच कतार' : 'INVESTIGATION QUEUE'}</span>
           </Link>
           <ChevronRight className="w-3.5 h-3.5 text-[#9AA3AB]" />
           <span className="font-bold text-[#285C7A]">{project.project_id}</span>
@@ -196,7 +200,7 @@ export default function ProjectInvestigationPage() {
           className="tactile-light-switch flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold text-[#182027]"
         >
           <Printer className="w-3.5 h-3.5 text-[#C88A25]" />
-          <span>GENERATE OFFICIAL REPORT</span>
+          <span>{isHindi ? 'आधिकारिक रिपोर्ट तैयार करें' : 'GENERATE OFFICIAL REPORT'}</span>
         </Link>
       </div>
 
@@ -212,7 +216,7 @@ export default function ProjectInvestigationPage() {
                 {statusBadge.text}
               </span>
               <span className={`px-3 py-1 rounded-full text-xs font-bold ${invBadge.bg}`}>
-                STATUS: {invBadge.text}
+                {isHindi ? 'स्थिति:' : 'STATUS:'} {invBadge.text}
               </span>
             </div>
 
@@ -233,7 +237,7 @@ export default function ProjectInvestigationPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[#667078]" />
-                <span>Sanction: {project.sanction_date?.split('T')[0]}</span>
+                <span>{isHindi ? 'स्वीकृति:' : 'Sanction:'} {project.sanction_date?.split('T')[0]}</span>
               </div>
             </div>
           </div>
@@ -242,7 +246,7 @@ export default function ProjectInvestigationPage() {
           {project.risk && (
             <div className="recessed-light-display p-6 flex flex-col items-center justify-center shrink-0 min-w-[220px] text-center space-y-2 border-[#C88A25]/30">
               <span className="text-[9px] font-bold text-[#667078] uppercase tracking-widest">
-                INVESTIGATION PRIORITY
+                {isHindi ? 'जाँच प्राथमिकता' : 'INVESTIGATION PRIORITY'}
               </span>
               <RiskBadge
                 score={project.risk.priority_score}
@@ -251,7 +255,7 @@ export default function ProjectInvestigationPage() {
                 showLabel={true}
               />
               <span className="text-[9px] text-[#667078] font-mono block mt-1 uppercase">
-                AI Prioritizes &bull; Human Verifies
+                {isHindi ? 'एआई प्राथमिकता देता है • मानव सत्यापित करता है' : 'AI Prioritizes • Human Verifies'}
               </span>
             </div>
           )}
@@ -295,7 +299,7 @@ export default function ProjectInvestigationPage() {
             <div className="floating-slab p-6 space-y-4">
               <div className="flex items-center gap-2 text-[#182027] font-bold text-xs uppercase tracking-wider border-b border-[#E4E7E1] pb-3">
                 <FileCheck className="w-4 h-4 text-[#285C7A]" />
-                <span>RECOMMENDED VERIFICATION PROTOCOL (HUMAN INVESTIGATOR ACTIONS)</span>
+                <span>{isHindi ? 'अनुशंसित सत्यापन प्रोटोकॉल (मानव अन्वेषक कार्रवाई)' : 'RECOMMENDED VERIFICATION PROTOCOL (HUMAN INVESTIGATOR ACTIONS)'}</span>
               </div>
               <div className="space-y-3">
                 {project.risk.recommended_verification.map((action, idx) => (
@@ -319,29 +323,29 @@ export default function ProjectInvestigationPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="floating-slab p-6 space-y-4">
               <h3 className="text-xs font-bold text-[#285C7A] uppercase tracking-wider border-b border-[#E4E7E1] pb-3">
-                PROJECT FINANCIAL PROFILE
+                {isHindi ? 'परियोजना वित्तीय प्रोफ़ाइल' : 'PROJECT FINANCIAL PROFILE'}
               </h3>
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between py-2 border-b border-[#F5F6F3]">
-                  <span className="text-[#667078]">Sanctioned Amount</span>
+                  <span className="text-[#667078]">{isHindi ? 'स्वीकृत राशि' : 'Sanctioned Amount'}</span>
                   <span className="font-mono font-extrabold text-[#182027]">
                     {formatCurrency(project.sanctioned_amount)}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#F5F6F3]">
-                  <span className="text-[#667078]">Released Amount</span>
+                  <span className="text-[#667078]">{isHindi ? 'जारी राशि' : 'Released Amount'}</span>
                   <span className="font-mono font-semibold text-[#182027]">
                     {formatCurrency(project.released_amount)}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#F5F6F3]">
-                  <span className="text-[#667078]">Recorded Expenditure</span>
+                  <span className="text-[#667078]">{isHindi ? 'दर्ज व्यय' : 'Recorded Expenditure'}</span>
                   <span className="font-mono font-extrabold text-[#182027]">
                     {formatCurrency(project.expenditure)}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#F5F6F3]">
-                  <span className="text-[#667078]">Utilization Ratio</span>
+                  <span className="text-[#667078]">{isHindi ? 'उपयोग अनुपात' : 'Utilization Ratio'}</span>
                   <span className="font-mono font-extrabold text-[#398265]">
                     {((project.expenditure / project.sanctioned_amount) * 100).toFixed(1)}%
                   </span>
@@ -351,31 +355,31 @@ export default function ProjectInvestigationPage() {
 
             <div className="floating-slab p-6 space-y-4">
               <h3 className="text-xs font-bold text-[#285C7A] uppercase tracking-wider border-b border-[#E4E7E1] pb-3">
-                EXECUTION TIMELINE &amp; SCOPE
+                {isHindi ? 'निष्पादन समय-सीमा एवं दायरा' : 'EXECUTION TIMELINE & SCOPE'}
               </h3>
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between py-2 border-b border-[#F5F6F3]">
-                  <span className="text-[#667078]">Sanction Date</span>
+                  <span className="text-[#667078]">{isHindi ? 'स्वीकृति तिथि' : 'Sanction Date'}</span>
                   <span className="font-mono text-[#182027]">
                     {project.sanction_date?.split('T')[0]}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#F5F6F3]">
-                  <span className="text-[#667078]">Start Date</span>
+                  <span className="text-[#667078]">{isHindi ? 'प्रारंभ तिथि' : 'Start Date'}</span>
                   <span className="font-mono text-[#182027]">
                     {project.start_date?.split('T')[0] || 'N/A'}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#F5F6F3]">
-                  <span className="text-[#667078]">Expected Completion</span>
+                  <span className="text-[#667078]">{isHindi ? 'अपेक्षित पूर्णता' : 'Expected Completion'}</span>
                   <span className="font-mono text-[#182027]">
                     {project.expected_completion_date?.split('T')[0] || 'N/A'}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#F5F6F3]">
-                  <span className="text-[#667078]">Actual Completion</span>
+                  <span className="text-[#667078]">{isHindi ? 'वास्तविक पूर्णता' : 'Actual Completion'}</span>
                   <span className="font-mono text-[#182027]">
-                    {project.actual_completion_date?.split('T')[0] || 'Ongoing'}
+                    {project.actual_completion_date?.split('T')[0] || (isHindi ? 'जारी है' : 'Ongoing')}
                   </span>
                 </div>
               </div>
@@ -383,7 +387,7 @@ export default function ProjectInvestigationPage() {
 
             <div className="md:col-span-2 floating-slab p-6 space-y-3">
               <h3 className="text-xs font-bold text-[#285C7A] uppercase tracking-wider">
-                FULL SCOPE DESCRIPTION
+                {isHindi ? 'पूर्ण दायरा विवरण' : 'FULL SCOPE DESCRIPTION'}
               </h3>
               <p className="text-xs text-[#182027] leading-relaxed font-sans recessed-light-display p-5">
                 {project.description}
@@ -404,7 +408,7 @@ export default function ProjectInvestigationPage() {
             <div className="floating-slab p-5 space-y-4">
               <h3 className="text-xs font-bold text-[#285C7A] uppercase tracking-wider flex items-center gap-2 border-b border-[#E4E7E1] pb-3">
                 <MapPin className="w-4 h-4 text-[#285C7A]" />
-                <span>GEOGRAPHIC PROXIMITY RADIUS (500M POTENTIAL OVERLAP INSPECTION)</span>
+                <span>{isHindi ? 'भौगोलिक निकटता त्रिज्या (500M संभावित अतिव्यापन निरीक्षण)' : 'GEOGRAPHIC PROXIMITY RADIUS (500M POTENTIAL OVERLAP INSPECTION)'}</span>
               </h3>
               <LeafletMap
                 markers={[
@@ -443,7 +447,7 @@ export default function ProjectInvestigationPage() {
             {/* Nearby Projects List */}
             <div className="floating-slab p-6 space-y-3">
               <h4 className="text-xs font-bold text-[#182027] uppercase">
-                NEARBY SANCTIONED WORKS WITHIN 3.0 KM ({nearbyData.count})
+                {isHindi ? `3.0 किमी के भीतर निकटतम स्वीकृत कार्य (${nearbyData.count})` : `NEARBY SANCTIONED WORKS WITHIN 3.0 KM (${nearbyData.count})`}
               </h4>
               <div className="divide-y divide-[#E4E7E1] text-xs">
                 {nearbyData.nearby.map((item: any) => (
@@ -453,7 +457,7 @@ export default function ProjectInvestigationPage() {
                         <span className="font-mono font-bold text-[#285C7A]">{item.project_id}</span>
                         {item.is_same_work_type && (
                           <span className="bg-[#C45145]/10 text-[#C45145] text-[9px] font-bold px-2 py-0.5 rounded-full border border-[#C45145]/30 uppercase">
-                            SAME WORK CATEGORY
+                            {isHindi ? 'समान कार्य श्रेणी' : 'SAME WORK CATEGORY'}
                           </span>
                         )}
                       </div>
@@ -463,7 +467,7 @@ export default function ProjectInvestigationPage() {
                     </div>
                     <div className="text-right font-mono">
                       <span className="font-bold text-[#182027] block">
-                        {item.distance_meters}m away
+                        {item.distance_meters}{isHindi ? 'मी दूर' : 'm away'}
                       </span>
                       <span className="text-[10px] text-[#667078]">
                         {formatCurrency(item.sanctioned_amount)}
@@ -483,10 +487,10 @@ export default function ProjectInvestigationPage() {
               <div className="flex items-center justify-between border-b border-[#E4E7E1] pb-3">
                 <h3 className="text-xs font-bold text-[#285C7A] uppercase tracking-wider flex items-center gap-2">
                   <Share2 className="w-4 h-4 text-[#285C7A]" />
-                  <span>INTERACTIVE CROSS-PROJECT ENTITY INVESTIGATION GRAPH</span>
+                  <span>{isHindi ? 'इंटरएक्टिव क्रॉस-प्रोजेक्ट संस्था जाँच ग्राफ' : 'INTERACTIVE CROSS-PROJECT ENTITY INVESTIGATION GRAPH'}</span>
                 </h3>
                 <span className="text-xs text-[#667078] font-mono">
-                  {graphData.nodes.length} CONNECTED NODES &bull; {graphData.edges.length} EDGES
+                  {isHindi ? `${graphData.nodes.length} जुड़े हुए नोड्स • ${graphData.edges.length} संधियाँ` : `${graphData.nodes.length} CONNECTED NODES • ${graphData.edges.length} EDGES`}
                 </span>
               </div>
               <CytoscapeGraph nodes={graphData.nodes} edges={graphData.edges} height="520px" />
@@ -526,3 +530,4 @@ export default function ProjectInvestigationPage() {
     </div>
   );
 }
+

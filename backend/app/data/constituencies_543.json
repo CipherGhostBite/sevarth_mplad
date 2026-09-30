@@ -1,20 +1,4 @@
-export interface Constituency {
-  id: string;
-  code: string;
-  name: string;
-  shortName: string;
-  state: string;
-  active: boolean;
-  count: string;
-  sanctionedAmount: number;
-  riskScoreAvg: number;
-  mpName?: string;
-  mpParty?: string;
-  latitude: number;
-  longitude: number;
-}
-
-export const ALL_543_CONSTITUENCIES: Constituency[] = [
+[
   {
     "id": "andaman_and_nicobar_islands",
     "code": "PC-001",
@@ -8160,23 +8144,4 @@ export const ALL_543_CONSTITUENCIES: Constituency[] = [
     "latitude": 24.135493,
     "longitude": 87.758502
   }
-];
-
-export const VARANASI_CONSTITUENCY: Constituency = ALL_543_CONSTITUENCIES.find((c) => c.id === 'varanasi') || {
-  id: 'varanasi',
-  code: 'PC-493',
-  name: 'Varanasi Lok Sabha Constituency',
-  shortName: 'Varanasi',
-  state: 'Uttar Pradesh',
-  active: true,
-  count: '91 Works (Active)',
-  sanctionedAmount: 188641531,
-  riskScoreAvg: 64,
-  mpName: 'Narendra Modi',
-  mpParty: 'BJP',
-  latitude: 25.283372,
-  longitude: 82.868063,
-};
-
-export const DEFAULT_CONSTITUENCY = VARANASI_CONSTITUENCY;
-
+]

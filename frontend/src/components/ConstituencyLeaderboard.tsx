@@ -18,6 +18,8 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 
+import { useLanguage } from '@/lib/LanguageContext';
+
 export interface EnrichedConstituency extends Constituency {
   rank: number;
   projectCountNum: number;
@@ -182,6 +184,7 @@ function getCivicIcon(c: Constituency): string {
 }
 
 export default function ConstituencyLeaderboard() {
+  const { isHindi, t } = useLanguage();
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -419,24 +422,24 @@ export default function ConstituencyLeaderboard() {
           <div className="space-y-3 max-w-3xl">
             <div className="flex items-center gap-2.5 flex-wrap">
               <span className="text-[10px] font-mono px-3 py-1 rounded-full font-bold uppercase tracking-wider bg-[#285C7A]/10 text-[#285C7A] border border-[#285C7A]/20 shadow-sm">
-                CIVIC INTELLIGENCE NETWORK &bull; ALL 543 CONSTITUENCIES
+                {isHindi ? 'नागरिक बुद्धिमत्ता नेटवर्क • सभी 543 संसदीय क्षेत्र' : 'CIVIC INTELLIGENCE NETWORK • ALL 543 CONSTITUENCIES'}
               </span>
               <button
                 onClick={() => setIsMethodologyOpen(true)}
                 className="inline-flex items-center gap-1 text-xs font-mono font-bold text-[#285C7A] hover:text-[#C88A25] transition border-b border-[#285C7A]/30 hover:border-[#C88A25]"
-                title="View Efficiency Calculation Methodology"
+                title={isHindi ? 'दक्षता गणना विधि देखें' : 'View Efficiency Calculation Methodology'}
               >
-                <span>How is efficiency measured?</span>
+                <span>{isHindi ? 'दक्षता कैसे मापी जाती है?' : 'How is efficiency measured?'}</span>
                 <span className="text-[#C88A25]">↗</span>
               </button>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#182027] tracking-tight font-sans">
-              Constituency Efficiency Intelligence
+              {t('landing.leaderboard_title', 'Constituency Efficiency Intelligence')}
             </h2>
 
             <p className="text-sm sm:text-base text-[#667078] leading-relaxed font-sans">
-              Explore development efficiency across 543 parliamentary constituencies. Visualized as an ordered connected network based on fund utilization, milestone completion, and low anomaly signals.
+              {t('landing.leaderboard_sub', 'Explore development efficiency across 543 parliamentary constituencies. Visualized as an ordered connected network based on fund utilization, milestone completion, and low anomaly signals.')}
             </p>
           </div>
 
@@ -444,11 +447,11 @@ export default function ConstituencyLeaderboard() {
           <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl border border-[#E4E7E1] shadow-sm shrink-0 font-mono">
             <TrendingUp className="w-4 h-4 text-[#C88A25]" />
             <span className="text-xs text-[#667078]">
-              PAGE <strong className="text-[#182027]">{currentPage + 1}</strong> OF <strong className="text-[#182027]">{totalPages}</strong>
+              {isHindi ? 'पृष्ठ ' : 'PAGE '}<strong className="text-[#182027]">{currentPage + 1}</strong> {isHindi ? 'कुल ' : 'OF '}<strong className="text-[#182027]">{totalPages}</strong>
             </span>
             <span className="text-[#D2D7CE]">&bull;</span>
             <span className="text-xs font-bold text-[#285C7A]">
-              {currentPage * PAGE_SIZE + 1}–{Math.min((currentPage + 1) * PAGE_SIZE, 543)} of 543
+              {isHindi ? `दिखा रहा है ${currentPage * PAGE_SIZE + 1}–${Math.min((currentPage + 1) * PAGE_SIZE, 543)} / 543` : `${currentPage * PAGE_SIZE + 1}–${Math.min((currentPage + 1) * PAGE_SIZE, 543)} of 543`}
             </span>
           </div>
         </div>
@@ -540,7 +543,7 @@ export default function ConstituencyLeaderboard() {
                   {/* Footer: Efficiency Index Score & Visual Progress Bar */}
                   <div className="space-y-2 pt-3 border-t border-[#E4E7E1]">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-[#667078] text-[11px]">Efficiency Index</span>
+                      <span className="text-[#667078] text-[11px]">{isHindi ? 'दक्षता सूचकांक' : 'Efficiency Index'}</span>
                       <span className="font-black text-[#285C7A] bg-[#285C7A]/10 px-2.5 py-0.5 rounded-md border border-[#285C7A]/20">
                         {item.efficiencyIndex} <span className="text-[9px] text-[#667078] font-normal">/100</span>
                       </span>
@@ -561,10 +564,10 @@ export default function ConstituencyLeaderboard() {
                           handleOpenConstituencyDossier(item);
                         }}
                         className="w-full py-1.5 px-3 rounded-xl text-[11px] font-mono font-bold bg-[#182027] text-white hover:bg-[#285C7A] transition flex items-center justify-center gap-1.5 shadow-sm group-hover:bg-[#285C7A]"
-                        title={`Open Investigation Dossier for ${item.name}`}
+                        title={isHindi ? `${item.name} हेतु साक्ष्य फ़ाइल खोलें` : `Open Investigation Dossier for ${item.name}`}
                       >
                         <Zap className="w-3.5 h-3.5 text-[#C88A25]" />
-                        <span>OPEN DOSSIER</span>
+                        <span>{isHindi ? 'साक्ष्य फ़ाइल खोलें' : 'OPEN DOSSIER'}</span>
                         <ArrowRight className="w-3 h-3 text-white/70" />
                       </button>
                     </div>
@@ -578,10 +581,10 @@ export default function ConstituencyLeaderboard() {
                         <span>#{item.rank}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-1 text-[10px] text-white/90 font-sans">
-                        <div>Utilization: <strong className="text-white">{item.fundUtilization}%</strong></div>
-                        <div>Completion: <strong className="text-white">{item.completionRate}%</strong></div>
-                        <div>Sanctioned: <strong className="text-white">{formatSanc(item.sanctionedAmount)}</strong></div>
-                        <div>Risk Anomaly: <strong className="text-white">{item.riskScoreAvg}</strong></div>
+                        <div>{isHindi ? 'उपयोग:' : 'Utilization:'} <strong className="text-white">{item.fundUtilization}%</strong></div>
+                        <div>{isHindi ? 'पूर्णता:' : 'Completion:'} <strong className="text-white">{item.completionRate}%</strong></div>
+                        <div>{isHindi ? 'स्वीकृत:' : 'Sanctioned:'} <strong className="text-white">{formatSanc(item.sanctionedAmount)}</strong></div>
+                        <div>{isHindi ? 'जोखिम:' : 'Risk Anomaly:'} <strong className="text-white">{item.riskScoreAvg}</strong></div>
                       </div>
                     </div>
                   )}
@@ -602,11 +605,11 @@ export default function ConstituencyLeaderboard() {
               }`}
             >
               <ChevronLeft className="w-4 h-4" />
-              <span>← PREVIOUS 25</span>
+              <span>{isHindi ? '← पिछला 25' : '← PREVIOUS 25'}</span>
             </button>
 
             <div className="text-xs text-[#667078] font-bold">
-              Showing <strong className="text-[#182027]">{currentPage * PAGE_SIZE + 1}–{Math.min((currentPage + 1) * PAGE_SIZE, 543)}</strong> of <strong className="text-[#182027]">543</strong> constituencies
+              {isHindi ? 'दिखा रहा है ' : 'Showing '}<strong className="text-[#182027]">{currentPage * PAGE_SIZE + 1}–{Math.min((currentPage + 1) * PAGE_SIZE, 543)}</strong> {isHindi ? 'कुल ' : 'of '}<strong className="text-[#182027]">543</strong> {isHindi ? 'संसदीय क्षेत्र' : 'constituencies'}
             </div>
 
             <button
@@ -618,7 +621,7 @@ export default function ConstituencyLeaderboard() {
                   : 'bg-[#182027] text-white hover:bg-[#285C7A] shadow-md'
               }`}
             >
-              <span>NEXT 25 →</span>
+              <span>{isHindi ? 'अगला 25 →' : 'NEXT 25 →'}</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>

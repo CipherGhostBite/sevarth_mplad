@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { useLanguage } from '@/lib/LanguageContext';
 import {
   ShieldCheck,
   Lock,
@@ -41,6 +42,7 @@ const DEPARTMENTS = [
 ];
 
 function LoginPageContent() {
+  const { isHindi, t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -239,7 +241,7 @@ function LoginPageContent() {
           className="tactile-light-switch inline-flex items-center gap-2 text-xs font-bold text-[#182027] px-4 py-2 rounded-full shadow-xs"
         >
           <Home className="w-3.5 h-3.5 text-[#C88A25]" />
-          <span>RETURN TO SEVAARTH AI</span>
+          <span>{isHindi ? 'SEVAARTH AI पर लौटें' : 'RETURN TO SEVAARTH AI'}</span>
         </Link>
       </div>
 
@@ -258,7 +260,7 @@ function LoginPageContent() {
             <span className="text-[#285C7A] font-mono ml-0.5">AI</span>
           </h1>
           <p className="text-[11px] text-[#667078] font-mono tracking-wider uppercase mt-0.5">
-            PUBLIC EXPENDITURE INTELLIGENCE AUTHENTICATION
+            {isHindi ? 'सार्वजनिक व्यय इंटेलिजेंस प्रमाणीकरण' : 'PUBLIC EXPENDITURE INTELLIGENCE AUTHENTICATION'}
           </p>
         </div>
 
@@ -271,7 +273,7 @@ function LoginPageContent() {
               authMethod === 'email' ? 'tactile-light-switch-active text-white shadow-xs' : 'text-[#667078] hover:text-[#182027]'
             }`}
           >
-            EMAIL &amp; PASSWORD SIGN IN
+            {isHindi ? 'ईमेल और पासवर्ड साइन इन' : 'EMAIL & PASSWORD SIGN IN'}
           </button>
           <button
             type="button"
@@ -280,7 +282,7 @@ function LoginPageContent() {
               authMethod === 'otp' ? 'tactile-light-switch-active text-white shadow-xs' : 'text-[#667078] hover:text-[#182027]'
             }`}
           >
-            MOBILE OTP AUTH
+            {isHindi ? 'मोबाइल ओटीपी प्रमाणीकरण' : 'MOBILE OTP AUTH'}
           </button>
         </div>
       </div>
@@ -298,10 +300,10 @@ function LoginPageContent() {
                 <form onSubmit={handleSendOtp} className="space-y-5">
                   <div className="text-center space-y-1">
                     <span className="text-xs font-bold text-[#285C7A] uppercase tracking-wider block">
-                      MOBILE NUMBER VERIFICATION
+                      {isHindi ? 'मोबाइल नंबर सत्यापन' : 'MOBILE NUMBER VERIFICATION'}
                     </span>
                     <p className="text-xs text-[#667078] font-sans">
-                      Enter your 10-digit Indian mobile number to receive a one-time passcode.
+                      {isHindi ? 'वन-टाइम पासकोड प्राप्त करने के लिए अपना 10-अंकीय भारतीय मोबाइल नंबर दर्ज करें।' : 'Enter your 10-digit Indian mobile number to receive a one-time passcode.'}
                     </p>
                   </div>
 
@@ -321,7 +323,7 @@ function LoginPageContent() {
 
                   <div>
                     <label className="block text-[10px] font-bold text-[#182027] uppercase tracking-wider mb-1.5">
-                      MOBILE NUMBER
+                      {isHindi ? 'मोबाइल नंबर' : 'MOBILE NUMBER'}
                     </label>
                     <div className="relative flex items-center">
                       <div className="absolute left-3.5 flex items-center gap-1 text-xs font-bold text-[#285C7A] border-r border-[#D2D7CE] pr-2.5">
@@ -350,7 +352,7 @@ function LoginPageContent() {
                     disabled={sendingOtp}
                     className="tactile-light-switch-active w-full py-3.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-md transition disabled:opacity-50"
                   >
-                    <span>{sendingOtp ? 'SENDING OTP...' : 'SEND OTP'}</span>
+                    <span>{isHindi ? (sendingOtp ? 'ओटीपी भेजा जा रहा है...' : 'ओटीपी भेजें') : (sendingOtp ? 'SENDING OTP...' : 'SEND OTP')}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </form>
@@ -361,10 +363,10 @@ function LoginPageContent() {
                 <form onSubmit={handleVerifyOtp} className="space-y-5 text-center">
                   <div className="space-y-1">
                     <span className="text-xs font-bold text-[#285C7A] uppercase tracking-wider block">
-                      VERIFY YOUR MOBILE
+                      {isHindi ? 'अपना मोबाइल सत्यापित करें' : 'VERIFY YOUR MOBILE'}
                     </span>
                     <p className="text-xs text-[#667078] font-sans">
-                      Enter the 6-digit OTP sent to <strong className="text-[#182027] font-mono">{maskedPhone}</strong>
+                      {isHindi ? `पर भेजा गया 6-अंकीय ओटीपी दर्ज करें ${maskedPhone}` : `Enter the 6-digit OTP sent to ${maskedPhone}`}
                     </p>
                   </div>
 
@@ -403,9 +405,9 @@ function LoginPageContent() {
                   <div className="flex items-center justify-between text-xs font-mono text-[#667078] pt-1">
                     <span>
                       {resendTimer > 0 ? (
-                        <>RESEND OTP IN: <strong className="text-[#285C7A]">00:{resendTimer < 10 ? `0${resendTimer}` : resendTimer}s</strong></>
+                        <>{isHindi ? 'ओटीपी पुनः भेजें:' : 'RESEND OTP IN:'} <strong className="text-[#285C7A]">00:{resendTimer < 10 ? `0${resendTimer}` : resendTimer}s</strong></>
                       ) : (
-                        <span className="text-[#398265]">OTP Expired</span>
+                        <span className="text-[#398265]">{isHindi ? 'ओटीपी समाप्त हो गया' : 'OTP Expired'}</span>
                       )}
                     </span>
                     <button
@@ -417,7 +419,7 @@ function LoginPageContent() {
                       }`}
                     >
                       <RefreshCw className="w-3 h-3" />
-                      <span>RESEND OTP</span>
+                      <span>{isHindi ? 'ओटीपी पुनः भेजें' : 'RESEND OTP'}</span>
                     </button>
                   </div>
 
@@ -427,7 +429,7 @@ function LoginPageContent() {
                       disabled={verifyingOtp}
                       className="tactile-light-switch-active w-full py-3.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
                     >
-                      <span>{verifyingOtp ? 'VERIFYING OTP...' : 'VERIFY & CONTINUE'}</span>
+                      <span>{isHindi ? (verifyingOtp ? 'सत्यापित किया जा रहा है...' : 'सत्यापित करें और जारी रखें') : (verifyingOtp ? 'VERIFYING OTP...' : 'VERIFY & CONTINUE')}</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
 
@@ -440,7 +442,7 @@ function LoginPageContent() {
                       }}
                       className="text-xs text-[#667078] hover:text-[#182027] font-mono underline block mx-auto pt-1"
                     >
-                      Change Mobile Number
+                      {isHindi ? 'मोबाइल नंबर बदलें' : 'Change Mobile Number'}
                     </button>
                   </div>
                 </form>
@@ -451,10 +453,10 @@ function LoginPageContent() {
                 <div className="space-y-5 text-center font-mono">
                   <div className="space-y-1">
                     <span className="text-xs font-bold text-[#398265] uppercase tracking-wider block">
-                      PASSCODE VERIFIED ✓ SELECT YOUR SESSION ROLE
+                      {isHindi ? 'पासकोड सत्यापित ✓ अपना सत्र विकल्प चुनें' : 'PASSCODE VERIFIED ✓ SELECT YOUR SESSION ROLE'}
                     </span>
                     <p className="text-xs text-[#667078] font-sans">
-                      Choose how you would like to participate in this intelligence session:
+                      {isHindi ? 'चुनें कि आप इस इंटेलिजेंस सत्र में कैसे भाग लेना चाहते हैं:' : 'Choose how you would like to participate in this intelligence session:'}
                     </p>
                   </div>
 
@@ -478,10 +480,10 @@ function LoginPageContent() {
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2 font-bold text-xs text-[#182027] group-hover:text-white">
                           <ShieldCheck className="w-4 h-4 text-[#285C7A] group-hover:text-white" />
-                          <span>CONTINUE AS VIGILANCE OFFICER</span>
+                          <span>{isHindi ? 'सतर्कता अधिकारी के रूप में जारी रखें' : 'CONTINUE AS VIGILANCE OFFICER'}</span>
                         </div>
                         <p className="text-[11px] text-[#667078] group-hover:text-white/80 font-sans">
-                          Official investigator mode with write access to Officer Log (Tab 9).
+                          {isHindi ? 'अधिकारी लॉग (टैब 9) पर लिखने की पहुंच के साथ आधिकारिक जांचकर्ता मोड।' : 'Official investigator mode with write access to Officer Log (Tab 9).'}
                         </p>
                       </div>
                       <ArrowRight className="w-4 h-4 text-[#285C7A] group-hover:text-white shrink-0" />
@@ -506,10 +508,10 @@ function LoginPageContent() {
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2 font-bold text-xs text-[#182027] group-hover:text-white">
                           <UserCheck className="w-4 h-4 text-[#C88A25] group-hover:text-white" />
-                          <span>CONTINUE AS COMMON PUBLIC OF INDIA</span>
+                          <span>{isHindi ? 'भारत के आम नागरिक के रूप में जारी रखें' : 'CONTINUE AS COMMON PUBLIC OF INDIA'}</span>
                         </div>
                         <p className="text-[11px] text-[#667078] group-hover:text-white/80 font-sans">
-                          Public citizen mode with access to Report Inaccuracy & file ground complaints (Tab 10).
+                          {isHindi ? 'अशुद्धता की रिपोर्ट करने और जमीनी शिकायतें दर्ज करने की पहुंच के साथ सार्वजनिक नागरिक मोड।' : 'Public citizen mode with access to Report Inaccuracy & file ground complaints (Tab 10).'}
                         </p>
                       </div>
                       <ArrowRight className="w-4 h-4 text-[#C88A25] group-hover:text-white shrink-0" />
@@ -526,10 +528,10 @@ function LoginPageContent() {
             <form onSubmit={handleEmailLoginSubmit} className="space-y-4 text-xs">
               <div className="text-center space-y-1 pb-2 border-b border-[#E4E7E1]">
                 <span className="text-xs font-bold text-[#285C7A] uppercase tracking-wider block">
-                  OFFICER CREDENTIAL LOGIN
+                  {isHindi ? 'अधिकारी साख लॉगिन' : 'OFFICER CREDENTIAL LOGIN'}
                 </span>
                 <p className="text-xs text-[#667078] font-sans">
-                  Sign in using your official email address and password.
+                  {isHindi ? 'अपने आधिकारिक ईमेल पते और पासवर्ड का उपयोग करके साइन इन करें।' : 'Sign in using your official email address and password.'}
                 </p>
               </div>
 
@@ -542,7 +544,7 @@ function LoginPageContent() {
 
               <div>
                 <label className="block text-[10px] font-bold text-[#182027] uppercase tracking-wider mb-1.5">
-                  OFFICIAL EMAIL ADDRESS
+                  {isHindi ? 'आधिकारिक ईमेल पता' : 'OFFICIAL EMAIL ADDRESS'}
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-[#9AA3AB] absolute left-3.5 top-3 pointer-events-none" />
@@ -560,11 +562,11 @@ function LoginPageContent() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-[10px] font-bold text-[#182027] uppercase tracking-wider">
-                    PASSWORD
+                    {isHindi ? 'पासवर्ड' : 'PASSWORD'}
                   </label>
                   {isCapsLock && (
                     <span className="text-[9px] font-bold text-[#C88A25] uppercase">
-                      CAPS LOCK IS ON
+                      {isHindi ? 'कैप्स लॉक ऑन है' : 'CAPS LOCK IS ON'}
                     </span>
                   )}
                 </div>
@@ -594,7 +596,7 @@ function LoginPageContent() {
                 disabled={emailLoading}
                 className="tactile-light-switch-active w-full py-3.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-md pt-2"
               >
-                <span>{emailLoading ? 'AUTHENTICATING...' : 'SIGN IN TO WORKSPACE'}</span>
+                <span>{isHindi ? (emailLoading ? 'प्रमाणीकरण हो रहा है...' : 'कार्यक्षेत्र में साइन इन करें') : (emailLoading ? 'AUTHENTICATING...' : 'SIGN IN TO WORKSPACE')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -603,7 +605,7 @@ function LoginPageContent() {
           {/* Quick Sign-In Option for Common Public of India */}
           <div className="pt-4 border-t border-[#E4E7E1] space-y-2">
             <span className="text-[10px] font-bold text-[#667078] uppercase tracking-wider block text-center">
-              OR SIGN IN AS A CITIZEN OF INDIA
+              {isHindi ? 'या भारत के नागरिक के रूप में साइन इन करें' : 'OR SIGN IN AS A CITIZEN OF INDIA'}
             </span>
             <button
               type="button"
@@ -621,7 +623,7 @@ function LoginPageContent() {
               className="w-full py-3 px-4 rounded-xl border border-[#285C7A] bg-[#285C7A]/10 text-[#285C7A] hover:bg-[#285C7A] hover:text-white transition font-mono text-xs font-bold flex items-center justify-center gap-2 shadow-xs"
             >
               <Sparkles className="w-4 h-4 text-[#C88A25]" />
-              <span>CONTINUE AS COMMON PUBLIC OF INDIA</span>
+              <span>{isHindi ? 'भारत के आम नागरिक के रूप में जारी रखें' : 'CONTINUE AS COMMON PUBLIC OF INDIA'}</span>
             </button>
           </div>
 
@@ -629,9 +631,9 @@ function LoginPageContent() {
 
         {/* Bottom Link to Sign Up */}
         <div className="text-center font-mono text-xs text-[#667078]">
-          Don&apos;t have an account?{' '}
+          {isHindi ? 'खाता नहीं है?' : "Don't have an account?"}{' '}
           <Link href="/signup" className="font-bold text-[#285C7A] hover:underline">
-            Create an Account / Register &rarr;
+            {isHindi ? 'खाता बनाएं / पंजीकरण करें →' : 'Create an Account / Register →'}
           </Link>
         </div>
 
@@ -641,12 +643,13 @@ function LoginPageContent() {
 }
 
 export default function LoginPage() {
+  const { isHindi } = useLanguage();
   return (
     <Suspense
       fallback={
         <div className="min-h-screen bg-[#F5F6F3] flex items-center justify-center font-mono text-xs text-[#667078]">
           <div className="w-8 h-8 border-4 border-[#285C7A] border-t-transparent rounded-full animate-spin mr-3" />
-          <span>INITIALIZING AUTHENTICATION CONSOLE...</span>
+          <span>{isHindi ? 'प्रमाणीकरण कंसोल प्रारंभ हो रहा है...' : 'INITIALIZING AUTHENTICATION CONSOLE...'}</span>
         </div>
       }
     >

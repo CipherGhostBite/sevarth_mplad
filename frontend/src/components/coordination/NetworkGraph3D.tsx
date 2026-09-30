@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Cytoscape from 'cytoscape';
 import { Network, RefreshCw, ZoomIn, ZoomOut, Filter, Info } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface Props {
   networkData: {
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export default function NetworkGraph3D({ networkData, onSelectNode }: Props) {
+  const { isHindi, t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Cytoscape.Core | null>(null);
   const [selectedEdge, setSelectedEdge] = useState<any | null>(null);
@@ -169,13 +171,13 @@ export default function NetworkGraph3D({ networkData, onSelectNode }: Props) {
         <div className="flex items-center gap-2">
           <Network className="w-5 h-5 text-purple-400" />
           <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider">
-            3D SPATIAL RELATIONSHIP NETWORK
+            {isHindi ? '3D स्थानिक संबंध नेटवर्क' : '3D SPATIAL RELATIONSHIP NETWORK'}
           </h3>
         </div>
         <button
           onClick={handleResetLayout}
           className="p-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition"
-          title="Reset Graph Layout"
+          title={isHindi ? 'ग्राफ़ लेआउट रीसेट करें' : 'Reset Graph Layout'}
         >
           <RefreshCw className="w-4 h-4" />
         </button>
@@ -189,20 +191,21 @@ export default function NetworkGraph3D({ networkData, onSelectNode }: Props) {
         <div className="p-3 bg-slate-900/90 rounded-2xl border border-cyan-500/50 text-xs text-slate-200 flex items-center justify-between animate-fadeIn">
           <div className="space-y-0.5">
             <span className="text-[10px] text-cyan-400 font-bold uppercase">
-              RELATIONSHIP: {selectedEdge.relationshipType.toUpperCase()}
+              {isHindi ? 'संबंध:' : 'RELATIONSHIP:'} {selectedEdge.relationshipType.toUpperCase()}
             </span>
             <div className="font-semibold text-slate-100">
-              Shared Resource: {selectedEdge.sharedResource}
+              {isHindi ? 'साझा संसाधन:' : 'Shared Resource:'} {selectedEdge.sharedResource}
             </div>
             <div className="text-[10px] text-slate-400">
-              Distance: {selectedEdge.distanceKm} km &bull; Timeline Overlap: {selectedEdge.overlapMonths} Months
+              {isHindi ? 'दूरी:' : 'Distance:'} {selectedEdge.distanceKm} {isHindi ? 'किमी • समय अतिव्यापन:' : 'km • Timeline Overlap:'} {selectedEdge.overlapMonths} {isHindi ? 'महीने' : 'Months'}
             </div>
           </div>
           <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-red-900/60 text-red-300 border border-red-500">
-            {selectedEdge.riskLevel} RISK
+            {selectedEdge.riskLevel} {isHindi ? 'जोखिम' : 'RISK'}
           </span>
         </div>
       )}
     </div>
   );
 }
+

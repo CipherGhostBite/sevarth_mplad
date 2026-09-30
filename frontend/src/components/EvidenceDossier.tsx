@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { EvidenceItem } from '@/lib/api';
 import { FileText, Shield, MapPin, Building, BookOpen, Tag } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface EvidenceDossierProps {
   evidenceItems: EvidenceItem[];
@@ -10,6 +11,7 @@ interface EvidenceDossierProps {
 }
 
 export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDossierProps) {
+  const { isHindi, t } = useLanguage();
   const [selectedType, setSelectedType] = useState<string>('ALL');
 
   const getEvidenceIcon = (type: string) => {
@@ -44,6 +46,21 @@ export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDo
     }
   };
 
+  const formatTypeLabel = (tType: string) => {
+    if (tType === 'ALL') return t('common.all', 'ALL').toUpperCase();
+    if (isHindi) {
+      switch (tType) {
+        case 'FINANCIAL': return 'वित्तीय';
+        case 'TIMELINE': return 'समय-सीमा';
+        case 'SPATIAL': return 'स्थानिक/जीआईएस';
+        case 'AGENCY_LOG': return 'एजेंसी लॉग';
+        case 'GUIDELINE_REF': return 'दिशानिर्देश संदर्भ';
+        default: return tType;
+      }
+    }
+    return tType.replace('_', ' ');
+  };
+
   const types = ['ALL', ...Array.from(new Set(evidenceItems.map((e) => e.evidence_type)))];
 
   const filteredItems =
@@ -55,17 +72,17 @@ export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDo
     <div className="space-y-6 font-mono">
       {/* Evidence Filter Tabs Bar */}
       <div className="flex flex-wrap items-center gap-2 pb-4 border-b border-[#E4E7E1]">
-        {types.map((t) => (
+        {types.map((typeKey) => (
           <button
-            key={t}
-            onClick={() => setSelectedType(t)}
+            key={typeKey}
+            onClick={() => setSelectedType(typeKey)}
             className={`tactile-light-switch px-4 py-2 rounded-full text-xs font-mono font-bold transition ${
-              selectedType === t
+              selectedType === typeKey
                 ? 'tactile-light-switch-active text-white'
                 : 'text-[#667078] hover:text-[#182027]'
             }`}
           >
-            {t.replace('_', ' ')}
+            {formatTypeLabel(typeKey)}
           </button>
         ))}
       </div>
@@ -92,7 +109,7 @@ export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDo
                           ev.evidence_type
                         )}`}
                       >
-                        {ev.evidence_type}
+                        {formatTypeLabel(ev.evidence_type)}
                       </span>
                     </div>
                     <h4 className="text-base font-bold text-[#182027] font-sans mt-1">{ev.title}</h4>
@@ -100,7 +117,7 @@ export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDo
                 </div>
 
                 <span className="text-[10px] font-mono font-extrabold text-[#C45145] bg-[#C45145]/10 px-3 py-1 rounded-full border border-[#C45145]/30 uppercase tracking-wider">
-                  {ev.relevance} RELEVANCE
+                  {ev.relevance} {isHindi ? 'प्रासंगिकता' : 'RELEVANCE'}
                 </span>
               </div>
 
@@ -112,11 +129,11 @@ export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDo
               {/* Source Authority Footer */}
               <div className="flex items-center justify-between text-[11px] font-mono text-[#667078] pt-3 border-t border-[#E4E7E1]">
                 <span>
-                  <strong className="text-[#182027]">SOURCE AUTHORITY:</strong> {ev.source}
+                  <strong className="text-[#182027]">{isHindi ? 'स्रोत प्राधिकरण:' : 'SOURCE AUTHORITY:'}</strong> {ev.source}
                 </span>
                 <span className="text-[#398265] font-bold flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5" />
-                  <span>VERIFIED EVIDENCE RECORD</span>
+                  <span>{isHindi ? 'सत्यापित साक्ष्य रिकॉर्ड' : 'VERIFIED EVIDENCE RECORD'}</span>
                 </span>
               </div>
             </div>
@@ -125,7 +142,7 @@ export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDo
 
         {filteredItems.length === 0 && (
           <div className="recessed-light-display p-10 text-center text-[#667078] text-xs font-mono">
-            NO EVIDENCE ARTIFACTS FOUND FOR THIS CATEGORY FILTER.
+            {isHindi ? 'इस फ़िल्टर श्रेणी के लिए कोई साक्ष्य नहीं मिला।' : 'NO EVIDENCE ARTIFACTS FOUND FOR THIS CATEGORY FILTER.'}
           </div>
         )}
       </div>

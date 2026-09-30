@@ -16,7 +16,7 @@ def run():
     print("==========================================================")
     
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    venv_python = os.path.join(base_dir, ".venv", "bin", "python")
+    venv_python = sys.executable
     
     # 1. Start Backend
     print("[1/2] Starting FastAPI Backend on http://127.0.0.1:8000 ...")
@@ -31,10 +31,12 @@ def run():
     
     # 2. Start Frontend
     print("[2/2] Starting Next.js Frontend on http://localhost:3000 ...")
+    npm_cmd = "npm.cmd" if os.name == "nt" else "npm"
     frontend_proc = subprocess.Popen(
-        ["npm", "run", "dev"],
+        [npm_cmd, "run", "dev"],
         cwd=os.path.join(base_dir, "frontend"),
-        env=os.environ
+        env=os.environ,
+        shell=(os.name == "nt")
     )
     
     print("\n----------------------------------------------------------")

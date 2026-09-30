@@ -2,7 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { GraphNode, GraphEdge } from '@/lib/api';
-import { ZoomIn, ZoomOut, Maximize2, Info, Compass, RotateCcw } from 'lucide-react';
+import { ZoomIn, ZoomOut, Info, RotateCcw } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface CytoscapeGraphProps {
   nodes: GraphNode[];
@@ -15,6 +16,7 @@ export default function CytoscapeGraph({
   edges,
   height = '540px',
 }: CytoscapeGraphProps) {
+  const { isHindi } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<any>(null);
   const [selectedNodeData, setSelectedNodeData] = useState<any>(null);
@@ -46,7 +48,7 @@ export default function CytoscapeGraph({
           id: e.id,
           source: e.source,
           target: e.target,
-          label: e.label || (e.type === 'proximity_overlap' ? 'PROXIMITY OVERLAP' : 'IMPLEMENTED BY'),
+          label: e.label || (e.type === 'proximity_overlap' ? (isHindi ? 'निकटता दोहराव' : 'PROXIMITY OVERLAP') : (isHindi ? 'कार्यन्वयनकर्ता' : 'IMPLEMENTED BY')),
           type: e.type || 'direct',
         },
       });
@@ -272,7 +274,7 @@ export default function CytoscapeGraph({
         cyRef.current = null;
       }
     };
-  }, [nodes, edges]);
+  }, [nodes, edges, isHindi]);
 
   const handleZoomIn = () => {
     if (cyRef.current) cyRef.current.zoom(cyRef.current.zoom() * 1.25);
@@ -300,21 +302,21 @@ export default function CytoscapeGraph({
         <button
           onClick={handleZoomIn}
           className="tactile-light-switch p-1.5 rounded-full text-[#182027]"
-          title="Zoom In"
+          title={isHindi ? 'ज़ूम इन' : 'Zoom In'}
         >
           <ZoomIn className="w-4 h-4" />
         </button>
         <button
           onClick={handleZoomOut}
           className="tactile-light-switch p-1.5 rounded-full text-[#182027]"
-          title="Zoom Out"
+          title={isHindi ? 'ज़ूम आउट' : 'Zoom Out'}
         >
           <ZoomOut className="w-4 h-4" />
         </button>
         <button
           onClick={handleReset}
           className="tactile-light-switch p-1.5 rounded-full text-[#182027]"
-          title="Reset Camera View"
+          title={isHindi ? 'कैमरा व्यू रीसेट करें' : 'Reset Camera View'}
         >
           <RotateCcw className="w-4 h-4" />
         </button>
@@ -326,7 +328,7 @@ export default function CytoscapeGraph({
           <div className="flex items-center justify-between border-b border-[#E4E7E1] pb-2.5">
             <div className="flex items-center gap-2 text-xs font-bold text-[#285C7A]">
               <Info className="w-4 h-4" />
-              <span>SPATIAL ENTITY INSPECTOR</span>
+              <span>{isHindi ? 'स्थानिक इकाई निरीक्षक' : 'SPATIAL ENTITY INSPECTOR'}</span>
             </div>
             <button
               onClick={() => {
@@ -335,39 +337,39 @@ export default function CytoscapeGraph({
               }}
               className="text-xs text-[#667078] hover:text-[#182027]"
             >
-              [CLOSE]
+              [{isHindi ? 'बंद करें' : 'CLOSE'}]
             </button>
           </div>
           <div className="text-xs space-y-2 text-[#182027]">
             <div>
-              <span className="text-[#667078] text-[9px] uppercase font-bold block">ENTITY IDENTIFIER</span>
+              <span className="text-[#667078] text-[9px] uppercase font-bold block">{isHindi ? 'इकाई पहचानकर्ता' : 'ENTITY IDENTIFIER'}</span>
               <span className="font-bold text-[#285C7A] text-sm">{selectedNodeData.id}</span>
             </div>
             <div>
-              <span className="text-[#667078] text-[9px] uppercase font-bold block">SEMANTIC CLASS</span>
+              <span className="text-[#667078] text-[9px] uppercase font-bold block">{isHindi ? 'वर्ग श्रेणी' : 'SEMANTIC CLASS'}</span>
               <span className="font-semibold text-[#173F58] uppercase">{selectedNodeData.type}</span>
             </div>
             {selectedNodeData.name && (
               <div>
-                <span className="text-[#667078] text-[9px] uppercase font-bold block">LABEL / TITLE</span>
+                <span className="text-[#667078] text-[9px] uppercase font-bold block">{isHindi ? 'लेबल / नाम' : 'LABEL / TITLE'}</span>
                 <span className="text-[#182027] font-sans">{selectedNodeData.name}</span>
               </div>
             )}
             {selectedNodeData.cost && (
               <div>
-                <span className="text-[#667078] text-[9px] uppercase font-bold block">FINANCIAL OUTLAY</span>
+                <span className="text-[#667078] text-[9px] uppercase font-bold block">{isHindi ? 'वित्तीय परिव्यय' : 'FINANCIAL OUTLAY'}</span>
                 <span className="font-bold text-[#182027]">{selectedNodeData.cost}</span>
               </div>
             )}
             {selectedNodeData.priority !== undefined && (
               <div>
-                <span className="text-[#667078] text-[9px] uppercase font-bold block">RISK SCORE</span>
+                <span className="text-[#667078] text-[9px] uppercase font-bold block">{isHindi ? 'जोखिम स्कोर' : 'RISK SCORE'}</span>
                 <span className="font-bold text-[#C45145]">{selectedNodeData.priority.toFixed(1)} / 100</span>
               </div>
             )}
             {selectedNodeData.delay_rate && (
               <div>
-                <span className="text-[#667078] text-[9px] uppercase font-bold block">HISTORICAL DELAY</span>
+                <span className="text-[#667078] text-[9px] uppercase font-bold block">{isHindi ? 'ऐतिहासिक विलंब' : 'HISTORICAL DELAY'}</span>
                 <span className="font-semibold text-[#C88A25]">{selectedNodeData.delay_rate}</span>
               </div>
             )}
@@ -379,26 +381,25 @@ export default function CytoscapeGraph({
       <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-full border border-[#E4E7E1] text-[10px] font-mono shadow-md flex items-center gap-4 text-[#182027]">
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#173F58] border-2 border-[#C88A25]" />
-          <span>PROJECT</span>
+          <span>{isHindi ? 'परियोजना' : 'PROJECT'}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#285C7A] border-2 border-[#94C0E6]" />
-          <span>AGENCY</span>
+          <span>{isHindi ? 'एजेंसी' : 'AGENCY'}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#398265] border-2 border-white" />
-          <span>LOCATION</span>
+          <span>{isHindi ? 'स्थान' : 'LOCATION'}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#C88A25] border-2 border-white" />
-          <span>FUND</span>
+          <span>{isHindi ? 'निधि' : 'FUND'}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-[#C45145] border-2 border-white" />
-          <span>RISK SIGNAL</span>
+          <span>{isHindi ? 'जोखिम संकेत' : 'RISK SIGNAL'}</span>
         </div>
       </div>
     </div>
   );
 }
-

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface MapMarker {
   project_id: string;
@@ -38,12 +39,13 @@ function isValidCoordinate(lat?: number | null, lng?: number | null): boolean {
 export default function LeafletMap({
   markers,
   selectedProjectId,
-  center = [25.1982, 85.5149],
+  center = [25.283372, 82.868063],
   zoom = 13,
   height = '500px',
   showProximityCircle = false,
   proximityRadiusKm = 0.5,
 }: LeafletMapProps) {
+  const { isHindi } = useLanguage();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const router = useRouter();
@@ -63,7 +65,7 @@ export default function LeafletMap({
     // Initialize Map
     const initialCenter: [number, number] = isValidCoordinate(center[0], center[1])
       ? center
-      : [25.1982, 85.5149];
+      : [25.283372, 82.868063];
     const map = L.map(mapContainerRef.current).setView(initialCenter, zoom);
     mapInstanceRef.current = map;
 
@@ -133,16 +135,16 @@ export default function LeafletMap({
       // Popup Content formatted with clean light spatial card theme
       const popupHtml = `
         <div style="font-family: sans-serif; min-width: 230px; font-size: 12px; line-height: 1.4; background: #FFFFFF; color: #182027; padding: 14px; border-radius: 12px; border: 1px solid #E4E7E1; box-shadow: 0 18px 45px rgba(40,50,55,0.12);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-family: monospace;">
+          <div style="display: flex; justify-space-between; align-items: center; margin-bottom: 6px; font-family: monospace;">
             <span style="font-weight: bold; color: #285C7A;">${m.project_id}</span>
             <span style="background: ${markerColor}; color: #FFFFFF; padding: 2px 8px; border-radius: 9999px; font-weight: 900; font-size: 11px;">
               ${m.priority_score.toFixed(1)} / 100
             </span>
           </div>
-          <div style="font-weight: font-bold; color: #182027; margin-bottom: 6px; font-size: 12px; line-height: 1.3;">${m.project_name}</div>
-          <div style="color: #667078; font-size: 11px; margin-bottom: 2px;"><strong>Type:</strong> ${m.work_type}</div>
-          <div style="color: #667078; font-size: 11px; margin-bottom: 2px;"><strong>Agency:</strong> ${m.agency_name}</div>
-          <div style="color: #667078; font-size: 11px; margin-bottom: 12px;"><strong>Cost:</strong> ₹${m.sanctioned_amount.toFixed(2)} Lakhs</div>
+          <div style="font-weight: bold; color: #182027; margin-bottom: 6px; font-size: 12px; line-height: 1.3;">${m.project_name}</div>
+          <div style="color: #667078; font-size: 11px; margin-bottom: 2px;"><strong>${isHindi ? 'प्रकार:' : 'Type:'}</strong> ${m.work_type}</div>
+          <div style="color: #667078; font-size: 11px; margin-bottom: 2px;"><strong>${isHindi ? 'एजेंसी:' : 'Agency:'}</strong> ${m.agency_name}</div>
+          <div style="color: #667078; font-size: 11px; margin-bottom: 12px;"><strong>${isHindi ? 'लागत:' : 'Cost:'}</strong> ₹${m.sanctioned_amount.toFixed(2)} ${isHindi ? 'लाख' : 'Lakhs'}</div>
           <a href="/projects/${m.project_id}" onclick="window.location.href='/projects/${m.project_id}'; return false;" style="
             display: block;
             text-align: center;
@@ -156,7 +158,7 @@ export default function LeafletMap({
             font-size: 11px;
             box-shadow: 0 4px 12px rgba(23,63,88,0.25);
           ">
-            OPEN CASE DOSSIER &rarr;
+            ${isHindi ? 'साक्ष्य फ़ाइल खोलें →' : 'OPEN CASE DOSSIER &rarr;'}
           </a>
         </div>
       `;
@@ -193,25 +195,27 @@ export default function LeafletMap({
         mapInstanceRef.current = null;
       }
     };
-  }, [markers, selectedProjectId, center, zoom, showProximityCircle, proximityRadiusKm]);
+  }, [markers, selectedProjectId, center, zoom, showProximityCircle, proximityRadiusKm, isHindi]);
 
   return (
     <div className="relative rounded-2xl overflow-hidden border border-[#E4E7E1] shadow-[0_18px_45px_rgba(40,50,55,0.08)] bg-[#ECEFEA]">
       <div ref={mapContainerRef} style={{ height, width: '100%' }} />
       {/* Map Legend overlay */}
       <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md p-3.5 rounded-2xl border border-[#E4E7E1] text-xs font-mono z-[1000] space-y-2 shadow-lg">
-        <div className="text-[10px] font-bold text-[#667078] uppercase tracking-wider">Priority Pin Legend</div>
+        <div className="text-[10px] font-bold text-[#667078] uppercase tracking-wider">
+          {isHindi ? 'प्राथमिकता पिन विवरण' : 'Priority Pin Legend'}
+        </div>
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-[#C45145] inline-block shadow-xs" />
-          <span className="text-[#182027]">High Priority (75–100)</span>
+          <span className="text-[#182027]">{isHindi ? 'उच्च प्राथमिकता (75–100)' : 'High Priority (75–100)'}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-[#C88A25] inline-block shadow-xs" />
-          <span className="text-[#182027]">Medium Priority (45–74)</span>
+          <span className="text-[#182027]">{isHindi ? 'मध्यम प्राथमिकता (45–74)' : 'Medium Priority (45–74)'}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-[#398265] inline-block shadow-xs" />
-          <span className="text-[#182027]">Low Priority (&lt;45)</span>
+          <span className="text-[#182027]">{isHindi ? 'कम प्राथमिकता (<45)' : 'Low Priority (<45)'}</span>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { getPriorityTier } from '@/lib/utils';
 import { ShieldAlert, ShieldCheck, AlertCircle } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface RiskBadgeProps {
   score: number;
@@ -17,6 +17,7 @@ export default function RiskBadge({
   size = 'md',
   isAnomaly = false,
 }: RiskBadgeProps) {
+  const { isHindi, t } = useLanguage();
   const isHigh = score >= 75;
   const isMedium = score >= 45 && score < 75;
 
@@ -25,7 +26,7 @@ export default function RiskBadge({
       return {
         bg: 'bg-[#C45145]/10 text-[#C45145] border-[#C45145]/30 shadow-[0_4px_12px_rgba(196,81,69,0.12)]',
         labelColor: 'text-[#C45145]',
-        label: 'HIGH PRIORITY',
+        label: isHindi ? 'उच्च प्राथमिकता' : 'HIGH PRIORITY',
         Icon: ShieldAlert,
       };
     }
@@ -33,14 +34,14 @@ export default function RiskBadge({
       return {
         bg: 'bg-[#C88A25]/10 text-[#C88A25] border-[#C88A25]/30 shadow-[0_4px_12px_rgba(200,138,37,0.12)]',
         labelColor: 'text-[#C88A25]',
-        label: 'MEDIUM PRIORITY',
+        label: isHindi ? 'मध्यम प्राथमिकता' : 'MEDIUM PRIORITY',
         Icon: AlertCircle,
       };
     }
     return {
       bg: 'bg-[#398265]/10 text-[#398265] border-[#398265]/30 shadow-[0_4px_12px_rgba(57,130,101,0.12)]',
       labelColor: 'text-[#398265]',
-      label: 'LOW PRIORITY',
+      label: isHindi ? 'कम प्राथमिकता' : 'LOW PRIORITY',
       Icon: ShieldCheck,
     };
   };
@@ -70,7 +71,7 @@ export default function RiskBadge({
       )}
       {isAnomaly && (
         <span className="bg-purple-50 text-purple-700 text-[9px] font-mono px-2 py-0.5 rounded-full border border-purple-200 font-bold uppercase tracking-wider shadow-xs">
-          ML OUTLIER
+          {isHindi ? 'एमएल आउटलायर' : 'ML OUTLIER'}
         </span>
       )}
     </div>

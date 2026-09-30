@@ -329,7 +329,7 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
 }
 
 const getActiveConstituencyId = (): string => {
-  if (typeof window === 'undefined') return 'nalanda';
+  if (typeof window === 'undefined') return 'varanasi';
   try {
     const saved = localStorage.getItem('selected_constituency');
     if (saved) {
@@ -337,7 +337,7 @@ const getActiveConstituencyId = (): string => {
       if (parsed && parsed.id) return parsed.id;
     }
   } catch (e) {}
-  return 'nalanda';
+  return 'varanasi';
 };
 
 export const api = {

@@ -15,8 +15,11 @@ import {
   X,
 } from 'lucide-react';
 
+import { useLanguage } from '@/lib/LanguageContext';
+
 export default function InvestigationQueuePage() {
   const router = useRouter();
+  const { lang, t, isHindi } = useLanguage();
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
 
   const handleOpenDossier = (e: React.MouseEvent, projectId?: string) => {
@@ -94,11 +97,11 @@ export default function InvestigationQueuePage() {
           <div className="flex items-center gap-2.5">
             <ShieldAlert className="w-5 h-5 text-[#C88A25]" />
             <h1 className="text-lg font-black text-[#182027] tracking-wider uppercase">
-              SPATIAL EVIDENCE INVESTIGATION QUEUE
+              {t('queue.title', 'Priority Investigation Queue')}
             </h1>
           </div>
           <p className="text-xs text-[#667078] font-sans mt-1">
-            Prioritized evidence records dynamically ranked from 0–100 based on multi-dimensional anomaly signals.
+            {t('queue.subtitle', 'Prioritized evidence records dynamically ranked from 0–100 based on multi-dimensional anomaly signals.')}
           </p>
         </div>
 
@@ -108,7 +111,7 @@ export default function InvestigationQueuePage() {
           title="Refresh Queue"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-          <span>REFRESH QUEUE</span>
+          <span>{isHindi ? 'कतार रीफ़्रेश करें' : 'REFRESH QUEUE'}</span>
         </button>
       </div>
 
@@ -116,7 +119,7 @@ export default function InvestigationQueuePage() {
       <div className="floating-slab p-5 space-y-4">
         <div className="flex items-center gap-2 text-xs text-[#285C7A] font-bold uppercase tracking-wider pb-3 border-b border-[#E4E7E1]">
           <SlidersHorizontal className="w-4 h-4" />
-          <span>SPATIAL FILTER &amp; SORT CONSOLE</span>
+          <span>{isHindi ? 'स्थानिक फ़िल्टर एवं सॉर्ट कंसोल' : 'SPATIAL FILTER & SORT CONSOLE'}</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -127,7 +130,7 @@ export default function InvestigationQueuePage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search ID, project name, agency..."
+              placeholder={t('queue.search_placeholder', 'Search ID, project name, agency...')}
               className="w-full bg-gradient-to-b from-[#FAFBF8] to-[#EEF2EA] border-2 border-[#B8C2B3] rounded-2xl pl-10 pr-9 py-2.5 text-xs text-[#182027] focus:ring-4 focus:ring-[#285C7A]/25 focus:border-[#285C7A] focus:outline-none font-mono placeholder-[#78828A] shadow-[inset_0_3px_6px_rgba(0,0,0,0.08),inset_0_1px_2px_rgba(0,0,0,0.06)] transition-all duration-200"
             />
             {search && (
@@ -147,10 +150,10 @@ export default function InvestigationQueuePage() {
             onChange={(e) => setPriorityFilter(e.target.value)}
             className="bg-[#FAFAF7] border border-[#D2D7CE] rounded-xl px-4 py-2.5 text-xs font-bold text-[#182027] focus:ring-2 focus:ring-[#285C7A] focus:outline-hidden"
           >
-            <option value="ALL">All Priority Tiers</option>
-            <option value="HIGH">High Priority (Score &ge; 75)</option>
-            <option value="MEDIUM">Medium Priority (45–74)</option>
-            <option value="LOW">Low Priority (&lt; 45)</option>
+            <option value="ALL">{isHindi ? 'सभी जोखिम श्रेणियां' : 'All Priority Tiers'}</option>
+            <option value="HIGH">{isHindi ? 'उच्च जोखिम (≥75)' : 'High Risk Tier (≥75)'}</option>
+            <option value="MEDIUM">{isHindi ? 'मध्यम जोखिम (45-74)' : 'Medium Risk Tier (45-74)'}</option>
+            <option value="LOW">{isHindi ? 'कम जोखिम (<45)' : 'Low Risk Tier (<45)'}</option>
           </select>
 
           {/* Work Type Filter */}
@@ -159,15 +162,15 @@ export default function InvestigationQueuePage() {
             onChange={(e) => setWorkTypeFilter(e.target.value)}
             className="bg-[#FAFAF7] border border-[#D2D7CE] rounded-xl px-4 py-2.5 text-xs font-bold text-[#182027] focus:ring-2 focus:ring-[#285C7A] focus:outline-hidden"
           >
-            <option value="ALL">All Work Categories</option>
-            <option value="PCC Road & Drainage">PCC Road &amp; Drainage</option>
-            <option value="Community Hall / Center">Community Hall / Center</option>
-            <option value="Solar Street Lights Installation">Solar Street Lights</option>
-            <option value="High School Science Lab & Classrooms">School Classrooms / Labs</option>
-            <option value="Drinking Water & RO Plant">Drinking Water &amp; RO</option>
-            <option value="Primary Health Center Upgrade">Health Center Upgrade</option>
-            <option value="Rural Culvert & Small Bridge">Culverts &amp; Bridges</option>
-            <option value="Anganwadi Center Building">Anganwadi Buildings</option>
+            <option value="ALL">{isHindi ? 'सभी कार्य श्रेणियां' : 'All Work Categories'}</option>
+            <option value="PCC Road & Drainage">{isHindi ? 'पीसीसी सड़क और जल निकासी' : 'PCC Road & Drainage'}</option>
+            <option value="Community Hall / Center">{isHindi ? 'सामुदायिक भवन / केंद्र' : 'Community Hall / Center'}</option>
+            <option value="Solar Street Lights Installation">{isHindi ? 'सोलर स्ट्रीट लाइट' : 'Solar Street Lights'}</option>
+            <option value="High School Science Lab & Classrooms">{isHindi ? 'स्कूल कक्षाएं / प्रयोगशालाएं' : 'School Classrooms / Labs'}</option>
+            <option value="Drinking Water & RO Plant">{isHindi ? 'पेयजल और आरओ' : 'Drinking Water & RO'}</option>
+            <option value="Primary Health Center Upgrade">{isHindi ? 'प्राथमिक स्वास्थ्य केंद्र उन्नयन' : 'Health Center Upgrade'}</option>
+            <option value="Rural Culvert & Small Bridge">{isHindi ? 'पुलिया और छोटे पुल' : 'Culverts & Bridges'}</option>
+            <option value="Anganwadi Center Building">{isHindi ? 'आंगनवाड़ी केंद्र भवन' : 'Anganwadi Buildings'}</option>
           </select>
 
           {/* Sort By */}
@@ -180,11 +183,11 @@ export default function InvestigationQueuePage() {
             }}
             className="bg-[#FAFAF7] border border-[#D2D7CE] rounded-xl px-4 py-2.5 text-xs font-bold text-[#182027] focus:ring-2 focus:ring-[#285C7A] focus:outline-hidden"
           >
-            <option value="priority_score_desc">Priority Score: High to Low</option>
-            <option value="priority_score_asc">Priority Score: Low to High</option>
-            <option value="sanctioned_amount_desc">Cost: Highest First</option>
-            <option value="sanctioned_amount_asc">Cost: Lowest First</option>
-            <option value="sanction_date_desc">Sanction: Newest First</option>
+            <option value="priority_score_desc">{isHindi ? 'प्राथमिकता स्कोर: उच्च से निम्न' : 'Priority Score: High to Low'}</option>
+            <option value="priority_score_asc">{isHindi ? 'प्राथमिकता स्कोर: निम्न से उच्च' : 'Priority Score: Low to High'}</option>
+            <option value="sanctioned_amount_desc">{isHindi ? 'लागत: उच्चतम पहले' : 'Cost: Highest First'}</option>
+            <option value="sanctioned_amount_asc">{isHindi ? 'लागत: न्यूनतम पहले' : 'Cost: Lowest First'}</option>
+            <option value="sanction_date_desc">{isHindi ? 'स्वीकृति: नवीनतम पहले' : 'Sanction: Newest First'}</option>
           </select>
         </div>
       </div>
@@ -193,7 +196,7 @@ export default function InvestigationQueuePage() {
       {loading ? (
         <div className="p-16 text-center text-xs text-[#667078]">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto text-[#285C7A] mb-3" />
-          <span>FETCHING SPATIAL EVIDENCE RECORDS...</span>
+          <span>{isHindi ? 'स्थानिक साक्ष्य रिकॉर्ड प्राप्त किए जा रहे हैं...' : 'FETCHING SPATIAL EVIDENCE RECORDS...'}</span>
         </div>
       ) : error ? (
         <div className="floating-slab bg-[#C45145]/10 border border-[#C45145]/30 p-6 text-center text-xs text-[#C45145] font-bold">
@@ -201,7 +204,7 @@ export default function InvestigationQueuePage() {
         </div>
       ) : projects.length === 0 ? (
         <div className="floating-slab p-16 text-center text-xs text-[#667078]">
-          NO INVESTIGATION RECORDS MATCHED THE SELECTED FILTERS.
+          {isHindi ? 'चयनित फ़िल्टर से कोई जाँच रिकॉर्ड मेल नहीं खाता।' : 'NO INVESTIGATION RECORDS MATCHED THE SELECTED FILTERS.'}
         </div>
       ) : (
         <div className="space-y-4">
@@ -233,7 +236,7 @@ export default function InvestigationQueuePage() {
                       </span>
                       {isGolden && (
                         <span className="bg-[#C88A25] text-white text-[9px] font-mono font-black px-2 py-0.5 rounded-full">
-                          CRITICAL CONCERN
+                          {isHindi ? 'गंभीर चिंता' : 'CRITICAL CONCERN'}
                         </span>
                       )}
                     </div>
@@ -241,7 +244,7 @@ export default function InvestigationQueuePage() {
                       {proj.project_name}
                     </h3>
                     <div className="text-xs text-[#667078] font-sans">
-                      Agency: <span className="text-[#182027] font-semibold">{proj.agency_name}</span>
+                      {isHindi ? 'एजेंसी:' : 'Agency:'} <span className="text-[#182027] font-semibold">{proj.agency_name}</span>
                     </div>
                   </div>
                 </div>
@@ -269,7 +272,7 @@ export default function InvestigationQueuePage() {
                     }}
                     className="tactile-light-switch px-4.5 py-2.5 rounded-xl text-xs font-mono font-bold text-[#182027] hover:text-[#285C7A] hover:border-[#285C7A] transition inline-flex items-center gap-2 cursor-pointer shadow-xs active:scale-95 select-none relative z-10"
                   >
-                    <span>DOSSIER</span>
+                    <span>{isHindi ? 'डोजियर' : 'DOSSIER'}</span>
                     <ArrowRight className="w-4 h-4 text-[#285C7A]" />
                   </Link>
                 </div>
@@ -281,3 +284,4 @@ export default function InvestigationQueuePage() {
     </div>
   );
 }
+

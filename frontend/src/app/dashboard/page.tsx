@@ -20,9 +20,14 @@ import {
   Network,
 } from 'lucide-react';
 
+import { useLanguage } from '@/lib/LanguageContext';
+import { ALL_543_CONSTITUENCIES, Constituency, VARANASI_CONSTITUENCY } from '@/lib/constituenciesData';
+
 export default function DashboardPage() {
   const router = useRouter();
+  const { lang, t, isHindi } = useLanguage();
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [selectedConstituency, setSelectedConstituency] = useState<Constituency>(VARANASI_CONSTITUENCY);
 
   const handleOpenDossier = (e: React.MouseEvent, projectId?: string) => {
     e.preventDefault();
@@ -34,7 +39,25 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
+  const updateConstituencyState = () => {
+    try {
+      const saved = localStorage.getItem('selected_constituency');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.id) {
+          const found = ALL_543_CONSTITUENCIES.find((c) => c.id === parsed.id);
+          if (found) {
+            setSelectedConstituency(found);
+            return;
+          }
+        }
+      }
+    } catch (e) {}
+    setSelectedConstituency(VARANASI_CONSTITUENCY);
+  };
+
   useEffect(() => {
+    updateConstituencyState();
     async function loadStats() {
       setLoading(true);
       try {
@@ -48,7 +71,13 @@ export default function DashboardPage() {
     }
     loadStats();
 
-    const handleConstituencyChange = () => {
+    const handleConstituencyChange = (e: Event) => {
+      const detail = (e as CustomEvent)?.detail;
+      if (detail && detail.shortName) {
+        setSelectedConstituency(detail);
+      } else {
+        updateConstituencyState();
+      }
       loadStats();
     };
     window.addEventListener('constituency-changed', handleConstituencyChange);
@@ -72,7 +101,9 @@ export default function DashboardPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[500px] space-y-4 font-mono">
         <div className="w-10 h-10 border-4 border-[#285C7A] border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-[#667078]">INITIALIZING CONSTITUENCY SPATIAL INTELLIGENCE LANDSCAPE...</p>
+        <p className="text-xs text-[#667078]">
+          {isHindi ? 'संसदीय क्षेत्र स्थानिक इंटेलिजेंस परिदृश्य प्रारंभ हो रहा है...' : 'INITIALIZING CONSTITUENCY SPATIAL INTELLIGENCE LANDSCAPE...'}
+        </p>
       </div>
     );
   }
@@ -82,14 +113,14 @@ export default function DashboardPage() {
       <div className="floating-slab bg-[#C45145]/10 border border-[#C45145]/30 p-6 rounded-2xl space-y-3 font-mono text-[#C45145]">
         <div className="flex items-center gap-2 font-bold text-sm">
           <AlertTriangle className="w-5 h-5" />
-          <span>SYSTEM ERROR: UNABLE TO LOAD DASHBOARD INTELLIGENCE</span>
+          <span>{isHindi ? 'सिस्टम त्रुटि: डैशबोर्ड इंटेलिजेंस लोड करने में असमर्थ' : 'SYSTEM ERROR: UNABLE TO LOAD DASHBOARD INTELLIGENCE'}</span>
         </div>
-        <p className="text-xs">{error || 'Unknown error. Verify backend service connection.'}</p>
+        <p className="text-xs">{error || (isHindi ? 'अज्ञात त्रुटि। बैकएंड सेवा कनेक्शन सत्यापित करें।' : 'Unknown error. Verify backend service connection.')}</p>
         <button
           onClick={() => window.location.reload()}
           className="tactile-light-switch tactile-light-switch-active px-5 py-2.5 rounded-xl text-xs font-mono font-bold"
         >
-          RETRY ENGINE INITIALIZATION
+          {isHindi ? 'इंजन आरंभीकरण पुन: प्रयास करें' : 'RETRY ENGINE INITIALIZATION'}
         </button>
       </div>
     );
@@ -103,15 +134,15 @@ export default function DashboardPage() {
         <div className="space-y-2 max-w-2xl">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#285C7A] bg-[#285C7A]/10 px-3 py-1 rounded-full">
-              CONSTITUENCY COMMAND LANDSCAPE
+              {isHindi ? 'संसदीय क्षेत्र कमांड लैंडस्केप' : 'CONSTITUENCY COMMAND LANDSCAPE'}
             </span>
-            <span className="text-xs font-mono text-[#667078]">NALANDA &bull; BIHAR</span>
+            <span className="text-xs font-mono text-[#667078] uppercase">{selectedConstituency.shortName} &bull; {selectedConstituency.state}</span>
           </div>
           <h1 className="text-3xl font-extrabold text-[#182027] tracking-tight font-mono">
-            Vigilance Investigation Intelligence
+            {t('dash.title', 'Vigilance Investigation Intelligence')}
           </h1>
           <p className="text-sm text-[#667078] leading-relaxed">
-            Multi-dimensional explainable risk prioritization across {stats.total_projects} sanctioned works &amp; {stats.total_agencies} executing bodies in Nalanda Lok Sabha constituency.
+            {t('dash.subtitle', 'Multi-dimensional explainable risk prioritization across sanctioned works & executing bodies.')}
           </p>
         </div>
 
@@ -120,7 +151,7 @@ export default function DashboardPage() {
           className="tactile-light-switch tactile-light-switch-active px-6 py-3.5 rounded-2xl text-xs font-mono font-bold flex items-center justify-center gap-2.5 shadow-[0_12px_28px_rgba(23,63,88,0.25)] shrink-0"
         >
           <FolderSearch className="w-4 h-4 text-white" />
-          <span>OPEN INVESTIGATION QUEUE</span>
+          <span>{isHindi ? 'जाँच कतार खोलें' : 'OPEN INVESTIGATION QUEUE'}</span>
           <ArrowRight className="w-4 h-4 text-[#C88A25]" />
         </Link>
       </div>
@@ -130,15 +161,15 @@ export default function DashboardPage() {
         <div className="space-y-2 max-w-3xl">
           <div className="flex items-center gap-2.5">
             <span className="bg-[#C88A25] text-white text-[9px] font-mono font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-              CRITICAL CONCERN
+              {isHindi ? 'गंभीर चिंता' : 'CRITICAL CONCERN'}
             </span>
             <span className="font-mono text-xs text-[#C88A25] font-bold">MPLAD-NAL-2023-042</span>
           </div>
           <h2 className="text-base font-bold text-[#182027] leading-snug">
-            Construction of PCC Road and Covered Drain from Main Road to High School, Ward 12, Bihar Sharif
+            {isHindi ? 'मुख्य सड़क से हाई स्कूल, वार्ड 12, बिहार शरीफ तक पीसीसी सड़क और ढकी हुई नाली का निर्माण' : 'Construction of PCC Road and Covered Drain from Main Road to High School, Ward 12, Bihar Sharif'}
           </h2>
           <p className="text-xs text-[#667078] font-sans">
-            Priority Score <strong className="text-[#C45145] font-mono text-sm font-extrabold">95.0 / 100</strong> &bull; Elevated cost deviation (2.8x peer median), 396-day execution delay, and spatial proximity overlap (&lt;170m from 2021 road asset).
+            {isHindi ? 'प्राथमिकता स्कोर' : 'Priority Score'} <strong className="text-[#C45145] font-mono text-sm font-extrabold">95.0 / 100</strong> &bull; {isHindi ? 'उच्च लागत विचलन (2.8x सहकर्मी मध्यिका), 396 दिनों की निष्पादन देरी, और स्थानिक निकटता अतिव्यापन (2021 सड़क संपत्ति से <170m)।' : 'Elevated cost deviation (2.8x peer median), 396-day execution delay, and spatial proximity overlap (<170m from 2021 road asset).'}
           </p>
         </div>
 
@@ -150,7 +181,7 @@ export default function DashboardPage() {
           }}
           className="tactile-light-switch tactile-light-switch-active px-5 py-3.5 rounded-xl text-xs font-mono font-bold inline-flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95 transition select-none relative z-10"
         >
-          <span>INSPECT CASE DOSSIER</span>
+          <span>{isHindi ? 'केस डोजियर का निरीक्षण करें' : 'INSPECT CASE DOSSIER'}</span>
           <ArrowRight className="w-4 h-4 text-[#C88A25]" />
         </Link>
       </div>
@@ -162,16 +193,16 @@ export default function DashboardPage() {
         <div className="space-y-2 max-w-3xl">
           <div className="flex items-center gap-2.5">
             <span className="bg-cyan-500 text-slate-950 text-[9px] font-mono font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-              3D GIS COMMAND CENTER
+              {isHindi ? '3D जीआईएस कमांड केंद्र' : '3D GIS COMMAND CENTER'}
             </span>
-            <span className="font-mono text-xs text-cyan-400 font-bold">CROSS-GOVERNMENT INTELLIGENCE</span>
+            <span className="font-mono text-xs text-cyan-400 font-bold">{isHindi ? 'क्रॉस-सरकार इंटेलिजेंस' : 'CROSS-GOVERNMENT INTELLIGENCE'}</span>
           </div>
           <h2 className="text-lg font-black text-slate-100 leading-snug flex items-center gap-2">
             <Network className="w-5 h-5 text-cyan-400" />
-            <span>Multi-Level Government Project Coordination &amp; Conflict Detection</span>
+            <span>{isHindi ? 'बहु-स्तरीय सरकारी परियोजना समन्वय और संघर्ष पहचान' : 'Multi-Level Government Project Coordination & Conflict Detection'}</span>
           </h2>
           <p className="text-xs text-slate-300 font-sans leading-relaxed">
-            Real-time 3D spatial twin analyzing spatial overlaps, timeline concurrencies, and subterranean utility dependencies across Central, State, District, and Local government projects.
+            {isHindi ? 'केंद्रीय, राज्य, जिला और स्थानीय सरकारी परियोजनाओं में स्थानिक अतिव्यापन, समय-सीमा समवर्तीता, और उप-सतह उपयोगिता निर्भरताओं का विश्लेषण करने वाला वास्तविक समय 3D स्थानिक ट्विन।' : 'Real-time 3D spatial twin analyzing spatial overlaps, timeline concurrencies, and subterranean utility dependencies across Central, State, District, and Local government projects.'}
           </p>
         </div>
 
@@ -179,7 +210,7 @@ export default function DashboardPage() {
           href="/coordination"
           className="tactile-light-switch bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-3.5 rounded-2xl text-xs font-mono font-bold inline-flex items-center justify-center gap-2 shrink-0 shadow-[0_8px_24px_rgba(6,182,212,0.4)] transition transform hover:scale-105 active:scale-95 select-none relative z-10"
         >
-          <span>LAUNCH 3D COMMAND CENTER</span>
+          <span>{isHindi ? '3D कमांड सेंटर लॉन्च करें' : 'LAUNCH 3D COMMAND CENTER'}</span>
           <ArrowRight className="w-4 h-4 text-slate-950" />
         </Link>
       </div>
@@ -205,10 +236,10 @@ export default function DashboardPage() {
               {stats.high_priority_count}
             </span>
             <span className="text-xs font-mono font-extrabold text-[#182027] uppercase tracking-widest mt-1">
-              HIGH RISK
+              {isHindi ? 'उच्च जोखिम' : 'HIGH RISK'}
             </span>
             <span className="text-[10px] font-mono text-[#667078] uppercase">
-              PRIORITY &ge; 75
+              {isHindi ? 'प्राथमिकता ≥ 75' : 'PRIORITY ≥ 75'}
             </span>
           </div>
 
@@ -216,22 +247,22 @@ export default function DashboardPage() {
           <div className="space-y-4 max-w-sm">
             <div>
               <span className="text-xs font-mono font-bold text-[#285C7A] uppercase tracking-wider block mb-1">
-                3D SCULPTURAL RISK MATRIX
+                {isHindi ? '3D मूर्तिकला जोखिम मैट्रिक्स' : '3D SCULPTURAL RISK MATRIX'}
               </span>
-              <h3 className="text-xl font-bold text-[#182027]">Constituency Threat Score</h3>
+              <h3 className="text-xl font-bold text-[#182027]">{isHindi ? 'संसदीय क्षेत्र खतरा स्कोर' : 'Constituency Threat Score'}</h3>
               <p className="text-xs text-[#667078] leading-relaxed mt-1 font-sans">
-                Real-time risk core calculating multi-factorial anomalies across all sanctioned infrastructure works in Nalanda.
+                {isHindi ? `${selectedConstituency.shortName} में सभी स्वीकृत बुनियादी ढांचा कार्यों में बहु-कारक विसंगतियों की गणना करने वाला वास्तविक समय का जोखिम कोर।` : `Real-time risk core calculating multi-factorial anomalies across all sanctioned infrastructure works in ${selectedConstituency.shortName}.`}
               </p>
             </div>
 
             <div className="space-y-2 font-mono text-xs">
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E4E7E1] shadow-xs">
-                <span className="text-[#667078]">HIGH RISK (SCORE &ge;75)</span>
-                <span className="font-extrabold text-[#C45145] text-sm">{stats.high_priority_count} WORKS</span>
+                <span className="text-[#667078]">{isHindi ? 'उच्च जोखिम (स्कोर ≥75)' : 'HIGH RISK (SCORE ≥75)'}</span>
+                <span className="font-extrabold text-[#C45145] text-sm">{stats.high_priority_count} {isHindi ? 'कार्यों' : 'WORKS'}</span>
               </div>
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-[#E4E7E1] shadow-xs">
-                <span className="text-[#667078]">MEDIUM RISK (45–74)</span>
-                <span className="font-extrabold text-[#C88A25] text-sm">{stats.medium_priority_count} WORKS</span>
+                <span className="text-[#667078]">{isHindi ? 'मध्यम जोखिम (45–74)' : 'MEDIUM RISK (45–74)'}</span>
+                <span className="font-extrabold text-[#C88A25] text-sm">{stats.medium_priority_count} {isHindi ? 'कार्यों' : 'WORKS'}</span>
               </div>
             </div>
           </div>
@@ -246,7 +277,7 @@ export default function DashboardPage() {
             <div>
               <div className="editorial-number text-5xl text-[#182027]">{stats.total_projects}</div>
               <span className="text-xs font-mono font-bold text-[#667078] uppercase tracking-wider">
-                SANCTIONED CONSTITUENCY WORKS
+                {isHindi ? 'स्वीकृत संसदीय क्षेत्र के कार्य' : 'SANCTIONED CONSTITUENCY WORKS'}
               </span>
             </div>
           </div>
@@ -259,7 +290,7 @@ export default function DashboardPage() {
                 {formatCurrency(stats.total_sanctioned_amount)}
               </div>
               <span className="text-xs font-mono font-bold text-[#667078] uppercase tracking-wider">
-                TOTAL CAPITAL MONITORED (EXP: {formatCurrency(stats.total_expenditure)})
+                {isHindi ? `कुल पूंजी निगरानी (व्यय: ${formatCurrency(stats.total_expenditure)})` : `TOTAL CAPITAL MONITORED (EXP: ${formatCurrency(stats.total_expenditure)})`}
               </span>
             </div>
           </div>
@@ -270,7 +301,7 @@ export default function DashboardPage() {
             <div>
               <div className="editorial-number text-4xl text-purple-700">{stats.total_agencies}</div>
               <span className="text-xs font-mono font-bold text-[#667078] uppercase tracking-wider">
-                EXECUTING AGENCIES PROFILED
+                {isHindi ? 'प्रोफाइल की गई निष्पादन एजेंसियां' : 'EXECUTING AGENCIES PROFILED'}
               </span>
             </div>
           </div>
@@ -287,17 +318,17 @@ export default function DashboardPage() {
             <div>
               <h3 className="text-base font-extrabold text-[#182027] font-mono tracking-wide uppercase flex items-center gap-2">
                 <ShieldAlert className="w-5 h-5 text-[#C45145]" />
-                <span>TOP PRIORITIZED INVESTIGATION CASES</span>
+                <span>{isHindi ? 'शीर्ष प्राथमिकता वाले जाँच मामले' : 'TOP PRIORITIZED INVESTIGATION CASES'}</span>
               </h3>
               <p className="text-xs text-[#667078] font-sans mt-0.5">
-                Ranked by multi-dimensional explainable risk score (0–100)
+                {isHindi ? 'बहु-आयामी व्याख्या योग्य जोखिम स्कोर (0-100) द्वारा रैंक किया गया' : 'Ranked by multi-dimensional explainable risk score (0–100)'}
               </p>
             </div>
             <Link
               href="/queue"
               className="text-xs text-[#285C7A] font-mono font-bold hover:underline"
             >
-              VIEW ALL QUEUE &rarr;
+              {isHindi ? 'सभी कतार देखें →' : 'VIEW ALL QUEUE →'}
             </Link>
           </div>
 
@@ -321,7 +352,7 @@ export default function DashboardPage() {
                     {proj.project_name}
                   </h4>
                   <div className="text-xs text-[#667078] font-sans">
-                    Agency: <span className="text-[#182027] font-semibold">{proj.agency_name}</span> &bull; Cost: <span className="font-mono font-bold text-[#182027]">{formatCurrency(proj.sanctioned_amount)}</span>
+                    {isHindi ? 'एजेंसी:' : 'Agency:'} <span className="text-[#182027] font-semibold">{proj.agency_name}</span> &bull; {isHindi ? 'लागत:' : 'Cost:'} <span className="font-mono font-bold text-[#182027]">{formatCurrency(proj.sanctioned_amount)}</span>
                   </div>
                 </div>
 
@@ -336,7 +367,7 @@ export default function DashboardPage() {
                       }
                     }}
                     className="tactile-light-switch p-2.5 rounded-xl text-[#182027] hover:text-[#285C7A] hover:border-[#285C7A] transition inline-flex items-center justify-center cursor-pointer active:scale-95 select-none relative z-10"
-                    title="Open Investigation Dossier"
+                    title={isHindi ? 'जाँच डोजियर खोलें' : 'Open Investigation Dossier'}
                   >
                     <ArrowRight className="w-4 h-4 text-[#285C7A]" />
                   </Link>
@@ -353,7 +384,7 @@ export default function DashboardPage() {
           <div className="floating-slab p-6 space-y-4">
             <h3 className="text-xs font-mono font-bold text-[#182027] uppercase tracking-wider border-b border-[#E4E7E1] pb-3 flex items-center gap-2">
               <Activity className="w-4 h-4 text-[#285C7A]" />
-              <span>SCORE DISTRIBUTION</span>
+              <span>{isHindi ? 'स्कोर वितरण' : 'SCORE DISTRIBUTION'}</span>
             </h3>
 
             <div className="space-y-3.5 text-xs font-mono">
@@ -361,10 +392,11 @@ export default function DashboardPage() {
                 const pct = Math.round((count / stats.total_projects) * 100);
                 const color =
                   label.includes('High') ? 'bg-[#C45145]' : label.includes('Medium') ? 'bg-[#C88A25]' : 'bg-[#398265]';
+                const displayLabel = isHindi ? (label.includes('High') ? 'उच्च जोखिम' : label.includes('Medium') ? 'मध्यम जोखिम' : 'कम जोखिम') : label;
                 return (
                   <div key={label} className="space-y-1.5">
                     <div className="flex justify-between">
-                      <span className="text-[#667078]">{label}</span>
+                      <span className="text-[#667078]">{displayLabel}</span>
                       <span className="font-bold text-[#182027]">
                         {count} ({pct}%)
                       </span>
@@ -381,7 +413,7 @@ export default function DashboardPage() {
           {/* Quick Shortcuts */}
           <div className="floating-slab p-6 space-y-3 font-mono">
             <h3 className="text-xs font-bold text-[#182027] uppercase tracking-wider border-b border-[#E4E7E1] pb-3">
-              COMMAND SHORTCUTS
+              {isHindi ? 'कमांड शॉर्टकट' : 'COMMAND SHORTCUTS'}
             </h3>
             <div className="space-y-2 text-xs">
               <Link
@@ -390,7 +422,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-2.5">
                   <Network className="w-4 h-4 text-cyan-400" />
-                  <span>3D Project Coordination &amp; Conflicts</span>
+                  <span>{isHindi ? '3D परियोजना समन्वय और संघर्ष' : '3D Project Coordination & Conflicts'}</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
               </Link>
@@ -401,7 +433,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-[#285C7A]" />
-                  <span>Constituency GIS Map</span>
+                  <span>{isHindi ? 'संसदीय क्षेत्र जीआईएस मानचित्र' : 'Constituency GIS Map'}</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-[#667078]" />
               </Link>
@@ -412,7 +444,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-2.5">
                   <Building2 className="w-4 h-4 text-purple-600" />
-                  <span>Agency Risk Profiles ({stats.total_agencies})</span>
+                  <span>{isHindi ? `एजेंसी जोखिम प्रोफाइल (${stats.total_agencies})` : `Agency Risk Profiles (${stats.total_agencies})`}</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-[#667078]" />
               </Link>
@@ -423,7 +455,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-2.5">
                   <Sparkles className="w-4 h-4 text-[#C88A25]" />
-                  <span>AI Investigation Assistant</span>
+                  <span>{isHindi ? 'एआई जाँच सहायक' : 'AI Investigation Assistant'}</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5 text-[#667078]" />
               </Link>
@@ -435,3 +467,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

@@ -4,6 +4,7 @@ from backend.app.models.schema import Project, Risk, Agency, Location
 from backend.pipeline.feature_engineering import haversine_distance
 
 from backend.pipeline.seed_db import seed_constituency_if_needed
+from backend.app.services.constituency_resolver import resolve_constituency
 
 def get_map_projects(
     db: Session,
@@ -25,8 +26,13 @@ def get_map_projects(
     
     if constituency and constituency.lower() not in ["all_india", "all", "national"]:
         seed_constituency_if_needed(db, constituency)
-        token = constituency.lower().replace('-', '_').replace(' ', '_').split('_')[0]
-        query = query.filter(Project.constituency.ilike(f"%{token}%"))
+        resolved = resolve_constituency(constituency)
+        if resolved:
+            c_name = resolved["name"]
+            c_id = resolved["id"]
+            query = query.filter((Project.constituency.ilike(f"%{c_name}%")) | (Project.constituency.ilike(f"%{c_id}%")))
+        else:
+            query = query.filter(Project.constituency.ilike(f"%{constituency}%"))
     if min_priority is not None:
         query = query.filter(Risk.priority_score >= min_priority)
     if work_type and work_type != "ALL":

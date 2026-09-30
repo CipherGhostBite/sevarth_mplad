@@ -23,25 +23,28 @@ import {
   Sparkles,
 } from 'lucide-react';
 
+import { useLanguage } from '@/lib/LanguageContext';
+
 const STATES = [
-  { id: 'BIHAR', name: 'Bihar (Nalanda)', code: 'BR' },
-  { id: 'KARNATAKA', name: 'Karnataka (Bangalore)', code: 'KA' },
-  { id: 'MAHARASHTRA', name: 'Maharashtra (Mumbai)', code: 'MH' },
-  { id: 'TAMIL_NADU', name: 'Tamil Nadu (Chennai)', code: 'TN' },
-  { id: 'UTTAR_PRADESH', name: 'Uttar Pradesh (Lucknow)', code: 'UP' },
-  { id: 'DELHI', name: 'Delhi NCR', code: 'DL' },
+  { id: 'BIHAR', name: 'Bihar (Nalanda)', nameHi: 'बिहार (नालंदा)', code: 'BR' },
+  { id: 'KARNATAKA', name: 'Karnataka (Bangalore)', nameHi: 'कर्नाटक (बेंगलुरु)', code: 'KA' },
+  { id: 'MAHARASHTRA', name: 'Maharashtra (Mumbai)', nameHi: 'महाराष्ट्र (मुंबई)', code: 'MH' },
+  { id: 'TAMIL_NADU', name: 'Tamil Nadu (Chennai)', nameHi: 'तमिलनाडु (चेन्नई)', code: 'TN' },
+  { id: 'UTTAR_PRADESH', name: 'Uttar Pradesh (Lucknow)', nameHi: 'उत्तर प्रदेश (लखनऊ)', code: 'UP' },
+  { id: 'DELHI', name: 'Delhi NCR', nameHi: 'दिल्ली एनसीआर', code: 'DL' },
 ];
 
 const USER_ROLES = [
-  { id: 'PUBLIC_CITIZEN', label: 'Common Public of India (Citizen)', desc: 'Public user filing ground complaints and reporting project inaccuracies' },
-  { id: 'VIGILANCE_OFFICER', label: 'Vigilance Officer / Auditor', desc: 'Official investigator with full dossier access' },
-  { id: 'CITIZEN_WHISTLEBLOWER', label: 'Citizen Whistleblower', desc: 'Public user raising verified expenditure complaints' },
-  { id: 'NGO_AUDITOR', label: 'NGO / Independent Auditor', desc: 'Civil society expenditure monitoring' },
-  { id: 'EXECUTIVE_AGENCY', label: 'Executive Agency Representative', desc: 'PWD / Rural Development departmental access' },
+  { id: 'PUBLIC_CITIZEN', label: 'Common Public of India (Citizen)', labelHi: 'भारत की सामान्य जनता (नागरिक)', desc: 'Public user filing ground complaints and reporting project inaccuracies' },
+  { id: 'VIGILANCE_OFFICER', label: 'Vigilance Officer / Auditor', labelHi: 'सतर्कता अधिकारी / ऑडिटर', desc: 'Official investigator with full dossier access' },
+  { id: 'CITIZEN_WHISTLEBLOWER', label: 'Citizen Whistleblower', labelHi: 'नागरिक व्हिसलब्लोअर', desc: 'Public user raising verified expenditure complaints' },
+  { id: 'NGO_AUDITOR', label: 'NGO / Independent Auditor', labelHi: 'गैर-सरकारी संगठन / स्वतंत्र ऑडिटर', desc: 'Civil society expenditure monitoring' },
+  { id: 'EXECUTIVE_AGENCY', label: 'Executive Agency Representative', labelHi: 'कार्यपालक एजेंसी प्रतिनिधि', desc: 'PWD / Rural Development departmental access' },
 ];
 
 function SignupPageContent() {
   const router = useRouter();
+  const { isHindi, t } = useLanguage();
 
   // Step 1: Email Input
   const [email, setEmail] = useState('');
@@ -251,14 +254,14 @@ function SignupPageContent() {
             className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#667078] hover:text-[#285C7A] transition"
           >
             <ChevronLeft className="w-4 h-4" />
-            <span>RETURN TO SEVAARTH AI</span>
+            <span>{t('signup.return_home')}</span>
           </Link>
 
           <Link
             href="/login"
             className="inline-flex items-center gap-1 text-xs font-mono font-extrabold text-[#285C7A] hover:underline"
           >
-            <span>SIGN IN INSTEAD &rarr;</span>
+            <span>{t('signup.sign_in_instead')}</span>
           </Link>
         </div>
 
@@ -268,10 +271,10 @@ function SignupPageContent() {
             <ShieldCheck className="w-7 h-7 text-[#285C7A]" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#182027]">
-            REGISTER FOR SEVAARTH AI
+            {t('signup.header_title')}
           </h1>
           <p className="text-xs text-[#667078] font-mono tracking-wider uppercase">
-            EMAIL OTP VERIFICATION &amp; ACCOUNT CREATION
+            {t('signup.header_sub')}
           </p>
         </div>
 
@@ -286,7 +289,7 @@ function SignupPageContent() {
               }`}>
                 1
               </span>
-              <span className={step === 'enter_email' ? 'font-bold text-[#182027]' : 'text-[#667078]'}>EMAIL</span>
+              <span className={step === 'enter_email' ? 'font-bold text-[#182027]' : 'text-[#667078]'}>{t('signup.step1')}</span>
             </div>
 
             <div className="h-0.5 w-8 bg-[#D2D7CE]" />
@@ -297,7 +300,7 @@ function SignupPageContent() {
               }`}>
                 2
               </span>
-              <span className={step === 'verify_otp' ? 'font-bold text-[#182027]' : 'text-[#667078]'}>OTP</span>
+              <span className={step === 'verify_otp' ? 'font-bold text-[#182027]' : 'text-[#667078]'}>{t('signup.step2')}</span>
             </div>
 
             <div className="h-0.5 w-8 bg-[#D2D7CE]" />
@@ -308,7 +311,7 @@ function SignupPageContent() {
               }`}>
                 3
               </span>
-              <span className={step === 'set_password' ? 'font-bold text-[#182027]' : 'text-[#667078]'}>PASSWORD</span>
+              <span className={step === 'set_password' ? 'font-bold text-[#182027]' : 'text-[#667078]'}>{t('signup.step3')}</span>
             </div>
           </div>
 
@@ -332,16 +335,16 @@ function SignupPageContent() {
             <form onSubmit={handleSendEmailOtp} className="space-y-4 text-xs font-sans">
               <div className="space-y-1">
                 <span className="text-xs font-mono font-bold text-[#285C7A] uppercase tracking-wider block">
-                  ENTER OFFICIAL / PERSONAL EMAIL
+                  {t('signup.enter_email_title')}
                 </span>
                 <p className="text-xs text-[#667078]">
-                  We will send a 6-digit verification OTP to your email address.
+                  {t('signup.enter_email_desc')}
                 </p>
               </div>
 
               <div>
                 <label className="block text-[10px] font-mono font-bold text-[#182027] uppercase tracking-wider mb-1.5">
-                  EMAIL ADDRESS (GMAIL OR OFFICIAL) *
+                  {t('signup.email_label')}
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-[#9AA3AB] absolute left-3.5 top-3" />
@@ -350,7 +353,7 @@ function SignupPageContent() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="e.g. officer@gmail.com or auditor@mpladguard.gov.in"
+                    placeholder={t('signup.email_placeholder')}
                     className="w-full bg-[#FAFAF7] border border-[#D2D7CE] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#182027] font-bold focus:outline-none focus:border-[#285C7A] focus:bg-white transition"
                   />
                 </div>
@@ -361,7 +364,7 @@ function SignupPageContent() {
                 disabled={loading}
                 className="tactile-light-switch-active w-full py-3.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
               >
-                <span>{loading ? 'SENDING EMAIL OTP...' : 'GET EMAIL OTP'}</span>
+                <span>{loading ? t('signup.sending_otp') : t('signup.get_otp')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -372,10 +375,10 @@ function SignupPageContent() {
             <form onSubmit={handleVerifyEmailOtp} className="space-y-4 text-xs font-sans">
               <div className="space-y-1 text-center">
                 <span className="text-xs font-mono font-bold text-[#285C7A] uppercase tracking-wider block">
-                  VERIFY EMAIL OTP
+                  {t('signup.verify_otp_title')}
                 </span>
                 <p className="text-xs text-[#667078]">
-                  Enter the 6-digit OTP code sent to <strong className="text-[#182027] font-mono">{maskedEmail}</strong>
+                  {t('signup.verify_otp_desc')} <strong className="text-[#182027] font-mono">{maskedEmail}</strong>
                 </p>
               </div>
 
@@ -400,9 +403,9 @@ function SignupPageContent() {
               <div className="flex items-center justify-between text-xs font-mono text-[#667078] pt-1">
                 <span>
                   {resendTimer > 0 ? (
-                    <>RESEND IN: <strong className="text-[#285C7A]">00:{resendTimer < 10 ? `0${resendTimer}` : resendTimer}s</strong></>
+                    <>{t('signup.resend_in')} <strong className="text-[#285C7A]">00:{resendTimer < 10 ? `0${resendTimer}` : resendTimer}s</strong></>
                   ) : (
-                    <span className="text-[#398265]">OTP Expired</span>
+                    <span className="text-[#398265]">{t('signup.otp_expired')}</span>
                   )}
                 </span>
                 <button
@@ -414,7 +417,7 @@ function SignupPageContent() {
                   }`}
                 >
                   <RefreshCw className="w-3 h-3" />
-                  <span>RESEND OTP</span>
+                  <span>{t('signup.resend_btn')}</span>
                 </button>
               </div>
 
@@ -424,7 +427,7 @@ function SignupPageContent() {
                   disabled={loading}
                   className="tactile-light-switch-active w-full py-3.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
                 >
-                  <span>{loading ? 'VERIFYING OTP...' : 'VERIFY EMAIL OTP'}</span>
+                  <span>{loading ? t('signup.verifying_otp') : t('signup.verify_btn')}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
@@ -433,7 +436,7 @@ function SignupPageContent() {
                   onClick={() => setStep('enter_email')}
                   className="text-xs text-[#667078] hover:text-[#182027] font-mono underline block mx-auto pt-1"
                 >
-                  &larr; Change Email Address
+                  {t('signup.change_email')}
                 </button>
               </div>
             </form>
@@ -444,17 +447,17 @@ function SignupPageContent() {
             <form onSubmit={handleCompleteRegistration} className="space-y-4 text-xs font-sans">
               <div className="space-y-1 pb-2 border-b border-[#E4E7E1]">
                 <span className="text-xs font-mono font-bold text-[#285C7A] uppercase tracking-wider block">
-                  CREATE ACCOUNT &amp; SET PASSWORD
+                  {t('signup.create_account_title')}
                 </span>
                 <p className="text-xs text-[#667078]">
-                  Set your login password for <strong className="text-[#182027] font-mono">{email}</strong>.
+                  {t('signup.create_account_desc')} <strong className="text-[#182027] font-mono">{email}</strong>.
                 </p>
               </div>
 
               {/* Full Name */}
               <div>
                 <label className="block text-[10px] font-mono font-bold text-[#182027] uppercase tracking-wider mb-1">
-                  FULL NAME *
+                  {t('signup.name_label')}
                 </label>
                 <div className="relative">
                   <User className="w-4 h-4 text-[#9AA3AB] absolute left-3.5 top-3" />
@@ -463,7 +466,7 @@ function SignupPageContent() {
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="e.g. Dr. Rajesh Sharma"
+                    placeholder={t('signup.name_placeholder')}
                     className="w-full bg-[#FAFAF7] border border-[#D2D7CE] rounded-xl pl-10 pr-4 py-2.5 text-xs text-[#182027] font-bold focus:outline-none focus:border-[#285C7A]"
                   />
                 </div>
@@ -472,7 +475,7 @@ function SignupPageContent() {
               {/* Role Selection */}
               <div>
                 <label className="block text-[10px] font-mono font-bold text-[#182027] uppercase tracking-wider mb-1">
-                  ROLE &amp; DESIGNATION *
+                  {t('signup.role_label')}
                 </label>
                 <select
                   value={selectedRole}
@@ -481,7 +484,7 @@ function SignupPageContent() {
                 >
                   {USER_ROLES.map((role) => (
                     <option key={role.id} value={role.id}>
-                      {role.label}
+                      {isHindi ? role.labelHi : role.label}
                     </option>
                   ))}
                 </select>
@@ -490,7 +493,7 @@ function SignupPageContent() {
               {/* State Jurisdiction */}
               <div>
                 <label className="block text-[10px] font-mono font-bold text-[#182027] uppercase tracking-wider mb-1">
-                  STATE JURISDICTION *
+                  {t('signup.state_label')}
                 </label>
                 <select
                   value={selectedState}
@@ -499,7 +502,7 @@ function SignupPageContent() {
                 >
                   {STATES.map((st) => (
                     <option key={st.id} value={st.id}>
-                      {st.name}
+                      {isHindi ? st.nameHi : st.name}
                     </option>
                   ))}
                 </select>
@@ -509,7 +512,7 @@ function SignupPageContent() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[10px] font-mono font-bold text-[#182027] uppercase tracking-wider mb-1">
-                    CREATE PASSWORD *
+                    {t('signup.password_label')}
                   </label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-[#9AA3AB] absolute left-3 top-2.5" />
@@ -526,7 +529,7 @@ function SignupPageContent() {
 
                 <div>
                   <label className="block text-[10px] font-mono font-bold text-[#182027] uppercase tracking-wider mb-1">
-                    CONFIRM PASSWORD *
+                    {t('signup.confirm_label')}
                   </label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-[#9AA3AB] absolute left-3 top-2.5" />
@@ -554,7 +557,7 @@ function SignupPageContent() {
                 disabled={loading}
                 className="tactile-light-switch-active w-full py-3.5 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 shadow-md pt-2"
               >
-                <span>{loading ? 'CREATING ACCOUNT & SAVING...' : 'SAVE CREDS & SIGN IN'}</span>
+                <span>{loading ? t('signup.saving_creds') : t('signup.save_btn')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -564,9 +567,9 @@ function SignupPageContent() {
 
         {/* Bottom Link to Sign In */}
         <div className="text-center font-mono text-xs text-[#667078]">
-          Already have an account?{' '}
+          {t('signup.already_have')}{' '}
           <Link href="/login" className="font-bold text-[#285C7A] hover:underline">
-            Sign In with Email &amp; Password &rarr;
+            {t('signup.sign_in_link')}
           </Link>
         </div>
 
@@ -576,12 +579,13 @@ function SignupPageContent() {
 }
 
 export default function SignupPage() {
+  const { t } = useLanguage();
   return (
     <Suspense
       fallback={
         <div className="min-h-screen bg-[#F5F6F3] flex items-center justify-center font-mono text-xs text-[#667078]">
           <div className="w-8 h-8 border-4 border-[#285C7A] border-t-transparent rounded-full animate-spin mr-3" />
-          <span>INITIALIZING REGISTRATION CONSOLE...</span>
+          <span>{t('signup.init')}</span>
         </div>
       }
     >
