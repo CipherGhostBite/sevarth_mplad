@@ -188,7 +188,7 @@ docs/
 <p align="center">
   <img src="mermaid-diagram.png"
        alt="SEVARTH System Architecture"
-       width="1000">
+       width="500">
 </p>
                          
 
