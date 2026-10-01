@@ -250,7 +250,7 @@ docs/
 
                          
 
-##2.2 Service Boundaries
+#2.2 Service Boundaries
 Frontend Layer
 
 Responsible for:
@@ -447,7 +447,7 @@ The following flow represents the intended investigation lifecycle:
                    │ Frontend      │
                    └───────────────┘
 
-##2.4 Investigation Data Flow
+#2.4 Investigation Data Flow
 Raw Project / Financial Data
             │
             ▼
@@ -511,7 +511,7 @@ docs/
 ├── screenshots/
 └── demo/
 ## 3. Installation & Configuration
-## 3.1 Prerequisites & Tech Stack
+# 3.1 Prerequisites & Tech Stack
 Component	Requirement	Tested / Recommended
 Python	>= 3.11	3.11 / 3.12 / 3.13
 Node.js	>= 20.x	Node 20 LTS+
@@ -522,7 +522,7 @@ Storage	Minimum 2 GB free	5 GB+ recommended
 GPU	Not required	CPU runtime supported
 OS	Linux / macOS / Windows	Cross-platform
 
-## 3.2 Technology Stack
+# 3.2 Technology Stack
 Frontend
 Next.js 14
 React
@@ -561,7 +561,7 @@ Deployment
 Vercel
 Render
 
-## 3.3 Step-by-Step Installation
+# 3.3 Step-by-Step Installation
 Step 1 — Clone Repository
 git clone https://github.com/CipherGhostBite/sevarth_mplad.git
 
@@ -626,7 +626,7 @@ Frontend:
 
 http://localhost:3000
 
-## 3.4 Production Deployment
+# 3.4 Production Deployment
 Frontend
 Platform: Vercel
 Framework: Next.js
@@ -642,7 +642,7 @@ Production API documentation:
 
 https://sevarth-mplad.onrender.com/docs
 
-## 3.5 Environment Variables Matrix
+# 3.5 Environment Variables Matrix
 Variable	Description	Type	Default	Required
 JWT_SECRET	Secret used for JWT signing/verification	String	None	Yes
 GEMINI_API_KEY	Google Gemini API authentication key	String	None	Optional
@@ -666,7 +666,7 @@ or access tokens to the repository.
 
 
 ## 4. Developer Experience & Quality Control
-## 4.1 Usage Snippets
+# 4.1 Usage Snippets
 A. Authentication
 curl -X POST "http://127.0.0.1:8000/api/auth/login" \
      -H "Content-Type: application/json" \
@@ -677,10 +677,10 @@ curl -X POST "http://127.0.0.1:8000/api/auth/login" \
 
 The response can be used to obtain an authentication token.
 
-## 4.2 Authenticated API Request
+# 4.2 Authenticated API Request
 curl -X GET "http://127.0.0.1:8000/api/projects/" \
      -H "Authorization: Bearer YOUR_JWT_TOKEN"
-## 4.3 Project Risk Query
+# 4.3 Project Risk Query
 import requests
 
 BASE_URL = "http://127.0.0.1:8000/api"
@@ -699,7 +699,7 @@ response.raise_for_status()
 data = response.json()
 
 print(data)
-## 4.4 AI Investigation Query
+# 4.4 AI Investigation Query
 curl -X POST "http://127.0.0.1:8000/api/assistant/chat" \
      -H "Authorization: Bearer YOUR_JWT_TOKEN" \
      -H "Content-Type: application/json" \
@@ -707,47 +707,47 @@ curl -X POST "http://127.0.0.1:8000/api/assistant/chat" \
        "query": "Analyse the available project records for unusual expenditure patterns.",
        "constituency": "Nalanda"
      }'
-## 4.5 Testing & QA Commands
+# 4.5 Testing & QA Commands
 Backend Unit Tests
 pytest backend/tests/test_api.py -v
 Full Backend Test Suite
 pytest backend/tests/ -v
 Coverage
 pytest --cov=backend/app backend/tests/
-## 4.6 Frontend Type Checking
+# 4.6 Frontend Type Checking
 cd frontend
 
 npx tsc --noEmit
-## 4.7 Frontend Linting
+# 4.7 Frontend Linting
 cd frontend
 
 npm run lint
-## 4.8 Production Build Verification
+# 4.8 Production Build Verification
 cd frontend
 
 npm run build
-## 4.9 PDF Report Verification
+# 4.9 PDF Report Verification
 python generate_pdf_report.py
-## 4.10 Recommended Pre-Commit Verification
+# 4.10 Recommended Pre-Commit Verification
 
 Before pushing a feature:
 
-# Backend tests
+ Backend tests
 pytest backend/tests/ -v
 
-# Backend coverage
+ Backend coverage
 pytest --cov=backend/app backend/tests/
 
-# Frontend type checking
+ Frontend type checking
 cd frontend
 npx tsc --noEmit
 
-# Frontend lint
+ Frontend lint
 npm run lint
 
-# Production build
+ Production build
 npm run build
-## 4.11 Git Development Workflow
+# 4.11 Git Development Workflow
 Create Branch
       │
       ▼
@@ -793,7 +793,7 @@ Push:
 
 git push origin feature/your-feature-name
 ## 5. Reliability, Performance & Security
-## 5.1 Benchmarks & Maturity Status
+# 5.1 Benchmarks & Maturity Status
 Current Readiness
 Beta / Competition-Ready
 
@@ -830,7 +830,7 @@ deployment infrastructure
 Therefore these measurements should be treated as reference
 benchmarks rather than production SLAs.
 
-## 5.2 Reliability Strategy
+# 5.2 Reliability Strategy
 
 SEVARTH separates the application into:
 
@@ -856,7 +856,7 @@ AI-assisted functionality can use deterministic analytical logic
 where applicable so that investigation workflows are not completely
 dependent on generative AI availability.
 
-## 5.3 Troubleshooting & Known Limitations
+# 5.3 Troubleshooting & Known Limitations
 Issue / Error	Root Cause	Resolution / Workaround
 ModuleNotFoundError: No module named 'backend'	Command executed outside project root or Python path issue	Run commands from repository root and activate the virtual environment
 GeoJSON fails to render	Required constituency GeoJSON unavailable	Verify .india_ls_seats_543.geojson is present
@@ -909,7 +909,7 @@ Geographic Data
 The GIS experience depends on the availability and correctness of the
 underlying GeoJSON constituency dataset.
 
-## 5.5 Security Architecture
+# 5.5 Security Architecture
 
 SEVARTH uses application-level security mechanisms including:
 
@@ -934,7 +934,7 @@ API Protection
 
 Protected endpoints require appropriate authentication credentials.
 
-## 5.6 Security Checklist
+# 5.6 Security Checklist
 
 Before deployment:
 
@@ -972,7 +972,7 @@ Please do not publish credentials, access tokens, private data, or
 complete exploit details in public issues.
 
 ## 6. Governance & License
-## 6.1 Open Source License
+# 6.1 Open Source License
 
 SEVARTH is distributed under the:
 
@@ -984,7 +984,7 @@ LICENSE
 
 for the complete license text.
 
-## 6.2 Contribution Guidelines
+# 6.2 Contribution Guidelines
 
 Contributors should follow the development workflow:
 
@@ -1005,7 +1005,7 @@ Pull Request
 Code Review
         ↓
 Merge
-## 6.3 Code Style Rules
+# 6.3 Code Style Rules
 Python
 
 Follow:
@@ -1040,7 +1040,7 @@ cd frontend
 npx tsc --noEmit
 
 npm run lint
-## 6.4 Commit Message Convention
+# 6.4 Commit Message Convention
 
 Use descriptive commits.
 
@@ -1057,7 +1057,7 @@ refactor: improve anomaly scoring service
 test: add project risk API tests
 
 chore: update dependencies
-## 6.5 Pull Request Guidelines
+# 6.5 Pull Request Guidelines
 
 Every pull request should ideally include:
 
@@ -1089,7 +1089,7 @@ Allows investigators to inspect project risk geographically.
 ## Screenshots
 
 Attach relevant UI screenshots.
-## 6.6 Project Structure
+# 6.6 Project Structure
 sevarth_mplad/
 │
 ├── backend/
