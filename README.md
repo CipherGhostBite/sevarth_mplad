@@ -187,7 +187,54 @@ docs/
 ## 2. Architecture & System Design
 2.1 High-Level Architecture
 
-                         <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/88a6a8a4-d568-47d0-b32f-74216a72b13c" />
+                         ┌──────────────────────────────────────────────────────────────┐
+│                        CLIENT LAYER                          │
+│                                                              │
+│  Next.js 14 + TypeScript                                    │
+│  ├── Investigation Dashboard                                │
+│  ├── Leaflet GIS                                             │
+│  ├── Cytoscape Graphs                                        │
+│  ├── Recharts Analytics                                      │
+│  ├── Three.js Visualization                                  │
+│  └── AI Assistant                                            │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│                         API GATEWAY                           │
+│                                                              │
+│  FastAPI Backend                                             │
+│  ├── REST APIs                                               │
+│  ├── JWT Authentication                                      │
+│  ├── CORS & Request Validation                               │
+│  └── Investigation / Audit Endpoints                         │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│                      INTELLIGENCE LAYER                      │
+│                                                              │
+│  Python ML Pipeline                                          │
+│  ├── Data Preprocessing                                      │
+│  ├── Feature Engineering                                     │
+│  ├── Anomaly Detection                                       │
+│  ├── Risk Scoring                                            │
+│  ├── Explainability                                          │
+│  └── Investigation Intelligence                              │
+└──────────────────────────────┬───────────────────────────────┘
+                               │
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│                         DATA LAYER                            │
+│                                                              │
+│  SQLite Database                                             │
+│  ├── MPLADS Project Data                                     │
+│  ├── Investigation Records                                   │
+│  ├── Risk Scores                                             │
+│  └── Audit Evidence                                          │
+│                                                              │
+│  Pandas / NumPy / Scikit-learn                               │
+└──────────────────────────────────────────────────────────────┘
 
                          
 
