@@ -187,54 +187,59 @@ docs/
 ## 2. Architecture & System Design
 2.1 High-Level Architecture
 
-                         ┌──────────────────────────────────────────────────────────────┐
-│                        CLIENT LAYER                          │
-│                                                              │
-│  Next.js 14 + TypeScript                                    │
-│  ├── Investigation Dashboard                                │
-│  ├── Leaflet GIS                                             │
-│  ├── Cytoscape Graphs                                        │
-│  ├── Recharts Analytics                                      │
-│  ├── Three.js Visualization                                  │
-│  └── AI Assistant                                            │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                               ▼
-┌──────────────────────────────────────────────────────────────┐
-│                         API GATEWAY                           │
-│                                                              │
-│  FastAPI Backend                                             │
-│  ├── REST APIs                                               │
-│  ├── JWT Authentication                                      │
-│  ├── CORS & Request Validation                               │
-│  └── Investigation / Audit Endpoints                         │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                               ▼
-┌──────────────────────────────────────────────────────────────┐
-│                      INTELLIGENCE LAYER                      │
-│                                                              │
-│  Python ML Pipeline                                          │
-│  ├── Data Preprocessing                                      │
-│  ├── Feature Engineering                                     │
-│  ├── Anomaly Detection                                       │
-│  ├── Risk Scoring                                            │
-│  ├── Explainability                                          │
-│  └── Investigation Intelligence                              │
-└──────────────────────────────┬───────────────────────────────┘
-                               │
-                               ▼
-┌──────────────────────────────────────────────────────────────┐
-│                         DATA LAYER                            │
-│                                                              │
-│  SQLite Database                                             │
-│  ├── MPLADS Project Data                                     │
-│  ├── Investigation Records                                   │
-│  ├── Risk Scores                                             │
-│  └── Audit Evidence                                          │
-│                                                              │
-│  Pandas / NumPy / Scikit-learn                               │
-└──────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────┐
+│                         CLIENT / PRESENTATION                         │
+│                                                                       │
+│  Next.js 14 + TypeScript                                              │
+│  ┌──────────────┐ ┌────────────┐ ┌─────────────┐ ┌──────────────┐   │
+│  │ Investigation│ │ Leaflet GIS│ │  Cytoscape  │ │   Recharts   │   │
+│  │  Dashboard   │ │   Mapping  │ │   Graphs    │ │  Analytics   │   │
+│  └──────────────┘ └────────────┘ └─────────────┘ └──────────────┘   │
+│                                                                       │
+│                  Three.js Visualization • AI Assistant                │
+└───────────────────────────────┬───────────────────────────────────────┘
+                                │
+                                ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│                          API / BACKEND LAYER                          │
+│                                                                       │
+│  FastAPI + Python                                                     │
+│  ┌──────────────┐ ┌───────────────┐ ┌──────────────────────────────┐ │
+│  │   REST APIs  │ │     JWT       │ │ Investigation & Audit APIs  │ │
+│  │              │ │ Authentication│ │                              │ │
+│  └──────────────┘ └───────────────┘ └──────────────────────────────┘ │
+│                                                                       │
+│             CORS • Request Validation • API Orchestration             │
+└───────────────────────────────┬───────────────────────────────────────┘
+                                │
+                                ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│                      INTELLIGENCE / ML LAYER                          │
+│                                                                       │
+│  Python Data & ML Pipeline                                            │
+│                                                                       │
+│  Data Preprocessing → Feature Engineering → Anomaly Detection        │
+│                              │                                        │
+│                              ▼                                        │
+│                     Risk Scoring & Classification                     │
+│                              │                                        │
+│                              ▼                                        │
+│                 Explainability & Investigation Intelligence            │
+│                                                                       │
+│             Pandas • NumPy • Scikit-learn                              │
+└───────────────────────────────┬───────────────────────────────────────┘
+                                │
+                                ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│                           DATA LAYER                                  │
+│                                                                       │
+│                         SQLite Database                               │
+│                                                                       │
+│  ┌─────────────────┐ ┌──────────────────┐ ┌────────────────────────┐ │
+│  │ MPLADS Projects │ │ Investigation    │ │ Risk Scores & Audit    │ │
+│  │ & Metadata      │ │ Records          │ │ Evidence               │ │
+│  └─────────────────┘ └──────────────────┘ └────────────────────────┘ │
+└───────────────────────────────────────────────────────────────────────┘
 
                          
 
