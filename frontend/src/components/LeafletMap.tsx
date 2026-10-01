@@ -168,23 +168,28 @@ export default function LeafletMap({
       }
     });
 
-    // If selected coords exist, pan to it and draw radius circle
+    const focusTarget = selectedCoords || (validMarkers.length > 0 ? [validMarkers[0].latitude, validMarkers[0].longitude] : null);
+
+    if (showProximityCircle && focusTarget) {
+      L.circle(focusTarget, {
+        color: '#C45145',
+        fillColor: '#C45145',
+        fillOpacity: 0.14,
+        weight: 2,
+        dashArray: '4, 4',
+        radius: proximityRadiusKm * 1000,
+      }).addTo(map);
+    }
+
     if (selectedCoords) {
       map.setView(selectedCoords, zoom || 14);
-
-      if (showProximityCircle) {
-        L.circle(selectedCoords, {
-          color: '#C45145',
-          fillColor: '#C45145',
-          fillOpacity: 0.12,
-          radius: proximityRadiusKm * 1000,
-        }).addTo(map);
-      }
     } else if (validMarkers.length > 0) {
       const bounds = L.latLngBounds(validMarkers.map((m: any) => [m.latitude, m.longitude]));
       if (bounds.isValid()) {
-        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+        map.fitBounds(bounds, { padding: [45, 45], maxZoom: 13 });
       }
+    } else {
+      map.setView(initialCenter, zoom);
     }
 
     return () => {

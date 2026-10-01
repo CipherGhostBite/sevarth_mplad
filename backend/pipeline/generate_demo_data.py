@@ -126,7 +126,7 @@ WARDS = ["Ward No 02", "Ward No 05", "Ward No 08", "Ward No 11", "Ward No 12", "
 
 
 def generate_projects_dataset(num_records: int = 75) -> pd.DataFrame:
-    return generate_projects_dataset_for_constituency("varanasi", num_records)
+    records = []
 
     
     # -------------------------------------------------------------

@@ -7,7 +7,7 @@ from backend.app.models.api_models import (
     EvidenceItem, InvestigationUpdate, DashboardStats
 )
 
-from backend.pipeline.seed_db import seed_constituency_if_needed
+from backend.pipeline.seed_db import seed_constituency_if_needed, resolve_constituency_token
 
 def get_projects(
     db: Session,
@@ -23,8 +23,9 @@ def get_projects(
     limit: int = 100,
     offset: int = 0
 ) -> List[ProjectSummary]:
-    c_target = constituency or "varanasi"
-    if c_target.lower() not in ["all_india", "all", "national"]:
+    c_target = constituency or "nalanda"
+    token = resolve_constituency_token(c_target)
+    if token:
         seed_constituency_if_needed(db, c_target)
 
     query = db.query(Project, Risk, Agency, Investigation).join(
@@ -35,8 +36,7 @@ def get_projects(
         Investigation, Project.project_id == Investigation.project_id
     )
     
-    if c_target.lower() not in ["all_india", "all", "national"]:
-        token = c_target.lower().replace('-', '_').replace(' ', '_').split('_')[0]
+    if token:
         query = query.filter(Project.constituency.ilike(f"%{token}%"))
     if status and status != "ALL":
         query = query.filter(Project.status == status)
@@ -236,12 +236,12 @@ def update_investigation(db: Session, project_id: str, req: InvestigationUpdate)
     )
 
 def get_dashboard_stats(db: Session, constituency: Optional[str] = None) -> DashboardStats:
-    c_target = constituency or "varanasi"
-    if c_target.lower() not in ["all_india", "all", "national"]:
+    c_target = constituency or "nalanda"
+    token = resolve_constituency_token(c_target)
+    if token:
         seed_constituency_if_needed(db, c_target)
-        token = c_target.lower().replace('-', '_').replace(' ', '_').split('_')[0]
         projects = db.query(Project).filter(Project.constituency.ilike(f"%{token}%")).all()
-        constituency_title = projects[0].constituency if projects else f"{c_target.replace('_', ' ').title()} Lok Sabha Constituency"
+        constituency_title = projects[0].constituency if projects else f"{token} Lok Sabha Constituency"
     else:
         projects = db.query(Project).all()
         constituency_title = "All India (All 543 Constituencies)"

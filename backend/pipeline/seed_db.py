@@ -319,23 +319,48 @@ def seed_database():
         db.close()
 
 
+from backend.pipeline.generate_demo_data import CONSTITUENCY_543_MAP
+
+def resolve_constituency_token(constituency_key: Optional[str]) -> Optional[str]:
+    if not constituency_key or constituency_key.lower() in ["all_india", "all", "national"]:
+        return None
+    
+    clean_key = constituency_key.lower().replace('-', '_').replace(' ', '_')
+    c_info = CONSTITUENCY_543_MAP.get(clean_key)
+    if not c_info:
+        for item in CONSTITUENCY_543_MAP.values():
+            if (item["id"] == clean_key or 
+                item["shortName"].lower().replace(' ', '_') == clean_key or 
+                item["id"].startswith(clean_key) or
+                clean_key in item["name"].lower()):
+                c_info = item
+                break
+
+    if c_info:
+        return c_info["shortName"]
+
+    parts = [p for p in clean_key.split('_') if p not in ["lok", "sabha", "constituency"]]
+    return " ".join(parts) if parts else clean_key
+
+
 def seed_constituency_if_needed(db: Session, constituency_key: str):
     if not constituency_key or constituency_key.lower() in ["all_india", "all", "national"]:
         return
 
     clean_key = constituency_key.lower().replace('-', '_').replace(' ', '_')
-    parts = [p for p in clean_key.split('_') if p not in ["lok", "sabha", "constituency"]]
-    search_token = parts[0] if parts else clean_key
-    
+    token = resolve_constituency_token(clean_key)
+    if not token:
+        return
+
     # Check if any projects exist for this constituency
     existing = db.query(Project).filter(
-        Project.constituency.ilike(f"%{search_token}%")
+        Project.constituency.ilike(f"%{token}%")
     ).first()
     
     if existing:
         return
 
-    print(f"ON-DEMAND SEEDING: Generating dataset for constituency '{constituency_key}'...")
+    print(f"ON-DEMAND SEEDING: Generating dataset for constituency '{constituency_key}' (token: '{token}')...")
     from backend.pipeline.generate_demo_data import generate_projects_dataset_for_constituency
     
     raw_df = generate_projects_dataset_for_constituency(clean_key, 50)
