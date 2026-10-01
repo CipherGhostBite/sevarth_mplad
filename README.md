@@ -169,20 +169,11 @@ determinations remain with authorized human authorities.
 
 ## 1.5 Demo Screenshots & Media
 
-Add high-resolution screenshots to:
-
-text
-
-docs/
-└── screenshots/
-    ├── dashboard.png
-    ├── investigation.png
-    ├── gis.png
-    ├── graph-board.png
-    ├── ai-workstation.png
-    ├── evidence-locker.png
-    └── reports.png
-
+<p align="center">
+  <img src="sevarthdemo.png" width="32%">
+  <img src="sevarthdemo2.png" width="32%">
+  <img src="sevarthdemo3.png" width="32%">
+</p>
 
 ## 2. Architecture & System Design
 <p align="center">
