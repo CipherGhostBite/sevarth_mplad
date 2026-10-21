@@ -337,14 +337,25 @@
   background: #A8B0A2;
 }
 
-/* PRINT STYLES */
+/* PRINT STYLES (Chrome, Safari & Cross-Browser PDF Export) */
 @media print {
-  body {
+  @page {
+    margin: 12mm;
+    size: auto;
+  }
+  html, body {
     background: #FFFFFF !important;
     color: #000000 !important;
+    overflow: visible !important;
+    height: auto !important;
   }
-  .no-print {
+  .no-print, header, aside {
     display: none !important;
+  }
+  .architectural-env {
+    background: #FFFFFF !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
   .print-page {
     background: #FFFFFF !important;
@@ -352,5 +363,13 @@
     box-shadow: none !important;
     border: none !important;
     padding: 0 !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  .light-dossier-sheet {
+    box-shadow: none !important;
+    border: 1px solid #CBD5E1 !important;
   }
 }

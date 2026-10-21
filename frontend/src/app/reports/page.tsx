@@ -19,6 +19,13 @@ function ReportsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Sync state if query parameter changes via Next.js navigation
+  useEffect(() => {
+    if (queryProjectId && queryProjectId !== projectId) {
+      setProjectId(queryProjectId);
+    }
+  }, [queryProjectId]);
+
   const fetchReport = async (idToFetch: string) => {
     setLoading(true);
     setError('');
@@ -37,7 +44,13 @@ function ReportsContent() {
   }, [projectId]);
 
   const handlePrint = () => {
-    window.print();
+    try {
+      if (typeof window !== 'undefined') {
+        window.print();
+      }
+    } catch (err) {
+      console.warn('Print trigger failed or suppressed:', err);
+    }
   };
 
   return (

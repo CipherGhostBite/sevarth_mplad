@@ -78,7 +78,7 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
     <div className="min-h-screen architectural-env flex flex-col selection:bg-amber-400 selection:text-slate-950 font-sans text-slate-800">
       
       {/* FLOATING ARCHITECTURAL COMMAND STRIP (HEADER) */}
-      <header className="sticky top-0 z-50 bg-[#F5F6F3]/90 backdrop-blur-xl border-b border-[#E4E7E1]/80">
+      <header className="sticky top-0 z-50 bg-[#F5F6F3]/90 backdrop-blur-xl border-b border-[#E4E7E1]/80 no-print">
         <div className="max-w-[1650px] mx-auto px-6 sm:px-8 h-18 flex items-center justify-between">
           
           {/* Left branding & institutional identity with Ambient Indian Glow */}
@@ -177,7 +177,7 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
       </header>
 
       {/* CLEAN PHYSICAL WARNING PANEL */}
-      <div className="bg-[#ECEFEA] border-b border-[#E4E7E1] px-6 py-2.5">
+      <div className="bg-[#ECEFEA] border-b border-[#E4E7E1] px-6 py-2.5 no-print">
         <div className="max-w-[1650px] mx-auto flex flex-col sm:flex-row items-center justify-between text-xs font-mono gap-2">
           <div className="flex items-center gap-2.5 text-[#C88A25]">
             <span className="w-2 h-2 rounded-full bg-[#398265] pulse-indicator" />
@@ -195,7 +195,7 @@ export default function Navigation({ children }: { children: React.ReactNode }) 
       <div className="flex-1 flex max-w-[1650px] w-full mx-auto px-6 sm:px-8 py-8 gap-8 min-h-0">
         
         {/* SLIM FLOATING NAVIGATION RAIL (SIDEBAR) */}
-        <aside className="w-64 shrink-0 hidden md:block">
+        <aside className="w-64 shrink-0 hidden md:block no-print">
           <div className="sticky top-28 space-y-6">
             
             {/* Floating Navigation Rail Frame */}

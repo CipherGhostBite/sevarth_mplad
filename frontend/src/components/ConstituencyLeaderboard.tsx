@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { ALL_543_CONSTITUENCIES, Constituency } from '@/lib/constituenciesData';
 import {
   Search,
@@ -182,6 +183,7 @@ function getCivicIcon(c: Constituency): string {
 }
 
 export default function ConstituencyLeaderboard() {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -400,13 +402,13 @@ export default function ConstituencyLeaderboard() {
       }));
 
       if (c.id === 'nalanda') {
-        window.location.href = '/projects/MPLAD-NAL-2023-042';
+        router.push('/projects/MPLAD-NAL-2023-042');
         return;
       }
 
       const codeToken = c.id.replace(/[^a-zA-Z]/g, '').slice(0, 3).toUpperCase() || 'NAL';
       const targetProjectId = `MPLAD-${codeToken}-2023-001`;
-      window.location.href = `/projects/${targetProjectId}`;
+      router.push(`/projects/${targetProjectId}`);
     }
   };
 
@@ -727,7 +729,7 @@ export default function ConstituencyLeaderboard() {
                         name: selectedConstituency.name,
                         state: selectedConstituency.state
                       }));
-                      window.location.href = `/queue?constituency=${encodeURIComponent(selectedConstituency.id)}`;
+                      router.push(`/queue?constituency=${encodeURIComponent(selectedConstituency.id)}`);
                     }
                   }}
                   className="tactile-light-switch flex-1 sm:flex-none px-5 py-2.5 rounded-2xl text-xs font-bold text-[#182027] border border-[#D2D7CE] bg-white hover:border-[#285C7A] transition flex items-center justify-center gap-2"

@@ -5,12 +5,14 @@ import { EvidenceItem } from '@/lib/api';
 import { FileText, Shield, MapPin, Building, BookOpen, Tag } from 'lucide-react';
 
 interface EvidenceDossierProps {
-  evidenceItems: EvidenceItem[];
+  evidenceItems?: EvidenceItem[];
   projectId: string;
 }
 
-export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDossierProps) {
+export default function EvidenceDossier({ evidenceItems = [], projectId }: EvidenceDossierProps) {
   const [selectedType, setSelectedType] = useState<string>('ALL');
+
+  const safeItems = Array.isArray(evidenceItems) ? evidenceItems : [];
 
   const getEvidenceIcon = (type: string) => {
     switch (type) {
@@ -44,12 +46,12 @@ export default function EvidenceDossier({ evidenceItems, projectId }: EvidenceDo
     }
   };
 
-  const types = ['ALL', ...Array.from(new Set(evidenceItems.map((e) => e.evidence_type)))];
+  const types = ['ALL', ...Array.from(new Set(safeItems.map((e) => e.evidence_type).filter(Boolean)))];
 
   const filteredItems =
     selectedType === 'ALL'
-      ? evidenceItems
-      : evidenceItems.filter((e) => e.evidence_type === selectedType);
+      ? safeItems
+      : safeItems.filter((e) => e.evidence_type === selectedType);
 
   return (
     <div className="space-y-6 font-mono">

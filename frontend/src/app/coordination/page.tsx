@@ -42,6 +42,7 @@ export default function CoordinationPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string>('PRJ-GOV-STATE-01');
   const [dossier, setDossier] = useState<CoordinationDossier | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dossierLoading, setDossierLoading] = useState(false);
   const [error, setError] = useState('');
 
   // Active View Tab: '3D_GIS' | 'RELATIONSHIPS' | 'TIMELINE' | 'MATRIX'
@@ -58,7 +59,7 @@ export default function CoordinationPage() {
           api.getCoordinationOverview(),
           api.getCoordinationProjects(),
           api.getCoordinationMatrix(),
-          api.getCoordinationDossier(selectedProjectId)
+          api.getCoordinationDossier('PRJ-GOV-STATE-01')
         ]);
 
         setOverview(overviewRes);
@@ -72,14 +73,19 @@ export default function CoordinationPage() {
       }
     }
     loadData();
-  }, [selectedProjectId]);
+  }, []);
 
   const handleSelectProject = async (id: string) => {
     setSelectedProjectId(id);
+    setDossierLoading(true);
     try {
       const dossierRes = await api.getCoordinationDossier(id);
       setDossier(dossierRes);
-    } catch (e) {}
+    } catch (e) {
+      console.error('Failed to load dossier for project:', id, e);
+    } finally {
+      setDossierLoading(false);
+    }
   };
 
   const filteredProjects = projects.filter(

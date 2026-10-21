@@ -393,13 +393,29 @@ export default function ProjectInvestigationPage() {
         )}
 
         {/* TAB 3: Peer Comparison */}
-        {activeTab === 'peers' && peers && <PeerComparisonTable data={peers} />}
+        {activeTab === 'peers' && (
+          peers ? (
+            <PeerComparisonTable data={peers} />
+          ) : (
+            <div className="floating-slab p-8 text-center text-xs text-[#667078] font-mono">
+              PEER COMPARISON BENCHMARKING DATA IS CURRENTLY BEING COMPILED FOR THIS CATEGORY.
+            </div>
+          )
+        )}
 
         {/* TAB 4: Agency Profile */}
-        {activeTab === 'agency' && agency && <AgencyFingerprint agency={agency} />}
+        {activeTab === 'agency' && (
+          agency ? (
+            <AgencyFingerprint agency={agency} />
+          ) : (
+            <div className="floating-slab p-8 text-center text-xs text-[#667078] font-mono">
+              AGENCY AUDIT PROFILE DATA IS BEING INDEXED.
+            </div>
+          )
+        )}
 
         {/* TAB 5: GIS Spatial Map */}
-        {activeTab === 'map' && nearbyData && (
+        {activeTab === 'map' && (
           <div className="space-y-6">
             <div className="floating-slab p-5 space-y-4">
               <h3 className="text-xs font-bold text-[#285C7A] uppercase tracking-wider flex items-center gap-2 border-b border-[#E4E7E1] pb-3">
@@ -419,7 +435,7 @@ export default function ProjectInvestigationPage() {
                     longitude: project.longitude,
                     priority_score: project.priority_score,
                   },
-                  ...nearbyData.nearby.map((n: any) => ({
+                  ...((nearbyData && Array.isArray(nearbyData.nearby)) ? nearbyData.nearby.map((n: any) => ({
                     project_id: n.project_id,
                     project_name: n.project_name,
                     work_type: n.work_type,
@@ -429,7 +445,7 @@ export default function ProjectInvestigationPage() {
                     latitude: n.latitude,
                     longitude: n.longitude,
                     priority_score: n.priority_score,
-                  })),
+                  })) : []),
                 ]}
                 selectedProjectId={project.project_id}
                 center={[project.latitude, project.longitude]}
@@ -443,55 +459,67 @@ export default function ProjectInvestigationPage() {
             {/* Nearby Projects List */}
             <div className="floating-slab p-6 space-y-3">
               <h4 className="text-xs font-bold text-[#182027] uppercase">
-                NEARBY SANCTIONED WORKS WITHIN 3.0 KM ({nearbyData.count})
+                NEARBY SANCTIONED WORKS WITHIN 3.0 KM ({nearbyData?.count || 0})
               </h4>
-              <div className="divide-y divide-[#E4E7E1] text-xs">
-                {nearbyData.nearby.map((item: any) => (
-                  <div key={item.project_id} className="py-3 flex items-center justify-between">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-[#285C7A]">{item.project_id}</span>
-                        {item.is_same_work_type && (
-                          <span className="bg-[#C45145]/10 text-[#C45145] text-[9px] font-bold px-2 py-0.5 rounded-full border border-[#C45145]/30 uppercase">
-                            SAME WORK CATEGORY
-                          </span>
-                        )}
+              {nearbyData && Array.isArray(nearbyData.nearby) && nearbyData.nearby.length > 0 ? (
+                <div className="divide-y divide-[#E4E7E1] text-xs">
+                  {nearbyData.nearby.map((item: any) => (
+                    <div key={item.project_id} className="py-3 flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-[#285C7A]">{item.project_id}</span>
+                          {item.is_same_work_type && (
+                            <span className="bg-[#C45145]/10 text-[#C45145] text-[9px] font-bold px-2 py-0.5 rounded-full border border-[#C45145]/30 uppercase">
+                              SAME WORK CATEGORY
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[#182027] font-sans text-xs truncate max-w-lg mt-0.5">
+                          {item.project_name}
+                        </div>
                       </div>
-                      <div className="text-[#182027] font-sans text-xs truncate max-w-lg mt-0.5">
-                        {item.project_name}
+                      <div className="text-right font-mono">
+                        <span className="font-bold text-[#182027] block">
+                          {item.distance_meters}m away
+                        </span>
+                        <span className="text-[10px] text-[#667078]">
+                          {formatCurrency(item.sanctioned_amount)}
+                        </span>
                       </div>
                     </div>
-                    <div className="text-right font-mono">
-                      <span className="font-bold text-[#182027] block">
-                        {item.distance_meters}m away
-                      </span>
-                      <span className="text-[10px] text-[#667078]">
-                        {formatCurrency(item.sanctioned_amount)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="recessed-light-display p-6 text-center text-xs text-[#667078] font-mono">
+                  NO ADJACENT WORKS DETECTED WITHIN 3.0 KM (SPATIALLY ISOLATED WORK SITE).
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {/* TAB 6: Investigation Graph */}
-        {activeTab === 'graph' && graphData && (
-          <div className="space-y-6">
-            <div className="floating-slab p-5 space-y-4">
-              <div className="flex items-center justify-between border-b border-[#E4E7E1] pb-3">
-                <h3 className="text-xs font-bold text-[#285C7A] uppercase tracking-wider flex items-center gap-2">
-                  <Share2 className="w-4 h-4 text-[#285C7A]" />
-                  <span>INTERACTIVE CROSS-PROJECT ENTITY INVESTIGATION GRAPH</span>
-                </h3>
-                <span className="text-xs text-[#667078] font-mono">
-                  {graphData.nodes.length} CONNECTED NODES &bull; {graphData.edges.length} EDGES
-                </span>
+        {activeTab === 'graph' && (
+          graphData ? (
+            <div className="space-y-6">
+              <div className="floating-slab p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-[#E4E7E1] pb-3">
+                  <h3 className="text-xs font-bold text-[#285C7A] uppercase tracking-wider flex items-center gap-2">
+                    <Share2 className="w-4 h-4 text-[#285C7A]" />
+                    <span>INTERACTIVE CROSS-PROJECT ENTITY INVESTIGATION GRAPH</span>
+                  </h3>
+                  <span className="text-xs text-[#667078] font-mono">
+                    {graphData.nodes.length} CONNECTED NODES &bull; {graphData.edges.length} EDGES
+                  </span>
+                </div>
+                <CytoscapeGraph nodes={graphData.nodes} edges={graphData.edges} height="520px" />
               </div>
-              <CytoscapeGraph nodes={graphData.nodes} edges={graphData.edges} height="520px" />
             </div>
-          </div>
+          ) : (
+            <div className="floating-slab p-8 text-center text-xs text-[#667078] font-mono">
+              CROSS-PROJECT RELATIONSHIP GRAPH IS BEING ASSEMBLED.
+            </div>
+          )
         )}
 
         {/* TAB 7: Cross-Govt Multi-Level Project Coordination */}

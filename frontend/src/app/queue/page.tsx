@@ -18,13 +18,6 @@ import {
 export default function InvestigationQueuePage() {
   const router = useRouter();
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
-
-  const handleOpenDossier = (e: React.MouseEvent, projectId?: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!projectId) return;
-    router.push(`/projects/${encodeURIComponent(projectId)}`);
-  };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -261,12 +254,6 @@ export default function InvestigationQueuePage() {
 
                   <Link
                     href={`/projects/${proj.project_id}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (proj.project_id) {
-                        window.location.href = `/projects/${proj.project_id}`;
-                      }
-                    }}
                     className="tactile-light-switch px-4.5 py-2.5 rounded-xl text-xs font-mono font-bold text-[#182027] hover:text-[#285C7A] hover:border-[#285C7A] transition inline-flex items-center gap-2 cursor-pointer shadow-xs active:scale-95 select-none relative z-10"
                   >
                     <span>DOSSIER</span>

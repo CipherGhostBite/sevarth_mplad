@@ -23,13 +23,6 @@ import {
 export default function DashboardPage() {
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats | null>(null);
-
-  const handleOpenDossier = (e: React.MouseEvent, projectId?: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!projectId) return;
-    router.push(`/projects/${encodeURIComponent(projectId)}`);
-  };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -144,10 +137,6 @@ export default function DashboardPage() {
 
         <Link
           href="/projects/MPLAD-NAL-2023-042"
-          onClick={(e) => {
-            e.stopPropagation();
-            window.location.href = '/projects/MPLAD-NAL-2023-042';
-          }}
           className="tactile-light-switch tactile-light-switch-active px-5 py-3.5 rounded-xl text-xs font-mono font-bold inline-flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95 transition select-none relative z-10"
         >
           <span>INSPECT CASE DOSSIER</span>
@@ -329,12 +318,6 @@ export default function DashboardPage() {
                   <RiskBadge score={proj.priority_score} isAnomaly={proj.is_anomaly} size="sm" />
                   <Link
                     href={`/projects/${proj.project_id}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (proj.project_id) {
-                        window.location.href = `/projects/${proj.project_id}`;
-                      }
-                    }}
                     className="tactile-light-switch p-2.5 rounded-xl text-[#182027] hover:text-[#285C7A] hover:border-[#285C7A] transition inline-flex items-center justify-center cursor-pointer active:scale-95 select-none relative z-10"
                     title="Open Investigation Dossier"
                   >

@@ -143,21 +143,24 @@ export default function LeafletMap({
           <div style="color: #667078; font-size: 11px; margin-bottom: 2px;"><strong>Type:</strong> ${m.work_type}</div>
           <div style="color: #667078; font-size: 11px; margin-bottom: 2px;"><strong>Agency:</strong> ${m.agency_name}</div>
           <div style="color: #667078; font-size: 11px; margin-bottom: 12px;"><strong>Cost:</strong> ₹${m.sanctioned_amount.toFixed(2)} Lakhs</div>
-          <a href="/projects/${m.project_id}" onclick="window.location.href='/projects/${m.project_id}'; return false;" style="
+          <button type="button" class="leaflet-open-dossier-btn" data-project-id="${m.project_id}" style="
             display: block;
+            width: 100%;
             text-align: center;
             background: #173F58;
             color: #FFFFFF;
-            text-decoration: none;
             padding: 7px 12px;
             border-radius: 8px;
             font-weight: bold;
             font-family: monospace;
             font-size: 11px;
             box-shadow: 0 4px 12px rgba(23,63,88,0.25);
+            cursor: pointer;
+            border: none;
+            transition: background 0.15s ease;
           ">
             OPEN CASE DOSSIER &rarr;
-          </a>
+          </button>
         </div>
       `;
 
@@ -192,13 +195,34 @@ export default function LeafletMap({
       map.setView(initialCenter, zoom);
     }
 
+    // Attach delegated click handler for popup buttons (Chrome CSP and extension safe)
+    const handleMapContainerClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest('.leaflet-open-dossier-btn') as HTMLElement | null;
+      if (target) {
+        e.preventDefault();
+        e.stopPropagation();
+        const pId = target.getAttribute('data-project-id');
+        if (pId) {
+          router.push(`/projects/${encodeURIComponent(pId)}`);
+        }
+      }
+    };
+
+    const mapDom = mapContainerRef.current;
+    if (mapDom) {
+      mapDom.addEventListener('click', handleMapContainerClick);
+    }
+
     return () => {
+      if (mapDom) {
+        mapDom.removeEventListener('click', handleMapContainerClick);
+      }
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
     };
-  }, [markers, selectedProjectId, center, zoom, showProximityCircle, proximityRadiusKm]);
+  }, [markers, selectedProjectId, center, zoom, showProximityCircle, proximityRadiusKm, router]);
 
   return (
     <div className="relative rounded-2xl overflow-hidden border border-[#E4E7E1] shadow-[0_18px_45px_rgba(40,50,55,0.08)] bg-[#ECEFEA]">

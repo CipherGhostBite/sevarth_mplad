@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+const RAW_API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'https://sevarth-mplad.onrender.com').trim().replace(/\/+$/, '');
+const API_BASE = RAW_API_BASE.endsWith('/api') ? RAW_API_BASE : `${RAW_API_BASE}/api`;
 
 export interface ProjectSummary {
   project_id: string;
