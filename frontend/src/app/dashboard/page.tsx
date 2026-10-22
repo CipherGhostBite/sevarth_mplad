@@ -137,7 +137,7 @@ export default function DashboardPage() {
 
         <Link
           href="/projects/MPLAD-NAL-2023-042"
-          className="tactile-light-switch tactile-light-switch-active px-5 py-3.5 rounded-xl text-xs font-mono font-bold inline-flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95 transition select-none relative z-10"
+          className="tactile-light-switch tactile-light-switch-active px-5 py-3.5 rounded-xl text-xs font-mono font-bold inline-flex items-center justify-center gap-2 shrink-0 cursor-pointer transition select-none hover:shadow-lg"
         >
           <span>INSPECT CASE DOSSIER</span>
           <ArrowRight className="w-4 h-4 text-[#C88A25]" />
@@ -166,7 +166,7 @@ export default function DashboardPage() {
 
         <Link
           href="/coordination"
-          className="tactile-light-switch bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-3.5 rounded-2xl text-xs font-mono font-bold inline-flex items-center justify-center gap-2 shrink-0 shadow-[0_8px_24px_rgba(6,182,212,0.4)] transition transform hover:scale-105 active:scale-95 select-none relative z-10"
+          className="tactile-light-switch bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-6 py-3.5 rounded-2xl text-xs font-mono font-bold inline-flex items-center justify-center gap-2 shrink-0 shadow-[0_8px_24px_rgba(6,182,212,0.4)] transition hover:shadow-cyan-500/50 select-none relative z-10"
         >
           <span>LAUNCH 3D COMMAND CENTER</span>
           <ArrowRight className="w-4 h-4 text-slate-950" />
@@ -293,38 +293,40 @@ export default function DashboardPage() {
           {/* Open Spatial Case Records */}
           <div className="space-y-3">
             {stats.top_priority_projects.map((proj) => (
-              <div
+              <Link
                 key={proj.project_id}
-                className="floating-slab floating-slab-interactive p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                href={`/projects/${proj.project_id}`}
+                className="floating-slab floating-slab-interactive block p-5 cursor-pointer group no-underline text-inherit transition duration-200 select-none"
+                title={`Open investigation dossier for ${proj.project_id}`}
               >
-                <div className="space-y-1.5 min-w-0">
-                  <div className="flex items-center gap-2.5">
-                    <span className="font-mono text-xs font-extrabold text-[#285C7A]">
-                      {proj.project_id}
-                    </span>
-                    <span className="text-[10px] font-mono text-[#667078] bg-[#ECEFEA] px-2 py-0.5 rounded-full font-bold border border-[#E4E7E1]">
-                      {proj.work_type}
-                    </span>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-1.5 min-w-0">
+                    <div className="flex items-center gap-2.5">
+                      <span className="font-mono text-xs font-extrabold text-[#285C7A] group-hover:underline">
+                        {proj.project_id}
+                      </span>
+                      <span className="text-[10px] font-mono text-[#667078] bg-[#ECEFEA] px-2 py-0.5 rounded-full font-bold border border-[#E4E7E1]">
+                        {proj.work_type}
+                      </span>
+                    </div>
+                    <h4 className="text-sm font-bold text-[#182027] font-sans truncate max-w-lg group-hover:text-[#285C7A] transition-colors">
+                      {proj.project_name}
+                    </h4>
+                    <div className="text-xs text-[#667078] font-sans">
+                      Agency: <span className="text-[#182027] font-semibold">{proj.agency_name}</span> &bull; Cost: <span className="font-mono font-bold text-[#182027]">{formatCurrency(proj.sanctioned_amount)}</span>
+                    </div>
                   </div>
-                  <h4 className="text-sm font-bold text-[#182027] font-sans truncate max-w-lg">
-                    {proj.project_name}
-                  </h4>
-                  <div className="text-xs text-[#667078] font-sans">
-                    Agency: <span className="text-[#182027] font-semibold">{proj.agency_name}</span> &bull; Cost: <span className="font-mono font-bold text-[#182027]">{formatCurrency(proj.sanctioned_amount)}</span>
-                  </div>
-                </div>
 
-                <div className="flex items-center gap-4 shrink-0 self-end sm:self-auto">
-                  <RiskBadge score={proj.priority_score} isAnomaly={proj.is_anomaly} size="sm" />
-                  <Link
-                    href={`/projects/${proj.project_id}`}
-                    className="tactile-light-switch p-2.5 rounded-xl text-[#182027] hover:text-[#285C7A] hover:border-[#285C7A] transition inline-flex items-center justify-center cursor-pointer active:scale-95 select-none relative z-10"
-                    title="Open Investigation Dossier"
-                  >
-                    <ArrowRight className="w-4 h-4 text-[#285C7A]" />
-                  </Link>
+                  <div className="flex items-center gap-4 shrink-0 self-end sm:self-auto">
+                    <RiskBadge score={proj.priority_score} isAnomaly={proj.is_anomaly} size="sm" />
+                    <div
+                      className="tactile-light-switch p-2.5 rounded-xl text-[#182027] group-hover:text-[#285C7A] group-hover:border-[#285C7A] group-hover:shadow-md transition inline-flex items-center justify-center pointer-events-none shrink-0"
+                    >
+                      <ArrowRight className="w-4 h-4 text-[#285C7A] group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

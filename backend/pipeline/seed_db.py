@@ -333,14 +333,17 @@ def resolve_constituency_token(constituency_key: Optional[str]) -> Optional[str]
             if (item["id"] == clean_key or 
                 item["shortName"].lower().replace(' ', '_') == clean_key or 
                 item["id"].startswith(clean_key) or
-                clean_key in item["name"].lower()):
+                clean_key.startswith(item["id"]) or
+                clean_key in item["name"].lower() or
+                item["name"].lower() in clean_key.replace('_', ' ') or
+                item["shortName"].lower() in clean_key.replace('_', ' ')):
                 c_info = item
                 break
 
     if c_info:
         return c_info["shortName"]
 
-    parts = [p for p in clean_key.split('_') if p not in ["lok", "sabha", "constituency"]]
+    parts = [p for p in clean_key.split('_') if p not in ["lok", "sabha", "constituency", "gujarat", "bihar", "uttar", "pradesh", "maharashtra", "andhra"]]
     return " ".join(parts) if parts else clean_key
 
 
