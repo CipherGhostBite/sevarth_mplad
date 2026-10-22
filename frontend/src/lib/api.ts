@@ -1,5 +1,16 @@
-const RAW_API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'https://sevarth-mplad.onrender.com').trim().replace(/\/+$/, '');
-const API_BASE = RAW_API_BASE.endsWith('/api') ? RAW_API_BASE : `${RAW_API_BASE}/api`;
+export function getApiBase(): string {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://127.0.0.1:8000/api';
+    }
+  }
+  const raw = process.env.NEXT_PUBLIC_API_URL || 'https://sevarth-mplad.onrender.com';
+  const clean = raw.trim().replace(/\/+$/, '');
+  return clean.endsWith('/api') ? clean : `${clean}/api`;
+}
+
+const API_BASE = getApiBase();
 
 export interface ProjectSummary {
   project_id: string;
@@ -313,7 +324,8 @@ export interface CoordinationDossier {
 
 // Helper fetch wrapper
 async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
+  const base = getApiBase();
+  const url = endpoint.startsWith('http') ? endpoint : `${base}${endpoint}`;
   const res = await fetch(url, {
     ...options,
     headers: {

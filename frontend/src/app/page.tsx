@@ -135,9 +135,9 @@ export default function LandingPage() {
               <span>Leaderboard</span>
             </a>
             <span className="text-[#D2D7CE] text-[10px]">&bull;</span>
-            <a href="#dossiers" className="nav-link-item">
+            <Link href="/queue" className="nav-link-item">
               <span>Dossiers</span>
-            </a>
+            </Link>
             <span className="text-[#D2D7CE] text-[10px]">&bull;</span>
             <a href="#footer" className="nav-link-item">
               <span>About</span>
@@ -479,8 +479,15 @@ export default function LandingPage() {
               </p>
             </div>
 
-            {/* Microcopy Trigger Link */}
-            <div className="pt-1">
+            {/* Action buttons */}
+            <div className="pt-2 flex flex-wrap items-center gap-4">
+              <Link
+                href="/projects/MPLAD-NAL-2023-042"
+                className="tactile-light-switch tactile-light-switch-active px-6 py-2.5 rounded-xl text-xs font-mono font-bold inline-flex items-center gap-2 shadow-md"
+              >
+                <span>OPEN CASE DOSSIER</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#C88A25]" />
+              </Link>
               <button
                 onClick={() => setExplanationTopic('dossiers')}
                 className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#285C7A] hover:text-[#C88A25] transition group/trigger"

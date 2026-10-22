@@ -4,6 +4,7 @@ Builds the complete database with realistic data, features, risk scores, evidenc
 """
 import os
 import sys
+from typing import Optional, List, Dict, Any
 from datetime import datetime
 import pandas as pd
 
